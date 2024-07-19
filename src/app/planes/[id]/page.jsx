@@ -1,14 +1,10 @@
 'use client'
 import { Nunito } from "next/font/google";
+import Link from "next/link";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
 const PlansDetail = () => {
-  const handleMercadoPago = () => {
-    // Aquí deberías implementar la lógica para redirigir a la página de pago de Mercado Pago Suscripciones.
-    // Esto puede implicar una llamada al backend para obtener la URL de la suscripción de Mercado Pago y luego redirigir al usuario.
-    window.location.href = "URL_DE_PAGO_DE_MERCADO_PAGO";
-  };
 
   return (
     <div className={`${nunito.className} flex justify-center items-center h-screen px-4`}>
@@ -25,12 +21,7 @@ const PlansDetail = () => {
           <li>Reportes detallados</li>
           <li>Soporte 24/7</li>
         </ul>
-        <button
-          onClick={handleMercadoPago}
-          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
-        >
-          Continuar
-        </button>
+        <Link href='https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=2c93808490c3cfb60190cc6b955f02bd' className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">Continuar</Link>
       </div>
     </div>
   );

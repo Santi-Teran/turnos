@@ -1,39 +1,66 @@
-'use client'
-import axios from 'axios';
+'use client';
+
 import { Nunito } from "next/font/google";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdHouse, MdLock, MdMail, MdPerson, MdRemoveRedEye } from "react-icons/md";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
 const RegisterBusiness = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    address: '',
+    password: '',
+    subcriptionID: '',
+  });
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [adress, setAdress] = useState('');
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  useEffect(() => {
+    const url = window.location.href;
+    const preapprovalIdParam = url.split('preapproval_id=')[1];
+    if (preapprovalIdParam) {
+      const subcriptionID = preapprovalIdParam.split('&')[0];
+      setFormData((prevData) => ({
+        ...prevData,
+        subcriptionID,
+      }));
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const businessData = {
-      name,
-      email,
-      password,
-      adress,
-      selectedPlan
-    };
-
+    // Enviar el objeto formData al backend
     try {
-      // Guardar los datos del negocio en la base de datos
-      const response = await axios.post('/api/register-business', businessData);
-      
-      // Redirigir a Mercado Pago para completar la suscripción
-      window.location.href = response.data.mercadoPagoInitPoint;
+      const response = await fetch('https://localhost:7127/api/Users/singup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        // Manejar la respuesta del servidor
+        const result = await response.json();
+        console.log(result);
+        // Redirigir al usuario o mostrar un mensaje de éxito
+      } else {
+        // Manejar errores
+        console.error('Error en el registro:', response.statusText);
+      }
+      console.log(formData)
+
     } catch (error) {
-      console.error('Error registering business:', error);
-      alert('Error al registrar el negocio. Inténtelo de nuevo.');
+      console.log(formData)
+      console.error('Error en el registro:', error);
     }
   };
 
@@ -45,9 +72,10 @@ const RegisterBusiness = () => {
           <MdPerson className="text-gray-400" />
           <input
             type="text"
-            value={name}
+            name="name"
+            value={formData.name}
             placeholder='Nombre y Apellido'
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleChange}
             className="bg-transparent focus:outline-none focus:ring-0 w-full placeholder:text-gray-400"
             required
           />
@@ -56,9 +84,10 @@ const RegisterBusiness = () => {
           <MdMail className="text-gray-400" />
           <input
             type="email"
-            value={email}
+            name="email"
+            value={formData.email}
             placeholder='Email'
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
             className="bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400"
             required
           />
@@ -67,9 +96,10 @@ const RegisterBusiness = () => {
           <MdHouse className="text-gray-400" />
           <input
             type="text"
-            value={adress}
-            placeholder='Direccion'
-            onChange={(e) => setAdress(e.target.value)}
+            name="address"
+            value={formData.address}
+            placeholder='Dirección'
+            onChange={handleChange}
             className="bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400"
             required
           />
@@ -78,15 +108,16 @@ const RegisterBusiness = () => {
           <MdLock className="text-gray-400" />
           <input
             type="password"
-            value={password}
+            name="password"
+            value={formData.password}
             placeholder='Contraseña'
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
             className="bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400"
             required
           />
           <MdRemoveRedEye className="text-gray-400" />
         </div>
-        <button type="submit" className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`} >
+        <button type="submit" className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`}>
           Registrarse
         </button>
       </form>
