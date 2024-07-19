@@ -1,13 +1,14 @@
 import { Nunito } from "next/font/google";
 import plans from "@/app/api/plans";
 import { FaCheckCircle } from "react-icons/fa";
+import Link from "next/link";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
 const Plans = () => {
   return (
     <div className={`${nunito.className} flex flex-col gap-20 my-10 mx-6`}>
-      <h2 className="text-3xl font-bold text-center">Planes y Precios</h2>
+      <h2 className="text-2xl md:text-4xl font-bold text-center">Planes y Precios</h2>
       <div className="flex flex-col md:flex-row justify-center">
         {plans.map((plan, index) => (
           <div key={index} className={`flex flex-col gap-4 p-8 rounded-lg shadow-2xl gradient ${ index === 1 ? "transform scale-110 relative z-10" : "" }`}>
@@ -23,7 +24,7 @@ const Plans = () => {
                 </li>
               ))}
             </ul>
-            <button className="bg-blue-600 font-bold px-6 py-2 rounded-full hover:bg-blue-800 transition">Elegir Plan</button>
+            <Link href={`/planes/${plan.id}`} className="mx-auto bg-blue-600 font-bold px-6 py-2 rounded-lg hover:bg-blue-800 transition">Elegir Plan</Link>
           </div>
         ))}
       </div>

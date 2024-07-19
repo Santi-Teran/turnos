@@ -1,5 +1,6 @@
 const plans = [
   {
+    id: 1,
     title: "Gratis",
     description: "Ideal para empezar",
     price: "0 USD/mes",
@@ -11,6 +12,7 @@ const plans = [
     ]
   },
   {
+    id: 2,
     title: "Básico",
     description: "Para negocios en crecimiento",
     price: "15 USD/mes",
@@ -23,6 +25,7 @@ const plans = [
     ]
   },
   {
+    id: 3,
     title: "Premium",
     description: "Para grandes negocios",
     price: "30 USD/mes",

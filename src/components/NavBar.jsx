@@ -12,13 +12,12 @@ const NavBar = () => {
   };
 
   return (
-    <div className='bg-dark-blue flex justify-center items-center fixed w-full z-20 p-8'>
+    <div className='bg-dark-blue flex justify-center items-center fixed w-full z-20 p-6'>
       <div className='hidden md:flex gap-20'>
         <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>
         <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/servicios'>Servicios</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Portafolio</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/nosotros'>Nosotros</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/contacto'>Contacto</Link>
+        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Trabajos</Link>
+        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/planes'>Planes</Link>
       </div>
       <div className='md:hidden absolute right-0 m-5'>
         <button onClick={toggleMenu} className='text-3xl focus:outline-none'>
@@ -32,9 +31,8 @@ const NavBar = () => {
             <nav className='flex flex-col items-start gap-10 p-10 pt-20 text-xl'>
               <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>
               <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/servicios'>Servicios</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Portafolio</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/nosotros'>Nosotros</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/contacto'>Contacto</Link>
+              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Trabajos</Link>
+              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/planes'>Planes</Link>
             </nav>
           </div>
         </div>
