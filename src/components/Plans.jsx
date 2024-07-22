@@ -7,7 +7,7 @@ const nunito = Nunito({ subsets: ["latin"] });
 
 const Plans = () => {
   return (
-    <div className={`${nunito.className} flex flex-col gap-20 my-10 mx-6`}>
+    <div className={`${nunito.className} flex flex-col gap-20 mx-6`}>
       <h2 className="text-2xl md:text-4xl font-bold text-center">Planes y Precios</h2>
       <div className="flex flex-col md:flex-row justify-center">
         {plans.map((plan, index) => (

@@ -5,7 +5,7 @@ const nunito = Nunito({ subsets: ["latin"] });
 
 const Proposal = () => {
   return (
-    <div className="flex flex-col items-center justify-center mx-4 mt-10 md:mx-48 gap-10">
+    <div className="flex flex-col items-center justify-center mx-4 md:mx-48 gap-10">
       <h1 className={`${nunito.className} text-2xl md:text-4xl text-center font-bold mx-8`}>Así Funciona Nuestra Plataforma</h1>
       <div className={`${nunito.className} w-full flex flex-col gap-10`}>
         <div className="flex flex-col md:flex-row justify-center md:gap-20 gap-10 items-center">

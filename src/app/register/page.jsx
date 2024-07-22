@@ -39,7 +39,7 @@ const RegisterBusiness = () => {
     e.preventDefault();
     // Enviar el objeto formData al backend
     try {
-      const response = await fetch('https://localhost:7127/api/Users/singup', {
+      const response = await fetch('http://www.misturnos.somee.com/api/users/singup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

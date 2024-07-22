@@ -10,7 +10,7 @@ export default function Footer() {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
   return (
-    <div className='flex justify-between star-wars-gradient p-4 shadoww text-dark-blue dark:text-arena flex-col items-center md:flex-row'>
+    <div className='flex justify-between star-wars-gradient mt-10 p-2 shadoww text-dark-blue dark:text-arena flex-col items-center md:flex-row'>
       <div className='flex items-center gap-x-2'>
         <FaRegCopyright />
         <p className="text-sm lg:text-base">2024 Marea Tech.</p>

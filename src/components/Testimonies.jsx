@@ -7,7 +7,7 @@ const nunito = Nunito({ subsets: ["latin"] });
 const Testimonies = () => {
   return (
     <div className="flex flex-col items-center justify-center mx-4 md:mx-20 gap-10">
-      <h2 className={`${nunito.className} text-2xl md:text-4xl text-center font-bold mb-10 md:mb-20 mx-4 md:mx-32`}>Lo que dicen nuestros clientes</h2>
+      <h2 className={`${nunito.className} text-2xl md:text-4xl text-center font-bold mb-10 mx-4 md:mx-32`}>Lo que dicen nuestros clientes</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mx-4 md:mx-20">
         {testimonies.map((testimony, index) => (
           <div key={index} className="flex flex-col items-center gap-5 p-4 rounded-xl shadoww">
