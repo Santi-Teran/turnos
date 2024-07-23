@@ -1,5 +1,5 @@
 import Link from "next/link";
-import projects from "../api/projects";
+import projects from "../api/json/projects";
 import { Nunito } from "next/font/google";
 import Image from "next/image";
 

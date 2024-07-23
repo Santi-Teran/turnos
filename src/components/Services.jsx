@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { service } from "@/app/api/services";
+import { service } from "@/app/api/json/services";
 import { Nunito } from "next/font/google";
 import { FaArrowRight } from "react-icons/fa";
 

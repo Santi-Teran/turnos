@@ -1,68 +1,13 @@
 'use client';
-
 import { Nunito } from "next/font/google";
-import { useEffect, useState } from 'react';
-import { MdHouse, MdLock, MdMail, MdPerson, MdRemoveRedEye } from "react-icons/md";
+import { MdHouse, MdLock, MdMail, MdPerson } from "react-icons/md";
+import { useRegister } from "../api/handlers/handleRegister";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
 const RegisterBusiness = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    address: '',
-    password: '',
-    subcriptionID: '',
-  });
 
-  useEffect(() => {
-    const url = window.location.href;
-    const preapprovalIdParam = url.split('preapproval_id=')[1];
-    if (preapprovalIdParam) {
-      const subcriptionID = preapprovalIdParam.split('&')[0];
-      setFormData((prevData) => ({
-        ...prevData,
-        subcriptionID,
-      }));
-    }
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Enviar el objeto formData al backend
-    try {
-      const response = await fetch('http://www.misturnos.somee.com/api/users/singup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        // Manejar la respuesta del servidor
-        const result = await response.json();
-        console.log(result);
-        // Redirigir al usuario o mostrar un mensaje de éxito
-      } else {
-        // Manejar errores
-        console.error('Error en el registro:', response.statusText);
-      }
-      console.log(formData)
-
-    } catch (error) {
-      console.log(formData)
-      console.error('Error en el registro:', error);
-    }
-  };
+  const { formData, handleChange, handleSubmit } = useRegister();
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -76,7 +21,7 @@ const RegisterBusiness = () => {
             value={formData.name}
             placeholder='Nombre y Apellido'
             onChange={handleChange}
-            className="bg-transparent focus:outline-none focus:ring-0 w-full placeholder:text-gray-400"
+            className="bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400"
             required
           />
         </div>
@@ -115,7 +60,6 @@ const RegisterBusiness = () => {
             className="bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400"
             required
           />
-          <MdRemoveRedEye className="text-gray-400" />
         </div>
         <button type="submit" className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`}>
           Registrarse

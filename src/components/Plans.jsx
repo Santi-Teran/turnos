@@ -1,5 +1,5 @@
 import { Nunito } from "next/font/google";
-import plans from "@/app/api/plans";
+import plans from "@/app/api/json/plans";
 import { FaCheckCircle } from "react-icons/fa";
 import Link from "next/link";
 

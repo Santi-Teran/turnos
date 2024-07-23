@@ -1,4 +1,4 @@
-import { services } from "../api/services";
+import { services } from "../api/json/services";
 import Link from "next/link";
 import { Nunito } from "next/font/google";
 

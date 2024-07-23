@@ -1,4 +1,4 @@
-import testimonies from "@/app/api/testimonies";
+import testimonies from "@/app/api/json/testimonies";
 import { Nunito } from "next/font/google";
 import { FaStar } from "react-icons/fa";
 
