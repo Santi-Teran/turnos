@@ -4,11 +4,12 @@ import { registerUser } from '../api';
 
 export const useRegister = () => {
   const [formData, setFormData] = useState({
+    id: '',
     name: '',
     email: '',
     address: '',
     password: '',
-    subcriptionID: '',
+    subscriptionId: '',
   });
 
   const router = useRouter();
@@ -17,10 +18,10 @@ export const useRegister = () => {
     const url = window.location.href;
     const preapprovalIdParam = url.split('preapproval_id=')[1];
     if (preapprovalIdParam) {
-      const subcriptionID = preapprovalIdParam.split('&')[0];
+      const subscriptionId = preapprovalIdParam.split('&')[0];
       setFormData((prevData) => ({
         ...prevData,
-        subcriptionID,
+        subscriptionId,
       }));
     }
   }, []);
@@ -39,7 +40,7 @@ export const useRegister = () => {
 
     if (result.success) {
       console.log(result.data);
-      router.push('/dashboard');
+      router.push('/login');
     } else {
       console.error('Error en el registro:', result.message);
     }

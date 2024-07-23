@@ -1,32 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { businessConfiguration } from '../api';
 
-export const useBusinessConfiguration = () => {
+export const useBusinessConfiguration = (initialUserData) => {
   const [formData, setFormData] = useState({
-    businessName: '',
-    description: '',
-    logoData: '',
-    appointmentDuration: '',
-    timeBetweenAppointments: '',
-    dayStartTime: '',
-    dayEndTime: '',
-    daysOff: '',
-    fixedAppointmentsAvailable: true,
+    id: '',
+    email: '',
+    name: '',
+    address: '',
+    userConfiguration: {
+      businessName: '',
+      description: '',
+      logoData: '',
+      currency: '',
+      language: '',
+      appointmentDuration: '',
+      timeBetweenAppointments: '',
+      dayStartTime: '',
+      dayEndTime: '',
+      daysOff: '',
+      fixedAppointmentsAvailable: true,
+    }
   });
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (initialUserData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        id: initialUserData.id,
+        email: initialUserData.email,
+        name: initialUserData.name,
+        address: initialUserData.address,
+        userConfiguration: initialUserData.userConfiguration,
+      }));
+    }
+  }, [initialUserData]);
 
   const handleChange = (e) => {
     const { name, value, type, files, checked } = e.target;
     if (type === 'checkbox') {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: checked,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          [name]: checked,
+        }
       }));
     } else if (type === 'file') {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prevData) => ({
           ...prevData,
-          logoData: reader.result,
+          userConfiguration: {
+            ...prevData.userConfiguration,
+            logoData: reader.result,
+          }
         }));
       };
       reader.readAsDataURL(files[0]);
@@ -35,12 +63,18 @@ export const useBusinessConfiguration = () => {
       const values = Array.from(options).map(option => option.value).join(';');
       setFormData((prevData) => ({
         ...prevData,
-        daysOff: values,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          daysOff: values,
+        }
       }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          [name]: value,
+        }
       }));
     }
   };
@@ -49,18 +83,21 @@ export const useBusinessConfiguration = () => {
     e.preventDefault();
     const parsedFormData = {
       ...formData,
-      appointmentDuration: parseInt(formData.appointmentDuration, 10),
-      timeBetweenAppointments: parseInt(formData.timeBetweenAppointments, 10),
-      dayStartTime: parseInt(formData.dayStartTime, 10),
-      dayEndTime: parseInt(formData.dayEndTime, 10),
+      userConfiguration: {
+        ...formData.userConfiguration,
+        appointmentDuration: parseInt(formData.userConfiguration.appointmentDuration, 10),
+        timeBetweenAppointments: parseInt(formData.userConfiguration.timeBetweenAppointments, 10),
+        dayStartTime: parseInt(formData.userConfiguration.dayStartTime, 10),
+        dayEndTime: parseInt(formData.userConfiguration.dayEndTime, 10),
+      }
     };
 
     const result = await businessConfiguration(parsedFormData);
 
     if (result.success) {
-      console.log(result.data);
+      console.log(result.data, formData);
+      setIsEditing(false);  // Desactiva el modo de edición después de guardar
     } else {
-      console.log(parsedFormData)
       console.error('Error en el registro:', result.message);
     }
   };
@@ -69,5 +106,8 @@ export const useBusinessConfiguration = () => {
     formData,
     handleChange,
     handleSubmit,
+    setFormData,
+    isEditing,
+    setIsEditing,  // Agrega esta línea para permitir la alternancia del modo de edición
   };
 };

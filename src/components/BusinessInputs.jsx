@@ -104,11 +104,11 @@ export const BusinessSettings = ({ formData, handleChange }) => (
       <label>Dias cerrados</label>
       <select
         name="daysOff"
-        value={formData.daysOff.split(';')}
+        value={formData.userConfiguration.daysOff ? formData.userConfiguration.daysOff.split(';') : []}  // Asegúrate de que daysOff no sea null
         onChange={handleChange}
         multiple
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
-        required
+        
       >
         <option value="lunes">Lunes</option>
         <option value="martes">Martes</option>
