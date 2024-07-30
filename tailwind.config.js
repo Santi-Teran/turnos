@@ -12,6 +12,7 @@ module.exports = {
         'arena': '#F5F0DB',
         'light-gray': '#E6EFF5',
         'grayy': '#F5F7FA',
+        'dark-gray': '#1a1a1a'
       },
     },
   },

@@ -1,7 +1,7 @@
 "use client";
 import { handleUser } from "@/app/api/handlers/handleUser";
-import Sidebar from "@/components/Sidebar";
-import TopBar from "@/components/TopBar";
+import Sidebar from "@/components/dashboard/Sidebar";
+import TopBar from "@/components/dashboard/TopBar";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 

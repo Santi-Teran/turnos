@@ -1,8 +1,8 @@
 'use client';
 import { handleUser } from "@/app/api/handlers/handleUser";
-import BusinessForm from "@/components/BusinessForm";
-import Sidebar from "@/components/Sidebar";
-import TopBar from "@/components/TopBar";
+import BusinessForm from "@/components/dashboard/BusinessForm";
+import Sidebar from "@/components/dashboard/Sidebar";
+import TopBar from "@/components/dashboard/TopBar";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });

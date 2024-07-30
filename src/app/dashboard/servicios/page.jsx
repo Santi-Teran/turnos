@@ -1,8 +1,8 @@
 'use client'
-import ServiceForm from '@/components/ServiceForm';
-import ServiceDetail from '@/components/ServiceDetail';
-import Sidebar from "@/components/Sidebar";
-import TopBar from "@/components/TopBar";
+import ServiceForm from '@/components/dashboard/ServiceForm';
+import ServiceDetail from '@/components/dashboard/ServiceDetail';
+import Sidebar from "@/components/dashboard/Sidebar";
+import TopBar from "@/components/dashboard/TopBar";
 import { useServiceConfiguration } from '@/app/api/handlers/handleServices';
 import { Inter } from "next/font/google";
 import { handleUser } from '@/app/api/handlers/handleUser';
