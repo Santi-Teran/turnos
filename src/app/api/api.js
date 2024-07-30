@@ -32,17 +32,8 @@ export const loginUser = async (formData) => {
 };
 
 export const getUserInfo = async (userId) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    return { success: false, message: 'Token no disponible' };
-  }
-
   try {
-    const response = await axios.get(`${API_URL}/Users/${userId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(`${API_URL}/Users/${userId}`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, message: error.response ? error.response.statusText : error.message };
@@ -51,11 +42,8 @@ export const getUserInfo = async (userId) => {
 
 // Services CRUD
 export const getServices = async (userId) => {
-  const token = localStorage.getItem('token');
   try {
-    const response = await axios.get(`${API_URL}/Services/${userId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const response = await axios.get(`${API_URL}/Services/${userId}`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, message: error.response ? error.response.statusText : error.message };
@@ -63,11 +51,8 @@ export const getServices = async (userId) => {
 };
 
 export const getService = async (serviceId) => {
-  const token = localStorage.getItem('token');
   try {
-    const response = await axios.get(`${API_URL}/Services/get/${serviceId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const response = await axios.get(`${API_URL}/Services/get/${serviceId}`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, message: error.response ? error.response.statusText : error.message };
