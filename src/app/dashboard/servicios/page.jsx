@@ -17,7 +17,7 @@ const ServicePage = () => {
   return (
     <div className={`${inter.className} flex text-dark-blue`}>
       <Sidebar />
-      <div className='bg-grayy'>
+      <div className='bg-grayy w-5/6'>
         <TopBar />
         <div className="p-4">
           <div className="flex flex-col items-center gap-8">
