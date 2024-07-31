@@ -4,7 +4,7 @@ import { FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 
 const ServiceDetail = ({ services, handleUpdate, handleDelete }) => {
   const [editingId, setEditingId] = useState(null);
-  const [editedService, setEditedService] = useState({ id: '', name: '', price: '', isActive: true });
+  const [editedService, setEditedService] = useState({ id: '', name: '', price: '', description: '', overlapNumber: '', isActive: true });
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -21,15 +21,15 @@ const ServiceDetail = ({ services, handleUpdate, handleDelete }) => {
 
   const cancelEditing = () => {
     setEditingId(null);
-    setEditedService({ id: '', name: '', price: '', isActive: true });
+    setEditedService({ id: '', name: '', price: '', description: '', overlapNumber: '', isActive: true });
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     await handleUpdate(editedService);
     setEditingId(null);
-    setEditedService({ id: '', name: '', price: '', isActive: true });
-  };
+    setEditedService({ id: '', name: '', price: '', description: '', overlapNumber: '', isActive: true });
+  };  
 
   return (
     <div className="p-4 border rounded shadow-lg bg-white w-full">
@@ -38,9 +38,11 @@ const ServiceDetail = ({ services, handleUpdate, handleDelete }) => {
         <thead>
           <tr className='bg-gray-200 text-gray-600 uppercase text-sm leading-normal'>
             <th className="py-3 px-6 text-left">Nombre</th>
-            <th className="py-3 px-6 text-left">Precio</th>
-            <th className="py-3 px-6 text-left">Activo</th>
-            <th className="py-3 px-6 text-left">Acciones</th>
+            <th className="py-3 px-6 text-left">Descripcion</th>
+            <th className="py-3 px-6 text-center">Precio</th>
+            <th className="py-3 px-6 text-center">Turnos a la vez</th>
+            <th className="py-3 px-6 text-center">Activo</th>
+            <th className="py-3 px-6 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody className='text-gray-600 text-sm font-light'>
@@ -59,7 +61,20 @@ const ServiceDetail = ({ services, handleUpdate, handleDelete }) => {
                   service.name
                 )}
               </td>
-              <td className="py-3 px-6 text-left">
+              <td className="py-3 px-6 text-left w-2/6">
+                {editingId === service.id ? (
+                  <textarea
+                    type="text"
+                    name="description"
+                    value={editedService.description}
+                    onChange={handleEditChange}
+                    className="w-full h-32 px-2 py-1 border rounded"
+                  />
+                ) : (
+                  service.description
+                )}
+              </td>
+              <td className="py-3 px-6 text-center">
                 {editingId === service.id ? (
                   <input
                     type="number"
@@ -72,7 +87,20 @@ const ServiceDetail = ({ services, handleUpdate, handleDelete }) => {
                   service.price
                 )}
               </td>
-              <td className="py-3 px-6 text-left">
+              <td className="py-3 px-6 text-center">
+                {editingId === service.id ? (
+                  <input
+                    type="number"
+                    name="overlapNumber"
+                    value={editedService.overlapNumber}
+                    onChange={handleEditChange}
+                    className="w-full px-2 py-1 border rounded"
+                  />
+                ) : (
+                  service.overlapNumber
+                )}
+              </td>
+              <td className="py-3 px-6 text-center">
                 {editingId === service.id ? (
                   <select
                     name="isActive"

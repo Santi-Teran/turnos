@@ -4,7 +4,6 @@ import { registerUser } from '../api';
 
 export const useRegister = () => {
   const [formData, setFormData] = useState({
-    id: '',
     name: '',
     email: '',
     address: '',

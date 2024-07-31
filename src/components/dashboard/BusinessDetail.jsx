@@ -3,6 +3,8 @@ import { BusinessDescriptionInput, BusinessHours, BusinessNameInput, BusinessSet
 import Link from "next/link";
 
 const BusinessDetail = ({ formData, setIsEditing }) => {
+  const userConfig = formData.userConfiguration || {};
+
   return (
     <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue w-full m-10">
       <ul className="flex gap-10">
@@ -10,13 +12,15 @@ const BusinessDetail = ({ formData, setIsEditing }) => {
         <Link href='/dashboard/negocio/preferencias' >Preferencias</Link >
       </ul>
       <div className="flex gap-20">
-        <Image
-          src={formData.userConfiguration.logoData}
-          alt="Logo"
-          width={100}
-          height={100}
-          className="h-fit"
-        />
+        {userConfig.logoData && (
+          <Image
+            src={userConfig.logoData}
+            alt="Logo"
+            width={100}
+            height={100}
+            className="h-fit"
+          />
+        )}
         <div className="flex gap-20">
           <div className="w-1/2">
             <BusinessNameInput formData={formData} />

@@ -7,6 +7,8 @@ export const useServiceConfiguration = (initialUserData) => {
     userId: initialUserData.id,
     name: '',
     price: '',
+    description: '',
+    overlapNumber: '',
     isActive: true,
   });
 
@@ -37,17 +39,19 @@ export const useServiceConfiguration = (initialUserData) => {
     const dataToSend = {
       ...formData,
       userId: initialUserData.id,
+      price: parseFloat(formData.price, 10),
+      overlapNumber: parseInt(formData.overlapNumber, 10),
     };
-
-    console.log('Submitting service with data:', dataToSend);
-
+  
     const result = await createService(dataToSend);
-
+  
     if (result.success) {
       setFormData({
         userId: initialUserData.id,
         name: '',
         price: '',
+        description: '',
+        overlapNumber: '',
         isActive: true,
       });
       const servicesResult = await getServices(initialUserData.id);
@@ -55,12 +59,19 @@ export const useServiceConfiguration = (initialUserData) => {
         setServices(servicesResult.data);
       }
     } else {
+      console.log(dataToSend);
       console.log('Error in service submission:', result.message);
     }
-  };
+  };  
 
   const handleUpdate = async (editedService) => {
-    const result = await updateService(editedService);
+    const dataToSend = {
+      ...editedService,
+      price: parseFloat(editedService.price, 10),
+      overlapNumber: parseInt(editedService.overlapNumber, 10),
+    };
+  
+    const result = await updateService(dataToSend);
     if (result.success) {
       const servicesResult = await getServices(initialUserData.id);
       if (servicesResult.success) {
@@ -69,7 +80,7 @@ export const useServiceConfiguration = (initialUserData) => {
     } else {
       console.error('Error updating service:', result.message);
     }
-  };
+  };  
 
   const handleDelete = async (serviceId) => {
     const result = await deleteService(serviceId);

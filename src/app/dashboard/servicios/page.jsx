@@ -17,10 +17,10 @@ const ServicePage = () => {
   return (
     <div className={`${inter.className} flex text-dark-blue`}>
       <Sidebar />
-      <div className='bg-grayy w-5/6'>
+      <div className='bg-grayy'>
         <TopBar />
         <div className="p-4">
-          <div className="flex gap-8">
+          <div className="flex flex-col items-center gap-8">
             <ServiceForm
               formData={formData}
               handleChange={handleChange}
