@@ -1,6 +1,6 @@
-'use client';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
+"use client";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 
 export const BusinessNameInput = ({ formData, handleChange }) => {
@@ -16,6 +16,63 @@ export const BusinessNameInput = ({ formData, handleChange }) => {
         placeholder="Nombre del negocio"
         onChange={handleChange}
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        required
+      />
+    </div>
+  );
+};
+
+export const BusinessMisionInput = ({ formData, handleChange }) => {
+  const userConfig = formData.userConfiguration || {};
+
+  return (
+    <div className="flex flex-col w-full gap-2">
+      <label>Mision</label>
+      <textarea
+        type="text"
+        name="mision"
+        defaultValue={userConfig.mision || ""}
+        placeholder="Mision"
+        onChange={handleChange}
+        className="bg-transparent h-40 border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        required
+      />
+    </div>
+  );
+};
+
+export const BusinessVisionInput = ({ formData, handleChange }) => {
+  const userConfig = formData.userConfiguration || {};
+
+  return (
+    <div className="flex flex-col w-full gap-2">
+      <label>Vision</label>
+      <textarea
+        type="text"
+        name="vision"
+        defaultValue={userConfig.vision || ""}
+        placeholder="Vision"
+        onChange={handleChange}
+        className="bg-transparent h-40 border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        required
+      />
+    </div>
+  );
+};
+
+export const BusinessHistoryInput = ({ formData, handleChange }) => {
+  const userConfig = formData.userConfiguration || {};
+
+  return (
+    <div className="flex flex-col w-full gap-2">
+      <label>Historia</label>
+      <textarea
+        type="text"
+        name="history"
+        defaultValue={userConfig.history || ""}
+        placeholder="Historia"
+        onChange={handleChange}
+        className="bg-transparent h-40 border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
         required
       />
     </div>
@@ -38,7 +95,10 @@ export const BusinessLogoInput = ({ formData, handleChange }) => {
 
     reader.onloadend = () => {
       setLogo(reader.result);
-      handleChange({ ...e, target: { ...e.target, name: 'logoData', value: reader.result } });
+      handleChange({
+        ...e,
+        target: { ...e.target, name: "logoData", value: reader.result },
+      });
     };
 
     if (file) {
@@ -100,30 +160,58 @@ export const BusinessHours = ({ formData, handleChange }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col gap-2 w-1/2">
-        <label>Horario de Apertura</label>
-        <input
-          type="number"
-          name="dayStartTime"
-          defaultValue={userConfig.dayStartTime || ""}
-          onChange={handleChange}
-          placeholder="Hora de apertura (HH)"
-          className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
-          required
-        />
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-2 justify-center">
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Horario de Apertura</label>
+          <input
+            type="number"
+            name="dayStartTime"
+            defaultValue={userConfig.dayStartTime || ""}
+            onChange={handleChange}
+            placeholder="Hora de apertura (HH)"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Horario de Cierre</label>
+          <input
+            type="number"
+            name="dayEndTime"
+            defaultValue={userConfig.dayEndTime || ""}
+            onChange={handleChange}
+            placeholder="Hora de cierre (HH)"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
       </div>
-      <div className="flex flex-col gap-2 w-1/2">
-        <label>Horario de Cierre</label>
-        <input
-          type="number"
-          name="dayEndTime"
-          defaultValue={userConfig.dayEndTime || ""}
-          onChange={handleChange}
-          placeholder="Hora de cierre (HH)"
-          className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
-          required
-        />
+      <div className="flex gap-2 justify-center">
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Inicio del descanso</label>
+          <input
+            type="number"
+            name="breakStartHour"
+            defaultValue={userConfig.breakStartHour || ""}
+            onChange={handleChange}
+            placeholder="Inicio del descanso (HH)"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Duracion del descanso</label>
+          <input
+            type="number"
+            name="breakDuration"
+            defaultValue={userConfig.breakDuration || ""}
+            onChange={handleChange}
+            placeholder="Duracion del descanso (HH)"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
       </div>
     </div>
   );
@@ -158,24 +246,31 @@ export const BusinessSettings = ({ formData, handleChange }) => {
           required
         />
       </div>
-      <div className="flex flex-col gap-2">
-        <label>Dias cerrados</label>
-        <select
-          name="daysOff"
-          defaultValue={userConfig.daysOff ? userConfig.daysOff.split(';') : []}
-          onChange={handleChange}
-          multiple
-          className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
-        >
-          <option value="lunes">Lunes</option>
-          <option value="martes">Martes</option>
-          <option value="miércoles">Miércoles</option>
-          <option value="jueves">Jueves</option>
-          <option value="viernes">Viernes</option>
-          <option value="sábado">Sábado</option>
-          <option value="domingo">Domingo</option>
-        </select>
-      </div>
+    </div>
+  );
+};
+
+export const BusinessDays = ({ formData, handleChange }) => {
+  const userConfig = formData.userConfiguration || {};
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label>Dias cerrados</label>
+      <select
+        name="daysOff"
+        defaultValue={userConfig.daysOff ? userConfig.daysOff.split(";") : []}
+        onChange={handleChange}
+        multiple
+        className="bg-transparent h-40 overflow-hidden border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+      >
+        <option value="lunes">Lunes</option>
+        <option value="martes">Martes</option>
+        <option value="miércoles">Miércoles</option>
+        <option value="jueves">Jueves</option>
+        <option value="viernes">Viernes</option>
+        <option value="sábado">Sábado</option>
+        <option value="domingo">Domingo</option>
+      </select>
       <div className="flex flex-col gap-2">
         <label>Turnos fijos</label>
         <label className="flex gap-2">
@@ -193,4 +288,63 @@ export const BusinessSettings = ({ formData, handleChange }) => {
   );
 };
 
-export default BusinessSettings;
+export const BusinessPreferences = ({ formData, handleChange }) => {
+  const userConfig = formData.userConfiguration || {};
+
+  return (
+    <div className="flex flex-col gap-10">
+      <div className="flex gap-20 justify-center">
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Moneda</label>
+          <input
+            type="text"
+            name="currency"
+            defaultValue={userConfig.currency || ""}
+            onChange={handleChange}
+            placeholder="Moneda"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Lenguaje</label>
+          <input
+            type="text"
+            name="language"
+            defaultValue={userConfig.language || ""}
+            onChange={handleChange}
+            placeholder="Lenguaje"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
+      </div>
+      <div className="flex gap-20 justify-center">
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>WhatsApp</label>
+          <input
+            type="string"
+            name="phone"
+            defaultValue={userConfig.phone || ""}
+            onChange={handleChange}
+            placeholder="WhatsApp"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-2 w-1/2">
+          <label>Instagram</label>
+          <input
+            type="text"
+            name="instagramLink"
+            defaultValue={userConfig.instagramLink || ""}
+            onChange={handleChange}
+            placeholder="Instagram"
+            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            required
+          />
+        </div>
+      </div>
+    </div>
+  )
+};

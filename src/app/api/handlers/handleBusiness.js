@@ -13,11 +13,19 @@ export const useBusinessConfiguration = (initialUserData) => {
       logoData: '',
       currency: '',
       language: '',
+      instagramLink: '',
+      phone: '',
+      mision: '',
+      vision: '',
+      history: '',
       appointmentDuration: '',
       timeBetweenAppointments: '',
       dayStartTime: '',
       dayEndTime: '',
+      breakStartHour: '',
+      breakDuration: '',
       daysOff: '',
+      dailySchedules: null,
       fixedAppointmentsAvailable: true,
     }
   });
@@ -89,6 +97,8 @@ export const useBusinessConfiguration = (initialUserData) => {
         timeBetweenAppointments: parseInt(formData.userConfiguration.timeBetweenAppointments, 10),
         dayStartTime: parseInt(formData.userConfiguration.dayStartTime, 10),
         dayEndTime: parseInt(formData.userConfiguration.dayEndTime, 10),
+        breakStartHour: parseInt(formData.userConfiguration.breakStartHour, 10),
+        breakDuration: parseInt(formData.userConfiguration.breakDuration, 10)
       }
     };
 
@@ -96,7 +106,7 @@ export const useBusinessConfiguration = (initialUserData) => {
 
     if (result.success) {
       console.log(result.data, formData);
-      setIsEditing(false);  // Desactiva el modo de edición después de guardar
+      setIsEditing(false);
     } else {
       console.error('Error en el registro:', result.message);
     }
@@ -108,6 +118,6 @@ export const useBusinessConfiguration = (initialUserData) => {
     handleSubmit,
     setFormData,
     isEditing,
-    setIsEditing,  // Agrega esta línea para permitir la alternancia del modo de edición
+    setIsEditing,
   };
 };

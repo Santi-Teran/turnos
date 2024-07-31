@@ -1,27 +1,26 @@
 import { useBusinessConfiguration } from "@/app/api/handlers/handleBusiness";
-import { BusinessDescriptionInput, BusinessHours, BusinessLogoInput, BusinessNameInput, BusinessSettings } from "./BusinessInputs";
-import BusinessDetail from "./BusinessDetail";
+import { BusinessDescriptionInput, BusinessHistoryInput, BusinessHours, BusinessLogoInput, BusinessMisionInput, BusinessNameInput, BusinessSettings, BusinessVisionInput } from "./BusinessInputs";
+import BusinessGeneralDetail from "./BusinessGeneralDetail";
 
-const BusinessForm = ({ initialData }) => {
+const BusinessGeneralForm = ({ initialData }) => {
   const { formData, handleChange, handleSubmit, isEditing, setIsEditing } = useBusinessConfiguration(initialData);
 
   return (
     <div className="flex justify-center items-center">
       {isEditing ? (
-        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg w-full m-10">
-          <h1 className='font-black'>Configurar Negocio</h1>
-          <div className="flex gap-20">
-            <div className="flex flex-col items-center">
-              <BusinessLogoInput formData={formData} handleChange={handleChange} />
-            </div>
-            <div className="flex gap-20">
-              <div className="w-1/2">
+        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg w-fit m-10">
+          <h1 className='font-black'>Configurar</h1>
+          <div className="flex gap-10">
+            <BusinessLogoInput formData={formData} handleChange={handleChange} />
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-8">
                 <BusinessNameInput formData={formData} handleChange={handleChange} />
                 <BusinessDescriptionInput formData={formData} handleChange={handleChange} />
-                <BusinessHours formData={formData} handleChange={handleChange} />
               </div>
-              <div className="w-1/2">
-                <BusinessSettings formData={formData} handleChange={handleChange} />
+              <div className="flex gap-5">
+                <BusinessMisionInput formData={formData} handleChange={handleChange} />
+                <BusinessVisionInput formData={formData} handleChange={handleChange} />
+                <BusinessHistoryInput formData={formData} handleChange={handleChange} />
               </div>
             </div>
           </div>
@@ -38,7 +37,7 @@ const BusinessForm = ({ initialData }) => {
           </div>
         </form>
       ) : (
-        <BusinessDetail 
+        <BusinessGeneralDetail 
           formData={formData} 
           handleChange={handleChange} 
           setIsEditing={setIsEditing} 
@@ -48,4 +47,4 @@ const BusinessForm = ({ initialData }) => {
   );
 };
 
-export default BusinessForm;
+export default BusinessGeneralForm;

@@ -1,13 +1,13 @@
 'use client';
 import { handleUser } from "@/app/api/handlers/handleUser";
-import BusinessGeneralForm from "@/components/dashboard/BusinessGeneralForm";
+import BusinessTurnosForm from "@/components/dashboard/BusinessTurnosForm";
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const BusinessPage = () => {
+const TurnosPage = () => {
   const { userInfo, loading, error } = handleUser();
 
   if (loading) return <div>Cargando...</div>;
@@ -19,11 +19,11 @@ const BusinessPage = () => {
       <div className='bg-grayy w-5/6'>
         <TopBar />
         <div>
-          <BusinessGeneralForm initialData={userInfo} />
+          <BusinessTurnosForm initialData={userInfo} />
         </div>
       </div>
     </div>
   )
 }
 
-export default BusinessPage;
+export default TurnosPage;
