@@ -12,11 +12,7 @@ const BusinessForm = ({ initialData }) => {
           <h1 className='font-black'>Configurar Negocio</h1>
           <div className="flex gap-20">
             <div className="flex flex-col items-center">
-              {formData.userConfiguration.logoData ? (
-                <BusinessLogoInput formData={formData} handleChange={handleChange} />
-              ) : (
-                <BusinessLogoInput formData={formData} handleChange={handleChange} />
-              )}
+              <BusinessLogoInput formData={formData} handleChange={handleChange} />
             </div>
             <div className="flex gap-20">
               <div className="w-1/2">

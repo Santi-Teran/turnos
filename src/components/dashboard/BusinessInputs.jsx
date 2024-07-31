@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { MdEdit } from "react-icons/md";
 
@@ -8,7 +9,7 @@ export const BusinessNameInput = ({ formData, handleChange }) => (
     <input
       type="text"
       name="businessName"
-      value={formData.userConfiguration.businessName}
+      defaultValue={formData.userConfiguration.businessName}
       placeholder={formData.userConfiguration.businessName ? formData.userConfiguration.businessName : "Nombre del negocio"}
       onChange={handleChange}
       className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
@@ -32,7 +33,7 @@ export const BusinessLogoInput = ({ formData, handleChange }) => {
 
     reader.onloadend = () => {
       setLogo(reader.result);
-      handleChange({ ...e, target: { ...e.target, value: reader.result } });
+      handleChange({ ...e, target: { ...e.target, name: 'logoData', value: reader.result } });
     };
 
     if (file) {
@@ -55,15 +56,17 @@ export const BusinessLogoInput = ({ formData, handleChange }) => {
       >
         {logo ? (
           <div>
-          <img
-            src={logo}
-            alt="Logo"
-            className="rounded-full w-full h-full object-cover"
-          />
-          <MdEdit className="bg-blue-600 text-white rounded-full p-1 text-2xl absolute right-0 bottom-2" />
+            <Image
+              src={logo}
+              alt="Logo"
+              width={10}
+              height={10}
+              className="rounded-full w-full h-full object-cover"
+            />
+            <MdEdit className="bg-blue-600 text-white rounded-full p-1 text-2xl absolute right-0 bottom-2" />
           </div>
         ) : (
-          <div>a</div>
+          <div className="text-center">Subir Logo</div>
         )}
       </label>
     </div>
@@ -75,7 +78,7 @@ export const BusinessDescriptionInput = ({ formData, handleChange }) => (
     <label>Descripcion del negocio</label>
     <textarea
       name="description"
-      value={formData.userConfiguration.description}
+      defaultValue={formData.userConfiguration.description}
       placeholder={formData.userConfiguration.description ? formData.userConfiguration.description : "Descripcion"}
       onChange={handleChange}
       className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
@@ -91,7 +94,7 @@ export const BusinessHours = ({ formData, handleChange }) => (
       <input
         type="number"
         name="dayStartTime"
-        value={formData.userConfiguration.dayStartTime}
+        defaultValue={formData.userConfiguration.dayStartTime}
         onChange={handleChange}
         placeholder="Hora de apertura (HH)"
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
@@ -103,7 +106,7 @@ export const BusinessHours = ({ formData, handleChange }) => (
       <input
         type="number"
         name="dayEndTime"
-        value={formData.userConfiguration.dayEndTime}
+        defaultValue={formData.userConfiguration.dayEndTime}
         onChange={handleChange}
         placeholder="Hora de cierre (HH)"
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
@@ -120,7 +123,7 @@ export const BusinessSettings = ({ formData, handleChange }) => (
       <input
         type="number"
         name="appointmentDuration"
-        value={formData.userConfiguration.appointmentDuration}
+        defaultValue={formData.userConfiguration.appointmentDuration}
         onChange={handleChange}
         placeholder="Duracion del turno"
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
@@ -132,7 +135,7 @@ export const BusinessSettings = ({ formData, handleChange }) => (
       <input
         type="number"
         name="timeBetweenAppointments"
-        value={formData.userConfiguration.timeBetweenAppointments}
+        defaultValue={formData.userConfiguration.timeBetweenAppointments}
         onChange={handleChange}
         placeholder="Tiempo entre turnos"
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
@@ -143,7 +146,7 @@ export const BusinessSettings = ({ formData, handleChange }) => (
       <label>Dias cerrados</label>
       <select
         name="daysOff"
-        value={formData.userConfiguration.daysOff ? formData.userConfiguration.daysOff.split(';') : []}
+        defaultValue={formData.userConfiguration.daysOff ? formData.userConfiguration.daysOff.split(';') : []}
         onChange={handleChange}
         multiple
         className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
@@ -163,7 +166,7 @@ export const BusinessSettings = ({ formData, handleChange }) => (
         <input
           type="checkbox"
           name="fixedAppointmentsAvailable"
-          checked={formData.userConfiguration.fixedAppointmentsAvailable}
+          defaultChecked={formData.userConfiguration.fixedAppointmentsAvailable}
           onChange={handleChange}
           className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
         />
