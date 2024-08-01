@@ -11,7 +11,7 @@ const BusinessPreferencesForm = ({ initialData }) => {
         <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg w-fit m-10">
           <h1 className='font-black'>Configurar</h1>
           <div className="flex gap-10">
-            <BusinessPreferences formData={formData} handleChange={handleChange} />
+            <BusinessPreferences formData={formData} handleChange={handleChange} isEditing={isEditing} />
           </div>
           <div className="flex justify-end gap-2">
             <button type="submit" className='text-lg bg-dark-blue text-arena font-black px-6 py-2 rounded-lg'>

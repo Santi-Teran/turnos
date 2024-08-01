@@ -3,83 +3,87 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 
-export const BusinessNameInput = ({ formData, handleChange }) => {
+export const BusinessNameInput = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <label>Nombre del negocio</label>
+      <label className="font-semibold">Nombre del negocio</label>
       <input
         type="text"
         name="businessName"
         defaultValue={userConfig.businessName || ""}
         placeholder="Nombre del negocio"
         onChange={handleChange}
-        className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        className="bg-transparent border-2 p-2 rounded-lg  text-black"
+        readOnly={!isEditing}
         required
       />
     </div>
   );
 };
 
-export const BusinessMisionInput = ({ formData, handleChange }) => {
+export const BusinessMisionInput = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <label>Mision</label>
+      <label className="font-semibold">Mision</label>
       <textarea
         type="text"
         name="mision"
         defaultValue={userConfig.mision || ""}
         placeholder="Mision"
         onChange={handleChange}
-        className="bg-transparent h-40 border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        className="bg-transparent h-40 border-2 p-2 rounded-lg  text-black"
+        readOnly={!isEditing}
         required
       />
     </div>
   );
 };
 
-export const BusinessVisionInput = ({ formData, handleChange }) => {
+export const BusinessVisionInput = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <label>Vision</label>
+      <label className="font-semibold">Vision</label>
       <textarea
         type="text"
         name="vision"
         defaultValue={userConfig.vision || ""}
         placeholder="Vision"
         onChange={handleChange}
-        className="bg-transparent h-40 border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        className="bg-transparent h-40 border-2 p-2 rounded-lg  text-black"
+        readOnly={!isEditing}
         required
       />
     </div>
   );
 };
 
-export const BusinessHistoryInput = ({ formData, handleChange }) => {
+export const BusinessHistoryInput = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <label>Historia</label>
+      <label className="font-semibold">Historia</label>
       <textarea
         type="text"
         name="history"
         defaultValue={userConfig.history || ""}
         placeholder="Historia"
         onChange={handleChange}
-        className="bg-transparent h-40 border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        className="bg-transparent h-40 border-2 p-2 rounded-lg  text-black"
+        readOnly={!isEditing}
         required
       />
     </div>
   );
 };
 
-export const BusinessLogoInput = ({ formData, handleChange }) => {
+export const BusinessLogoInput = ({ formData, handleChange, isEditing }) => {
   const [logo, setLogo] = useState(null);
   const userConfig = formData.userConfiguration || {};
 
@@ -138,77 +142,82 @@ export const BusinessLogoInput = ({ formData, handleChange }) => {
   );
 };
 
-export const BusinessDescriptionInput = ({ formData, handleChange }) => {
+export const BusinessDescriptionInput = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col gap-2">
-      <label>Descripcion del negocio</label>
+      <label className="font-semibold">Descripcion del negocio</label>
       <textarea
         name="description"
         defaultValue={userConfig.description || ""}
         placeholder="Descripcion"
         onChange={handleChange}
-        className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+        className="bg-transparent border-2 p-2 rounded-lg  text-black"
+        readOnly={!isEditing}
         required
       />
     </div>
   );
 };
 
-export const BusinessHours = ({ formData, handleChange }) => {
+export const BusinessHours = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-2 justify-center">
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Horario de Apertura</label>
+          <label className="font-semibold">Horario de Apertura</label>
           <input
             type="number"
             name="dayStartTime"
             defaultValue={userConfig.dayStartTime || ""}
             onChange={handleChange}
             placeholder="Hora de apertura (HH)"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Horario de Cierre</label>
+          <label className="font-semibold">Horario de Cierre</label>
           <input
             type="number"
             name="dayEndTime"
             defaultValue={userConfig.dayEndTime || ""}
             onChange={handleChange}
             placeholder="Hora de cierre (HH)"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
       </div>
       <div className="flex gap-2 justify-center">
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Inicio del descanso</label>
+          <label className="font-semibold">Inicio del descanso</label>
           <input
             type="number"
             name="breakStartHour"
             defaultValue={userConfig.breakStartHour || ""}
             onChange={handleChange}
             placeholder="Inicio del descanso (HH)"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Duracion del descanso</label>
+          <label className="font-semibold">Duracion del descanso</label>
           <input
             type="number"
             name="breakDuration"
             defaultValue={userConfig.breakDuration || ""}
             onChange={handleChange}
             placeholder="Duracion del descanso (HH)"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
@@ -217,32 +226,34 @@ export const BusinessHours = ({ formData, handleChange }) => {
   );
 };
 
-export const BusinessSettings = ({ formData, handleChange }) => {
+export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <label>Duracion del turno (minutos)</label>
+        <label className="font-semibold">Duracion del turno (minutos)</label>
         <input
           type="number"
           name="appointmentDuration"
           defaultValue={userConfig.appointmentDuration || ""}
           onChange={handleChange}
           placeholder="Duracion del turno"
-          className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+          className="bg-transparent border-2 p-2 rounded-lg"
+          readOnly={!isEditing}
           required
         />
       </div>
       <div className="flex flex-col gap-2">
-        <label>Tiempo entre turnos (minutos)</label>
+        <label className="font-semibold">Tiempo entre turnos (minutos)</label>
         <input
           type="number"
           name="timeBetweenAppointments"
           defaultValue={userConfig.timeBetweenAppointments || ""}
           onChange={handleChange}
           placeholder="Tiempo entre turnos"
-          className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+          className="bg-transparent border-2 p-2 rounded-lg"
+          readOnly={!isEditing}
           required
         />
       </div>
@@ -250,18 +261,19 @@ export const BusinessSettings = ({ formData, handleChange }) => {
   );
 };
 
-export const BusinessDays = ({ formData, handleChange }) => {
+export const BusinessDays = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col gap-2">
-      <label>Dias cerrados</label>
+      <label className="font-semibold">Dias cerrados</label>
       <select
         name="daysOff"
         defaultValue={userConfig.daysOff ? userConfig.daysOff.split(";") : []}
         onChange={handleChange}
         multiple
-        className="bg-transparent h-40 overflow-hidden border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+        className="bg-transparent h-40 overflow-hidden border-2 p-2 rounded-lg"
+        readOnly={!isEditing}
       >
         <option value="lunes">Lunes</option>
         <option value="martes">Martes</option>
@@ -272,14 +284,15 @@ export const BusinessDays = ({ formData, handleChange }) => {
         <option value="domingo">Domingo</option>
       </select>
       <div className="flex flex-col gap-2">
-        <label>Turnos fijos</label>
+        <label className="font-semibold">Turnos fijos</label>
         <label className="flex gap-2">
           <input
             type="checkbox"
             name="fixedAppointmentsAvailable"
             defaultChecked={!!userConfig.fixedAppointmentsAvailable}
             onChange={handleChange}
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
           />
           Sí
         </label>
@@ -288,59 +301,63 @@ export const BusinessDays = ({ formData, handleChange }) => {
   );
 };
 
-export const BusinessPreferences = ({ formData, handleChange }) => {
+export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
     <div className="flex flex-col gap-10">
       <div className="flex gap-20 justify-center">
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Moneda</label>
+          <label className="font-semibold">Moneda</label>
           <input
             type="text"
             name="currency"
             defaultValue={userConfig.currency || ""}
             onChange={handleChange}
             placeholder="Moneda"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Lenguaje</label>
+          <label className="font-semibold">Lenguaje</label>
           <input
             type="text"
             name="language"
             defaultValue={userConfig.language || ""}
             onChange={handleChange}
             placeholder="Lenguaje"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
       </div>
       <div className="flex gap-20 justify-center">
         <div className="flex flex-col gap-2 w-1/2">
-          <label>WhatsApp</label>
+          <label className="font-semibold">WhatsApp</label>
           <input
             type="string"
             name="phone"
             defaultValue={userConfig.phone || ""}
             onChange={handleChange}
             placeholder="WhatsApp"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>
         <div className="flex flex-col gap-2 w-1/2">
-          <label>Instagram</label>
+          <label className="font-semibold">Instagram</label>
           <input
             type="text"
             name="instagramLink"
             defaultValue={userConfig.instagramLink || ""}
             onChange={handleChange}
             placeholder="Instagram"
-            className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
             required
           />
         </div>

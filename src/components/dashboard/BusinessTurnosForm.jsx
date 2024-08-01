@@ -13,11 +13,11 @@ const BusinessTurnosForm = ({ initialData }) => {
           <div className="flex gap-10">
             <div className="flex gap-8">
               <div className="flex flex-col gap-8 w-3/5">
-                <BusinessHours formData={formData} handleChange={handleChange} />
-                <BusinessSettings formData={formData} handleChange={handleChange} />
+                <BusinessHours formData={formData} handleChange={handleChange} isEditing={isEditing} />
+                <BusinessSettings formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
               <div className="w-2/5">
-                <BusinessDays formData={formData} handleChange={handleChange} />
+                <BusinessDays formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { useBusinessConfiguration } from "@/app/api/handlers/handleBusiness";
-import { BusinessDescriptionInput, BusinessHistoryInput, BusinessHours, BusinessLogoInput, BusinessMisionInput, BusinessNameInput, BusinessSettings, BusinessVisionInput } from "./BusinessInputs";
+import { BusinessDescriptionInput, BusinessHistoryInput, BusinessLogoInput, BusinessMisionInput, BusinessNameInput, BusinessVisionInput } from "./BusinessInputs";
 import BusinessGeneralDetail from "./BusinessGeneralDetail";
 
 const BusinessGeneralForm = ({ initialData }) => {
@@ -14,13 +14,13 @@ const BusinessGeneralForm = ({ initialData }) => {
             <BusinessLogoInput formData={formData} handleChange={handleChange} />
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-8">
-                <BusinessNameInput formData={formData} handleChange={handleChange} />
-                <BusinessDescriptionInput formData={formData} handleChange={handleChange} />
+                <BusinessNameInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
+                <BusinessDescriptionInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
               <div className="flex gap-5">
-                <BusinessMisionInput formData={formData} handleChange={handleChange} />
-                <BusinessVisionInput formData={formData} handleChange={handleChange} />
-                <BusinessHistoryInput formData={formData} handleChange={handleChange} />
+                <BusinessMisionInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
+                <BusinessVisionInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
+                <BusinessHistoryInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
             </div>
           </div>
