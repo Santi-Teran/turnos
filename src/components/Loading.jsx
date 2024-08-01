@@ -1,7 +1,7 @@
 const Loading = () => {
   return (
     <div className="h-screen flex items-center justify-center">
-      <span class="loader"></span>
+      <span className="loader"></span>
     </div>
   )
 }

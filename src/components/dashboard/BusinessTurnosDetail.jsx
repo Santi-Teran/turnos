@@ -1,14 +1,10 @@
 import { BusinessDays, BusinessHours, BusinessSettings } from "./BusinessInputs";
-import Link from "next/link";
+import BusinessLinks from "./BusinessLinks";
 
 const BusinessTurnosDetail = ({ formData, setIsEditing }) => {
   return (
     <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue w-fit m-10">
-      <ul className="flex gap-10">
-        <Link href='/dashboard/negocio'>General</Link>
-        <Link href='/dashboard/negocio/turnos'>Turnos</Link>
-        <Link href='/dashboard/negocio/preferencias'>Preferencias</Link>
-      </ul>
+      <BusinessLinks />
       <div className="flex gap-10">
         <div className="flex gap-8">
           <div className="flex flex-col gap-8 w-3/5">
