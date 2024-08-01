@@ -19,9 +19,7 @@ const BusinessPage = () => {
       <Sidebar />
       <div className='bg-grayy w-5/6'>
         <TopBar />
-        <div>
-          <BusinessGeneralForm initialData={userInfo} />
-        </div>
+        <BusinessGeneralForm initialData={userInfo} />
       </div>
     </div>
   )

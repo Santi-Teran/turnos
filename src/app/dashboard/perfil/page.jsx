@@ -1,9 +1,27 @@
-import React from 'react'
+'use client';
+import { Inter } from "next/font/google";
+import Sidebar from '@/components/dashboard/Sidebar';
+import TopBar from '@/components/dashboard/TopBar';
+import Loading from "@/components/Loading";
+import { handleUser } from "@/app/api/handlers/handleUser";
+import ProfileForm from "@/components/dashboard/ProfileForm";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const ProfilePage = () => {
+  const { userInfo, loading, error } = handleUser();
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error}</div>;
   return (
-    <div>ProfilePage</div>
-  )
-}
+    <div className={`${inter.className} flex`}>
+      <Sidebar />
+      <div className='bg-grayy w-5/6'>
+        <TopBar />
+        <ProfileForm initialData={userInfo} />
+      </div>
+    </div>
+  );
+};
 
 export default ProfilePage;
