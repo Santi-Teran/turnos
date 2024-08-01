@@ -9,7 +9,6 @@ export const handleUser = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
 
       const result = await getUserInfo(userId);
       if (result.success) {

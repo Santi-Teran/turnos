@@ -7,6 +7,7 @@ import Landing from "@/components/landing negocio/Landing";
 import NavBar from "@/components/landing negocio/NavBar";
 import { getServices, getUserInfo } from '@/app/api/api';
 import Services from '@/components/landing negocio/Services';
+import Loading from '@/components/Loading';
 
 const HomePage = ({ params }) => {
   const [config, setConfig] = useState(null);
@@ -40,9 +41,9 @@ const HomePage = ({ params }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
-console.log(services)
+
   return (
     <div className="flex flex-col gap-32 home">
       <NavBar config={config} />

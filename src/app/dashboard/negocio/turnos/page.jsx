@@ -3,6 +3,7 @@ import { handleUser } from "@/app/api/handlers/handleUser";
 import BusinessTurnosForm from "@/components/dashboard/BusinessTurnosForm";
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
+import Loading from "@/components/Loading";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -10,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 const TurnosPage = () => {
   const { userInfo, loading, error } = handleUser();
 
-  if (loading) return <div>Cargando...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
 
   return (

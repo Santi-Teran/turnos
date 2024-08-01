@@ -6,13 +6,16 @@ import TopBar from "@/components/dashboard/TopBar";
 import { useServiceConfiguration } from '@/app/api/handlers/handleServices';
 import { Inter } from "next/font/google";
 import { handleUser } from '@/app/api/handlers/handleUser';
+import Loading from '@/components/Loading';
 
 const inter = Inter({ subsets: ["latin"] });
 
 const ServicePage = () => {
-  const { userInfo } = handleUser();
-  
+  const { userInfo, loading, error } = handleUser();
   const { services, formData, handleChange, handleSubmit, handleUpdate, handleDelete } = useServiceConfiguration({ id: userInfo?.id });
+
+  if (loading) return <Loading />;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className={`${inter.className} flex text-dark-blue`}>
