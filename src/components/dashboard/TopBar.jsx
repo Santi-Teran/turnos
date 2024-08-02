@@ -1,4 +1,3 @@
-'use client';
 import { usePathname } from 'next/navigation';
 import Loading from '../Loading';
 import { handleUser } from '@/app/api/handlers/handleUser';
@@ -6,10 +5,10 @@ import Image from 'next/image';
 
 const TopBar = () => {
   const { userInfo, loading, error } = handleUser();
+  const pathname = usePathname();
 
   if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
-  const pathname = usePathname();
 
   const formatPathname = (path) => {
     const parts = path.split('/').filter(part => part !== '');
@@ -26,7 +25,8 @@ const TopBar = () => {
           src={userInfo.userConfiguration.logoData}
           alt='Logo'
           width={50}
-          height={0}
+          height={50} // Asegurarse de que ambas dimensiones se establezcan
+          style={{ height: 'auto' }} // Mantener la proporción de aspecto
         />
       </div>
     </div>

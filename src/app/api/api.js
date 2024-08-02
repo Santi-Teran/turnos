@@ -95,3 +95,12 @@ export const deleteService = async (serviceId) => {
     return { success: false, message: error.response ? error.response.statusText : error.message };
   }
 };
+
+export const getAppointments = async (userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Appointments/${userId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
