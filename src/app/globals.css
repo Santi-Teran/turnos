@@ -78,7 +78,7 @@ body {
 
 .custom-event {
   background-color: transparent;
-  border-color: #001022;
+  border-color: transparent;
   margin: 2px;
   cursor: pointer;
   overflow: hidden;
@@ -87,4 +87,26 @@ body {
 .custom-event:hover {
   background-color: #e0e0e0;
   overflow: hidden;
+}
+
+/* En tu archivo CSS */
+@media (max-width: 768px) {
+  .fc .fc-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .fc .fc-toolbar .fc-left,
+  .fc .fc-toolbar .fc-center,
+  .fc .fc-toolbar .fc-right {
+    margin-bottom: 10px;
+  }
+  .fc .fc-header-toolbar {
+    flex-wrap: wrap;
+  }
+  .fc .fc-dayGridMonth-view,
+  .fc .fc-timeGridWeek-view,
+  .fc .fc-timeGridDay-view {
+    width: 100%;
+  }
 }

@@ -8,15 +8,15 @@ const BusinessTurnosForm = ({ initialData }) => {
   return (
     <div className="flex justify-center items-center">
       {isEditing ? (
-        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg w-fit m-10">
+        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg m-8">
           <h1 className='font-black'>Configurar</h1>
           <div className="flex gap-10">
-            <div className="flex gap-8">
-              <div className="flex flex-col gap-8 w-3/5">
+            <div className="flex md:flex-row flex-col gap-8">
+              <div className="flex flex-col gap-8 md:w-3/5">
                 <BusinessHours formData={formData} handleChange={handleChange} isEditing={isEditing} />
                 <BusinessSettings formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
-              <div className="w-2/5">
+              <div className="md:w-2/5">
                 <BusinessDays formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
             </div>

@@ -8,16 +8,16 @@ const BusinessGeneralForm = ({ initialData }) => {
   return (
     <div className="flex justify-center items-center">
       {isEditing ? (
-        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg w-fit m-10">
+        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg m-8">
           <h1 className='font-black'>Configurar</h1>
-          <div className="flex gap-10">
+          <div className="flex md:flex-row flex-col gap-10">
             <BusinessLogoInput formData={formData} handleChange={handleChange} />
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-8">
                 <BusinessNameInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
                 <BusinessDescriptionInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
               </div>
-              <div className="flex gap-5">
+              <div className="flex md:flex-row flex-col gap-5">
                 <BusinessMisionInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
                 <BusinessVisionInput formData={formData} handleChange={handleChange} isEditing={isEditing} />
                 <BusinessHistoryInput formData={formData} handleChange={handleChange} isEditing={isEditing} />

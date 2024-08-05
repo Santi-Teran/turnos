@@ -27,7 +27,7 @@ export const ServiceDescriptionInput = ({ formData, handleChange }) => (
 );
 
 export const ServicePriceInput = ({ formData, handleChange }) => (
-  <div className="flex flex-col gap-1 w-1/2">
+  <div className="flex flex-col gap-1 md:w-1/2">
     <label>Precio</label>
     <input
       type="number"
@@ -41,7 +41,7 @@ export const ServicePriceInput = ({ formData, handleChange }) => (
 );
 
 export const ServiceOverlapInput = ({ formData, handleChange }) => (
-  <div className="flex flex-col gap-1 w-1/2">
+  <div className="flex flex-col gap-1 md:w-1/2">
     <label>Turnos a la vez</label>
     <input
       type="number"

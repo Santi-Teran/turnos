@@ -6,9 +6,9 @@ const BusinessGeneralDetail = ({ formData, setIsEditing }) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
-    <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue w-fit m-10">
+    <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue m-3">
       <BusinessLinks />
-      <div className="flex gap-10">
+      <div className="flex md:flex-row flex-col gap-10">
         {userConfig.logoData && (
           <Image
             src={userConfig.logoData}
@@ -23,7 +23,7 @@ const BusinessGeneralDetail = ({ formData, setIsEditing }) => {
             <BusinessNameInput formData={formData} />
             <BusinessDescriptionInput formData={formData} />
           </div>
-          <div className="flex gap-5">
+          <div className="flex md:flex-row flex-col gap-5">
             <BusinessMisionInput formData={formData} />
             <BusinessVisionInput formData={formData} />
             <BusinessHistoryInput formData={formData} />

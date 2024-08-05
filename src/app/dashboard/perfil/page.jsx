@@ -16,7 +16,7 @@ const ProfilePage = () => {
   return (
     <div className={`${inter.className} flex`}>
       <Sidebar />
-      <div className='bg-grayy w-5/6'>
+      <div className='bg-grayy md:w-5/6'>
         <TopBar />
         <ProfileForm initialData={userInfo} />
       </div>

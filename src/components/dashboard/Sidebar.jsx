@@ -21,15 +21,26 @@ const Sidebar = () => {
   const isActive = (path) => pathname === path;
 
   return (
-    <div className='w-1/6 bg-white text-dark-blue border-r border-light-gray'>
-      <Image src='/mareatech.png' alt="Marea Tech" width={200} height={100} className="mx-auto my-5" priority={true} />
-      <ul className='flex flex-col my-20'>
-        <NavLink href='/dashboard' icon={FaHouse} label='Dashboard' isActive={isActive('/dashboard')} />
-        <NavLink href='/dashboard/negocio' icon={MdOutlineWork} label='Negocio' isActive={isActive('/dashboard/negocio')} />
-        <NavLink href='/dashboard/servicios' icon={MdDesignServices} label='Servicios' isActive={isActive('/dashboard/servicios')} />
-        <NavLink href='/dashboard/perfil' icon={MdPerson} label='Perfil' isActive={isActive('/dashboard/perfil')} />
-      </ul>
-    </div>
+    <>
+      <div className='w-1/6 bg-white text-dark-blue border-r border-light-gray md:flex flex-col hidden'>
+        <Image src='/mareatech.png' alt="Marea Tech" width={200} height={100} className="mx-auto my-5" priority={true} />
+        <ul className='flex flex-col my-20'>
+          <NavLink href='/dashboard' icon={FaHouse} label='Dashboard' isActive={isActive('/dashboard')} />
+          <NavLink href='/dashboard/negocio' icon={MdOutlineWork} label='Negocio' isActive={isActive('/dashboard/negocio')} />
+          <NavLink href='/dashboard/servicios' icon={MdDesignServices} label='Servicios' isActive={isActive('/dashboard/servicios')} />
+          <NavLink href='/dashboard/perfil' icon={MdPerson} label='Perfil' isActive={isActive('/dashboard/perfil')} />
+        </ul>
+      </div>
+
+      <div className='md:hidden fixed bottom-0 left-0 right-0 bg-dark-blue z-10'>
+        <ul className='text-white flex justify-around'>
+          <Link href={'/dashboard'} className='p-4 text-2xl '><FaHouse /></Link>
+          <Link href={'/dashboard/negocio'} className='p-4 text-2xl '><MdOutlineWork /></Link>
+          <Link href={'/dashboard/servicios'} className='p-4 text-2xl '><MdDesignServices /></Link>
+          <Link href={'/dashboard/perfil'} className='p-4 text-2xl '><MdPerson /></Link>
+        </ul>
+      </div>
+    </>
   );
 };
 

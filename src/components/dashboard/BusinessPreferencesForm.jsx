@@ -8,7 +8,7 @@ const BusinessPreferencesForm = ({ initialData }) => {
   return (
     <div className="flex justify-center items-center">
       {isEditing ? (
-        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg w-fit m-10">
+        <form onSubmit={handleSubmit} className="bg-white text-dark-blue flex flex-col gap-8 my-10 p-8 rounded-lg shadow-lg m-8">
           <h1 className='font-black'>Configurar</h1>
           <div className="flex gap-10">
             <BusinessPreferences formData={formData} handleChange={handleChange} isEditing={isEditing} />

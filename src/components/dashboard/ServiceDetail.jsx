@@ -32,7 +32,7 @@ const ServiceDetail = ({ services, handleUpdate, handleDelete }) => {
   };  
 
   return (
-    <div className="p-4 border rounded shadow-lg bg-white w-full">
+    <div className="p-4 border rounded shadow-lg bg-white w-full overflow-x-auto">
       <h2 className="text-xl font-bold mb-4">Lista de Servicios</h2>
       <table className="w-full table-auto">
         <thead>

@@ -20,13 +20,13 @@ const TopBar = () => {
     <div className='bg-white border-b border-grayy text-dark-blue flex justify-between items-center px-10 py-2'>
       <h2 className='text-xl font-bold'>{formatPathname(pathname)}</h2>
       <div className='flex items-center gap-5'>
-        <p>Hola {userInfo.name}!</p>
+        <p className='md:flex hidden'>Hola {userInfo.name}!</p>
         <Image 
           src={userInfo.userConfiguration.logoData}
           alt='Logo'
           width={50}
-          height={50} // Asegurarse de que ambas dimensiones se establezcan
-          style={{ height: 'auto' }} // Mantener la proporción de aspecto
+          height={50}
+          style={{ height: 'auto' }} 
         />
       </div>
     </div>

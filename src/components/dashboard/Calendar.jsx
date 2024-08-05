@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -39,7 +39,7 @@ const CalendarView = ({ appointments, services, userConfiguration }) => {
   };
 
   return (
-    <div className="px-20 py-10 text-dark-blue bg-dark">
+    <div className="px-4 py-4 md:px-20 md:py-10 mb-20 text-dark-blue bg-dark">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -69,6 +69,8 @@ const CalendarView = ({ appointments, services, userConfiguration }) => {
         allDaySlot={false}
         slotEventOverlap={false}
         eventOverlap={false}
+        contentHeight="auto" // Ajustar altura automáticamente
+        aspectRatio={1.5} // Ajustar la relación de aspecto
       />
 
       <Modal

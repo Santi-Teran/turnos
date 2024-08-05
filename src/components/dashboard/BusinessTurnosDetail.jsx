@@ -3,15 +3,15 @@ import BusinessLinks from "./BusinessLinks";
 
 const BusinessTurnosDetail = ({ formData, setIsEditing }) => {
   return (
-    <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue w-fit m-10">
+    <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue m-3">
       <BusinessLinks />
       <div className="flex gap-10">
-        <div className="flex gap-8">
-          <div className="flex flex-col gap-8 w-3/5">
+        <div className="flex md:flex-row flex-col gap-8">
+          <div className="flex flex-col gap-8 md:w-3/5">
             <BusinessHours formData={formData} />
             <BusinessSettings formData={formData} />
           </div>
-          <div className="w-2/5">
+          <div className="md:w-2/5">
             <BusinessDays formData={formData} />
           </div>
         </div>

@@ -166,8 +166,8 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2 justify-center">
-        <div className="flex flex-col gap-2 w-1/2">
+      <div className="flex md:flex-row flex-col gap-2 justify-center">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Horario de Apertura</label>
           <input
             type="number"
@@ -180,7 +180,7 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
             required
           />
         </div>
-        <div className="flex flex-col gap-2 w-1/2">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Horario de Cierre</label>
           <input
             type="number"
@@ -194,8 +194,8 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
           />
         </div>
       </div>
-      <div className="flex gap-2 justify-center">
-        <div className="flex flex-col gap-2 w-1/2">
+      <div className="flex md:flex-row flex-col gap-2 justify-center">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Inicio del descanso</label>
           <input
             type="number"
@@ -208,7 +208,7 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
             required
           />
         </div>
-        <div className="flex flex-col gap-2 w-1/2">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Duracion del descanso</label>
           <input
             type="number"
@@ -306,8 +306,8 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
 
   return (
     <div className="flex flex-col gap-10">
-      <div className="flex gap-20 justify-center">
-        <div className="flex flex-col gap-2 w-1/2">
+      <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Moneda</label>
           <input
             type="text"
@@ -320,7 +320,7 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
             required
           />
         </div>
-        <div className="flex flex-col gap-2 w-1/2">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Lenguaje</label>
           <input
             type="text"
@@ -334,8 +334,8 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
           />
         </div>
       </div>
-      <div className="flex gap-20 justify-center">
-        <div className="flex flex-col gap-2 w-1/2">
+      <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">WhatsApp</label>
           <input
             type="string"
@@ -348,7 +348,7 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
             required
           />
         </div>
-        <div className="flex flex-col gap-2 w-1/2">
+        <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Instagram</label>
           <input
             type="text"

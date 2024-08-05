@@ -8,7 +8,7 @@ const ServiceForm = ({ formData, handleChange, handleSubmit }) => {
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <ServiceNameInput formData={formData} handleChange={handleChange} />
         <ServiceDescriptionInput formData={formData} handleChange={handleChange} />
-        <div className="flex items-center gap-5">
+        <div className="flex md:flex-row flex-col md:items-center gap-5">
           <ServicePriceInput formData={formData} handleChange={handleChange} />
           <ServiceOverlapInput formData={formData} handleChange={handleChange} />
         </div>

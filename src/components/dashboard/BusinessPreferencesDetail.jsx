@@ -3,7 +3,7 @@ import BusinessLinks from "./BusinessLinks";
 
 const BusinessPreferencesDetail = ({ formData, setIsEditing }) => {
   return (
-    <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue w-fit m-10">
+    <div className="flex flex-col gap-8 my-10 p-8 rounded-lg shadow-md bg-white text-dark-blue m-3">
       <BusinessLinks />
       <BusinessPreferences formData={formData} />
       <div className="flex justify-end">
