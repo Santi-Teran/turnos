@@ -104,3 +104,59 @@ export const getAppointments = async (userId) => {
     return { success: false, message: error.response ? error.response.statusText : error.message };
   }
 };
+
+// Holidays CRUD
+export const getHolidays = async (userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Holidays/${userId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const getHoliday = async (holidayId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Holidays/get/${holidayId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const createHoliday = async (data) => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.post(`${API_URL}/Holidays/add`, data, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const updateHoliday = async (data) => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.post(`${API_URL}/Holidays/update`, data, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const deleteHoliday = async (holidayId) => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.delete(`${API_URL}/Holidays/delete`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+      data: { id: holidayId }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
