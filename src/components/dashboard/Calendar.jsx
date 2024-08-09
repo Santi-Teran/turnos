@@ -10,7 +10,7 @@ import 'moment/locale/es';
 
 moment.locale('es');
 
-const CalendarView = ({ appointments, services, userConfiguration }) => {
+const CalendarView = ({ appointments, fixedappointments, services, userConfiguration }) => {
   const { dayStartTime, dayEndTime } = userConfiguration;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -20,13 +20,23 @@ const CalendarView = ({ appointments, services, userConfiguration }) => {
     return map;
   }, {});
 
-  const events = appointments.map(appointment => ({
+  const normalEvents = appointments.map(appointment => ({
     title: `${appointment.client.name} - ${serviceMap[appointment.serviceId] || 'Servicio'}`,
     start: new Date(`${appointment.date}T${appointment.hour}`),
     end: new Date(`${appointment.date}T${appointment.hour}`),
     extendedProps: appointment,
     classNames: ['custom-event'] // Añadir clase personalizada
   }));
+
+  const fixedEvents = fixedappointments.map(fixedappointment => ({
+    title: `${fixedappointment.client.name} - ${serviceMap[fixedappointment.serviceId] || 'Servicio'}`,
+    daysOfWeek: [fixedappointment.day], // Día de la semana (0=Domingo, 1=Lunes, etc.)
+    startTime: fixedappointment.hour, // Hora del día en que comienza
+    extendedProps: fixedappointment,
+    classNames: ['custom-fixed-event'] // Añadir clase personalizada
+  }));
+
+  const allEvents = [...normalEvents, ...fixedEvents];
 
   const handleEventClick = ({ event }) => {
     setSelectedEvent(event.extendedProps);
@@ -48,7 +58,7 @@ const CalendarView = ({ appointments, services, userConfiguration }) => {
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
-        events={events}
+        events={allEvents}
         locale="es"
         firstDay={1}
         slotMinTime={`${dayStartTime}:00`}
@@ -69,8 +79,8 @@ const CalendarView = ({ appointments, services, userConfiguration }) => {
         allDaySlot={false}
         slotEventOverlap={false}
         eventOverlap={false}
-        contentHeight="auto" // Ajustar altura automáticamente
-        aspectRatio={1.5} // Ajustar la relación de aspecto
+        contentHeight="auto"
+        aspectRatio={1.5}
       />
 
       <Modal

@@ -89,6 +89,18 @@ body {
   overflow: hidden;
 }
 
+.custom-fixed-event {
+  border-color: transparent;
+  margin: 2px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.custom-fixed-event:hover {
+  background-color: #79c1e2;
+  overflow: hidden;
+}
+
 /* En tu archivo CSS */
 @media (max-width: 768px) {
   .fc .fc-toolbar {

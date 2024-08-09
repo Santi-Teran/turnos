@@ -17,6 +17,7 @@ const DashboardPage = () => {
   if (userError || appointmentsError) return <div>Error: {userError || appointmentsError}</div>;
 
   const appointmentList = appointments.appointments;
+  const fixedAppointmentList = appointments.fixedAppointments;
 
   return (
     <div className={`${inter.className} flex`}>
@@ -24,7 +25,8 @@ const DashboardPage = () => {
       <div className='bg-grayy md:w-5/6'>
         <TopBar />
         <CalendarView 
-          appointments={appointmentList} 
+          appointments={appointmentList}
+          fixedappointments={fixedAppointmentList}
           services={services} 
           userConfiguration={userInfo?.userConfiguration} 
         />
