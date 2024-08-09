@@ -105,6 +105,15 @@ export const getAppointments = async (userId) => {
   }
 };
 
+export const createAppointment = async (data) => {
+  try {
+    const response = await axios.post(`${API_URL}/Appointments/add`, data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
 // Holidays CRUD
 export const getHolidays = async (userId) => {
   try {
