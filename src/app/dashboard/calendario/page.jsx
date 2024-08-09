@@ -4,13 +4,12 @@ import Sidebar from '@/components/dashboard/Sidebar';
 import TopBar from '@/components/dashboard/TopBar';
 import Loading from "@/components/Loading";
 import { useAppointments } from '@/app/api/handlers/handleAppointments';
-import { handleUser } from "../api/handlers/handleUser";
-import BusinessSummary from "@/components/dashboard/BusinessSummary";
-import Link from "next/link";
+import { handleUser } from "../../api/handlers/handleUser";
+import CalendarView from "@/components/dashboard/Calendar";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const DashboardPage = () => {
+const CalendarPage = () => {
   const { userInfo, loading: userLoading, error: userError } = handleUser();
   const { appointments, services, loading: appointmentsLoading, error: appointmentsError } = useAppointments(userInfo?.id);
 
@@ -21,21 +20,19 @@ const DashboardPage = () => {
   const fixedAppointmentList = appointments.fixedAppointments;
 
   return (
-    <div className={`${inter.className} flex text-dark-blue`}>
+    <div className={`${inter.className} flex`}>
       <Sidebar />
       <div className='bg-grayy md:w-5/6'>
         <TopBar />
-        <div className="p-4">
-          <h1 className="text-2xl font-bold mb-4">Resumen del Negocio</h1>
-          <BusinessSummary 
-            appointments={appointmentList} 
-            fixedAppointments={fixedAppointmentList} 
-            services={services} 
-          />
-        </div>
+        <CalendarView 
+          appointments={appointmentList}
+          fixedappointments={fixedAppointmentList}
+          services={services} 
+          userConfiguration={userInfo?.userConfiguration} 
+        />
       </div>
     </div>
   );
 };
 
-export default DashboardPage;
+export default CalendarPage;
