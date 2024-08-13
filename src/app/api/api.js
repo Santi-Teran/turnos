@@ -105,6 +105,15 @@ export const getAppointments = async (userId) => {
   }
 };
 
+export const getAppointmentsByPhone = async (phone) => {
+  try {
+    const response = await axios.get(`${API_URL}/Appointments/getByClient?phone=${phone}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
 export const createAppointment = async (data) => {
   try {
     const response = await axios.post(`${API_URL}/Appointments/add`, data);

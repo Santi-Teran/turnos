@@ -205,7 +205,6 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
             placeholder="Inicio del descanso (HH)"
             className="bg-transparent border-2 p-2 rounded-lg"
             readOnly={!isEditing}
-            required
           />
         </div>
         <div className="flex flex-col gap-2 md:w-1/2">
@@ -218,7 +217,6 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
             placeholder="Duracion del descanso (HH)"
             className="bg-transparent border-2 p-2 rounded-lg"
             readOnly={!isEditing}
-            required
           />
         </div>
       </div>

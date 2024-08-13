@@ -21,13 +21,18 @@ const TopBar = () => {
       <h2 className='text-xl font-bold'>{formatPathname(pathname)}</h2>
       <div className='flex items-center gap-5'>
         <p className='md:flex hidden'>Hola {userInfo.name}!</p>
-        <Image 
+        { userInfo.userConfiguration.logoData ? (
+          <Image 
           src={userInfo.userConfiguration.logoData}
           alt='Logo'
           width={50}
           height={50}
           style={{ height: 'auto' }} 
         />
+        ) : (
+          <></>
+        )}
+        
       </div>
     </div>
   );
