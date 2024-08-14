@@ -45,10 +45,10 @@ const HomePage = ({ params }) => {
   }
 
   return (
-    <div className="flex flex-col gap-32 home">
+    <div className="flex flex-col gap-20 home">
       <NavBar config={config} />
       <Landing config={config} />
-      <Services services={services} />
+      <Services services={services} config={config} />
       <About config={config} />
       <Contact config={config} />
       <Footer />
