@@ -132,6 +132,34 @@ export const createFixedAppointment = async (data) => {
   }
 };
 
+export const deleteAppointment = async (appointmentId, phone) => {
+  try {
+    const response = await axios.delete(`${API_URL}/Appointments/client-delete/${appointmentId}?phone=${phone}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error al cancelar el turno:', error);
+    return { success: false };
+  }
+};
+
+export const deleteFixedAppointment = async (fixedAppointmentId, phone) => {
+  try {
+    const response = await axios.delete(`${API_URL}/Appointments/fixed/client-delete/${fixedAppointmentId}?phone=${phone}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error al cancelar el turno fijo:', error);
+    return { success: false };
+  }
+};
+
 // Holidays CRUD
 export const getHolidays = async (userId) => {
   try {
