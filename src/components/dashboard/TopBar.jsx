@@ -2,6 +2,7 @@ import { usePathname } from 'next/navigation';
 import Loading from '../Loading';
 import { handleUser } from '@/app/api/handlers/handleUser';
 import Image from 'next/image';
+import Notifications from './Notifications';
 
 const TopBar = () => {
   const { userInfo, loading, error } = handleUser();
@@ -20,6 +21,7 @@ const TopBar = () => {
     <div className='bg-white border-b border-grayy text-dark-blue flex justify-between items-center px-10 py-2'>
       <h2 className='text-xl font-bold'>{formatPathname(pathname)}</h2>
       <div className='flex items-center gap-5'>
+        <Notifications />
         <p className='md:flex hidden'>Hola {userInfo.name}!</p>
         { userInfo.userConfiguration.logoData ? (
           <Image 

@@ -13,6 +13,7 @@
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@microsoft/signalr": "^8.0.7",
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
     "moment": "^2.30.1",
