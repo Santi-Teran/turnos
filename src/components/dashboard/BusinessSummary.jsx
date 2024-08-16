@@ -11,7 +11,7 @@ moment.locale('es');
 const BusinessSummary = ({ appointments, fixedAppointments, services }) => {
   const [todayAppointments, setTodayAppointments] = useState(0);
   const [nextAppointment, setNextAppointment] = useState(null);
-  const [lastThreeAppointments, setLastThreeAppointments] = useState([]);
+  const [nextThreeAppointments, setNextThreeAppointments] = useState([]);
   const [monthlyAppointments, setMonthlyAppointments] = useState(0);
   const [monthlyIncome, setMonthlyIncome] = useState(0);
   const [monthlyIncomeLastMonth, setMonthlyIncomeLastMonth] = useState(0);
@@ -29,30 +29,20 @@ const BusinessSummary = ({ appointments, fixedAppointments, services }) => {
     );
     setTodayAppointments(filteredTodayAppointments.length);
 
-    // Turno siguiente y últimos 3 turnos
+    // Próximos 3 turnos
     const futureAppointments = allAppointments.filter(app =>
       moment(`${app.date} ${app.hour}`).isAfter(moment())
-    );
-    const pastAppointments = allAppointments.filter(app =>
-      moment(`${app.date} ${app.hour}`).isBefore(moment())
-    );
-    const nextApp = futureAppointments.sort((a, b) => 
+    ).sort((a, b) => 
       moment(`${a.date} ${a.hour}`).diff(moment(`${b.date} ${b.hour}`))
-    )[0];
-    const lastThree = pastAppointments.sort((a, b) => 
-      moment(`${b.date} ${b.hour}`).diff(moment(`${a.date} ${a.hour}`))
     ).slice(0, 3);
-    setNextAppointment(nextApp);
-    setLastThreeAppointments(lastThree);
+    setNextAppointment(futureAppointments[0] || null);
+    setNextThreeAppointments(futureAppointments);
 
     // Turnos del mes y del mes pasado
     const thisMonth = moment().startOf('month');
     const lastMonth = moment().subtract(1, 'month').startOf('month');
     const filteredMonthlyAppointments = allAppointments.filter(app => 
       moment(`${app.date} ${app.hour}`).isAfter(thisMonth)
-    );
-    const filteredLastMonthAppointments = allAppointments.filter(app => 
-      moment(`${app.date} ${app.hour}`).isBetween(lastMonth, thisMonth)
     );
     setMonthlyAppointments(filteredMonthlyAppointments.length);
 
@@ -63,7 +53,7 @@ const BusinessSummary = ({ appointments, fixedAppointments, services }) => {
     }, 0);
     setMonthlyIncome(monthlyIncome);
 
-    const monthlyIncomeLastMonth = filteredLastMonthAppointments.reduce((total, app) => {
+    const monthlyIncomeLastMonth = filteredMonthlyAppointments.reduce((total, app) => {
       const service = services.find(service => service.id === app.serviceId);
       return total + (service ? service.price : 0);
     }, 0);
@@ -110,25 +100,11 @@ const BusinessSummary = ({ appointments, fixedAppointments, services }) => {
         </div>
       </div>
 
-      {/* Próximo Turno Compacto */}
+      {/* Próximos 3 Turnos */}
       <div className="p-4 border rounded-lg bg-white shadow">
-        <h2 className="text-lg font-bold mb-2">Próximo Turno</h2>
-        {nextAppointment ? (
-          <div>
-            <p><strong>Cliente:</strong> {nextAppointment.client.name}</p>
-            <p><strong>Servicio:</strong> {services.find(service => service.id === nextAppointment.serviceId)?.name || 'Servicio'}</p>
-            <p><strong>Fecha y Hora:</strong> {moment(`${nextAppointment.date} ${nextAppointment.hour}`).format('dddd, LL, LT')}</p>
-          </div>
-        ) : (
-          <p>No hay próximos turnos.</p>
-        )}
-      </div>
-
-      {/* Historial de Últimos 3 Turnos */}
-      <div className="p-4 border rounded-lg bg-white shadow">
-        <h2 className="text-lg font-bold mb-2">Últimos 3 Turnos Atendidos</h2>
+        <h2 className="text-lg font-bold mb-2">Próximos 3 Turnos</h2>
         <ul>
-          {lastThreeAppointments.map((app, index) => (
+          {nextThreeAppointments.map((app, index) => (
             <li key={index} className="mb-2">
               <strong>{services.find(service => service.id === app.serviceId)?.name || 'Servicio'}:</strong> {app.client.name} - {moment(`${app.date} ${app.hour}`).format('LLL')}
             </li>

@@ -20,7 +20,7 @@ const Form = ({ userId }) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    date: "",
+    date: null, // Cambiado a null para manejar como objeto Date
     hour: "",
     serviceId: "",
     userId: userId,
@@ -107,7 +107,7 @@ const Form = ({ userId }) => {
   };
 
   const handleDateChange = (date) => {
-    setFormData({ ...formData, date: date.toISOString().split("T")[0] });
+    setFormData({ ...formData, date: date }); // Cambiado a objeto Date
   };
 
   const handlePhoneChange = (value) => {
@@ -139,7 +139,7 @@ const Form = ({ userId }) => {
     }
 
     const appointmentData = {
-      date: formData.date,
+      date: formData.date.toISOString().split("T")[0], // Convertir a formato ISO
       hour: formData.hour,
       client: {
         name: formData.name,
@@ -147,12 +147,14 @@ const Form = ({ userId }) => {
       },
       serviceId: parseInt(formData.serviceId),
     };
-
     const result = await createAppointment(appointmentData);
 
     if (result.success) {
       setMessage("Turno agendado con éxito");
-      setFormData({ name: "", phone: "", date: "", hour: "", serviceId: "" });
+      setFormData({ name: "", phone: "", date: null, hour: "", serviceId: "" }); // Reiniciar fecha a null
+      setTimeout(() => {
+        window.location.href = "/mis-turnos";
+      }, 2000);
     } else {
       setMessage(`Error: ${result.message}`);
     }
@@ -215,7 +217,6 @@ const Form = ({ userId }) => {
       {/* Verificación del teléfono */}
       {!isPhoneVerified && (
         <>
-          
           <div className="flex flex-col w-full text-black">
             <input
               type="text"
@@ -240,44 +241,34 @@ const Form = ({ userId }) => {
         <>
           <div className="flex flex-col gap-6 w-full text-black">
             <DatePicker
-              selected={formData.date ? new Date(formData.date) : null}
+              name="date"
+              selected={formData.date} // Debe ser un objeto Date
               onChange={handleDateChange}
               className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
               placeholderText="Selecciona la fecha"
-              dateFormat="yyyy-MM-dd"
               filterDate={(date) => !isDayOff(date)}
               minDate={new Date()}
-              required
             />
             <select
               name="hour"
               value={formData.hour}
               onChange={handleChange}
-              className="px-3 py-2 rounded-md cursor-pointer"
+              className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
               required
             >
-              <option value="" disabled>
-                Selecciona una hora
-              </option>
+              <option value="" disabled>Selecciona la hora</option>
               {availableTimes.map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
+                <option key={time} value={time}>{time}</option>
               ))}
             </select>
-          </div>
-
-          <div className="flex flex-col gap-1 w-full text-black">
             <select
               name="serviceId"
               value={formData.serviceId}
               onChange={handleChange}
-              className="px-3 py-2 rounded-md cursor-pointer"
+              className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
               required
             >
-              <option value="" disabled>
-                Selecciona un servicio
-              </option>
+              <option value="" disabled>Selecciona el servicio</option>
               {services.map((service) => (
                 <option key={service.id} value={service.id}>
                   {service.name}
@@ -285,16 +276,25 @@ const Form = ({ userId }) => {
               ))}
             </select>
           </div>
+
           <button
-        type="submit"
-        className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-      >
-        Agendar Turno
-      </button>
+            type="submit"
+            className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
+          >
+            Agendar Turno
+          </button>
         </>
       )}
 
-      {message && <div className="text-red-500">{message}</div>}
+      {message && (
+        <div
+          className={`mt-4 ${
+            message.startsWith("Error") ? "text-red-600" : "text-green-600"
+          }`}
+        >
+          {message}
+        </div>
+      )}
     </form>
   );
 };
