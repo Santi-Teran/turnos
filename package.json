@@ -28,7 +28,8 @@
     "react-icons": "^5.2.1",
     "react-modal": "^3.16.1",
     "react-phone-input-2": "^2.15.1",
-    "react-time-picker": "^7.0.0"
+    "react-time-picker": "^7.0.0",
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "eslint": "^8",
