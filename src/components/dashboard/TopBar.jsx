@@ -21,7 +21,7 @@ const TopBar = () => {
     <div className='bg-white border-b border-grayy text-dark-blue flex justify-between items-center px-10 py-2'>
       <h2 className='text-xl font-bold'>{formatPathname(pathname)}</h2>
       <div className='flex items-center gap-5'>
-        <Notifications />
+        <Notifications token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJzYW50aWFnb0BnbWFpbC5jb20iLCJuYmYiOjE3MjQwOTYzNzEsImV4cCI6MTcyNDA5ODE3MSwiaWF0IjoxNzI0MDk2MzcxfQ.3z9KlFbOm4VNQ_L2cvzHMZPMWSBnJ4Wa3yNsmIKdJjM" />
         <p className='md:flex hidden'>Hola {userInfo.name}!</p>
         { userInfo.userConfiguration.logoData ? (
           <Image 
@@ -34,7 +34,6 @@ const TopBar = () => {
         ) : (
           <></>
         )}
-        
       </div>
     </div>
   );
