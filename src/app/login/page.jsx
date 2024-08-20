@@ -10,7 +10,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-10 mt-20 p-8 rounded-lg shadow w-full max-w-md">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-10 mt-20 p-8 rounded-lg shadow-2xl w-full max-w-md gradient">
         <h1 className={`${nunito.className} text-3xl md:text-4xl font-black`}>Iniciar Sesión</h1>
         <div className="flex flex-col gap-2">
           <div className={`flex items-center bg-white p-2 gap-2 rounded-lg ${errors.email ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border-2 border-transparent'}`}>
