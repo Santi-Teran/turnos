@@ -4,6 +4,7 @@ import BusinessPreferencesForm from "@/components/dashboard/BusinessPreferencesF
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
 import Loading from "@/components/Loading";
+import withAuth from "@/components/withAuth";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,4 +28,4 @@ const PreferencesPage = () => {
   )
 }
 
-export default PreferencesPage;
+export default withAuth(PreferencesPage);

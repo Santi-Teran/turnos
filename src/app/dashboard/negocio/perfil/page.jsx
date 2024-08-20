@@ -5,6 +5,7 @@ import TopBar from '@/components/dashboard/TopBar';
 import Loading from "@/components/Loading";
 import { handleUser } from "@/app/api/handlers/handleUser";
 import ProfileForm from "@/components/dashboard/ProfileForm";
+import withAuth from "@/components/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,4 +25,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default withAuth(ProfilePage);

@@ -7,6 +7,7 @@ import { useAppointments } from '@/app/api/handlers/handleAppointments';
 import { handleUser } from "../api/handlers/handleUser";
 import BusinessSummary from "@/components/dashboard/BusinessSummary";
 import Link from "next/link";
+import withAuth from "@/components/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,4 +39,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default withAuth(DashboardPage);

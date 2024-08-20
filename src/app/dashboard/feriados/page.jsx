@@ -7,6 +7,7 @@ import { handleUser } from '@/app/api/handlers/handleUser';
 import Loading from '@/components/Loading';
 import HolidaysForm from '@/components/dashboard/HolidaysForm';
 import HolidaysDetail from '@/components/dashboard/HolidaysDetail';
+import withAuth from "@/components/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,4 +42,4 @@ const HolidaysPage = () => {
   );
 };
 
-export default HolidaysPage;
+export default withAuth(HolidaysPage);

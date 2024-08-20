@@ -4,6 +4,7 @@ import BusinessTurnosForm from "@/components/dashboard/BusinessTurnosForm";
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
 import Loading from "@/components/Loading";
+import withAuth from "@/components/withAuth";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,4 +28,4 @@ const TurnosPage = () => {
   )
 }
 
-export default TurnosPage;
+export default withAuth(TurnosPage);

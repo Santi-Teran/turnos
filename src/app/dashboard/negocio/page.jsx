@@ -4,6 +4,7 @@ import BusinessGeneralForm from "@/components/dashboard/BusinessGeneralForm";
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
 import Loading from "@/components/Loading";
+import withAuth from "@/components/withAuth";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,4 +26,4 @@ const BusinessPage = () => {
   )
 }
 
-export default BusinessPage;
+export default withAuth(BusinessPage);

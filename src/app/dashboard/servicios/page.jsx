@@ -7,6 +7,7 @@ import { useServiceConfiguration } from '@/app/api/handlers/handleServices';
 import { Inter } from "next/font/google";
 import { handleUser } from '@/app/api/handlers/handleUser';
 import Loading from '@/components/Loading';
+import withAuth from '@/components/withAuth';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,4 +42,4 @@ const ServicePage = () => {
   );
 };
 
-export default ServicePage;
+export default withAuth(ServicePage);

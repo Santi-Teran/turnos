@@ -6,6 +6,7 @@ import Loading from "@/components/Loading";
 import { useAppointments } from '@/app/api/handlers/handleAppointments';
 import { handleUser } from "../../api/handlers/handleUser";
 import CalendarView from "@/components/dashboard/Calendar";
+import withAuth from "@/components/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,4 +36,4 @@ const CalendarPage = () => {
   );
 };
 
-export default CalendarPage;
+export default withAuth(CalendarPage);
