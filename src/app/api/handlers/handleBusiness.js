@@ -89,6 +89,7 @@ export const useBusinessConfiguration = (initialUserData) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
     const parsedFormData = {
       ...formData,
       userConfiguration: {
@@ -102,7 +103,7 @@ export const useBusinessConfiguration = (initialUserData) => {
       }
     };
 
-    const result = await businessConfiguration(parsedFormData);
+    const result = await businessConfiguration(parsedFormData, token);
 
     if (result.success) {
       console.log(result.data, formData);

@@ -36,6 +36,7 @@ export const useServiceConfiguration = (initialUserData) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
     const dataToSend = {
       ...formData,
       userId: initialUserData.id,
@@ -43,7 +44,7 @@ export const useServiceConfiguration = (initialUserData) => {
       overlapNumber: parseInt(formData.overlapNumber, 10),
     };
   
-    const result = await createService(dataToSend);
+    const result = await createService(dataToSend, token);
   
     if (result.success) {
       setFormData({
@@ -65,13 +66,14 @@ export const useServiceConfiguration = (initialUserData) => {
   };  
 
   const handleUpdate = async (editedService) => {
+    const token = localStorage.getItem('token');
     const dataToSend = {
       ...editedService,
       price: parseFloat(editedService.price, 10),
       overlapNumber: parseInt(editedService.overlapNumber, 10),
     };
   
-    const result = await updateService(dataToSend);
+    const result = await updateService(dataToSend, token);
     if (result.success) {
       const servicesResult = await getServices(initialUserData.id);
       if (servicesResult.success) {
@@ -83,7 +85,8 @@ export const useServiceConfiguration = (initialUserData) => {
   };  
 
   const handleDelete = async (serviceId) => {
-    const result = await deleteService(serviceId);
+    const token = localStorage.getItem('token');
+    const result = await deleteService(serviceId, token);
     if (result.success) {
       const servicesResult = await getServices(initialUserData.id);
       if (servicesResult.success) {

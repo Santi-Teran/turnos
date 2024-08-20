@@ -33,12 +33,13 @@ export const useServiceConfiguration = (initialUserData) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
     const dataToSend = {
       ...formData,
       userId: initialUserData.id,
     };
   
-    const result = await createHoliday(dataToSend);
+    const result = await createHoliday(dataToSend, token);
   
     if (result.success) {
       setFormData({
@@ -57,11 +58,12 @@ export const useServiceConfiguration = (initialUserData) => {
   };  
 
   const handleUpdate = async (editedHoliday) => {
+    const token = localStorage.getItem('token');
     const dataToSend = {
       ...editedHoliday,
     };
   
-    const result = await updateHoliday(dataToSend);
+    const result = await updateHoliday(dataToSend, token);
     if (result.success) {
       const holidaysResult = await getHolidays(initialUserData.id);
       if (holidaysResult.success) {
@@ -73,7 +75,8 @@ export const useServiceConfiguration = (initialUserData) => {
   };  
 
   const handleDelete = async (holidayId) => {
-    const result = await deleteHoliday(holidayId);
+    const token = localStorage.getItem('token');
+    const result = await deleteHoliday(holidayId, token);
     if (result.success) {
       const holidaysResult = await getHolidays(initialUserData.id);
       if (holidaysResult.success) {
