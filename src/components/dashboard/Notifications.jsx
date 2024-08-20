@@ -7,19 +7,32 @@ const Notifications = ({ token }) => {
   const [messages, setMessages] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
+  const [isConnected, setIsConnected] = useState(false); // Nuevo estado para manejar la conexión
 
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("https://www.misturnos.somee.com/notificationHub", {
         accessTokenFactory: () => token,
       })
-      .configureLogging(signalR.LogLevel.Information)
+      .configureLogging(signalR.LogLevel.None) // Desactivar logs de SignalR
       .build();
 
-    connection
-      .start()
-      .then(() => console.log("Connected to SignalR"))
-      .catch((err) => console.error("SignalR Connection Error: ", err));
+    const startConnection = () => {
+      connection
+        .start()
+        .then(() => {
+          setIsConnected(true);
+          setConnectionError(false);
+        })
+        .catch((err) => {
+          setIsConnected(false);
+          setConnectionError(true);
+          setTimeout(startConnection, 5000); // Reintenta la conexión después de 5 segundos
+        });
+    };
+
+    startConnection();
 
     connection.on("ReceiveNotification", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -27,7 +40,7 @@ const Notifications = ({ token }) => {
     });
 
     return () => {
-      connection.stop().then(() => console.log("Disconnected from SignalR"));
+      connection.stop();
     };
   }, [token]);
 
@@ -35,6 +48,10 @@ const Notifications = ({ token }) => {
     setIsModalOpen(!isModalOpen);
     setUnreadCount(0); // Marcar como leídas al abrir el modal
   };
+
+  if (!isConnected) {
+    return <div>...</div>;
+  }
 
   return (
     <div>
@@ -57,11 +74,14 @@ const Notifications = ({ token }) => {
                 </li>
               ))
             ) : (
-              <div>
-                <li>No tienes notificaciones</li>
-              </div>
+              <li>No tienes notificaciones</li>
             )}
           </ul>
+        </div>
+      )}
+      {connectionError && (
+        <div className="text-red-600 text-sm mt-2">
+          Error de conexión. Reintentando...
         </div>
       )}
     </div>
