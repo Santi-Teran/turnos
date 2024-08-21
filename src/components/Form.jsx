@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useAppointments } from "@/app/api/handlers/handleAppointments";
 import {
   createAppointment,
-  getHolidays,
   getConfigurationInfo,
   getUpcomingHolidays,
+  getServices,
 } from "@/app/api/api";
 import Loading from "./Loading";
 import DatePicker from "react-datepicker";
@@ -18,9 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const Form = ({ userId }) => {
-  const [userInfo, setUserInfo] = useState(null);
-  const { services, loading, error } = useAppointments(userId);
-  const [formData, setFormData] = useState({
+  const [ userInfo, setUserInfo ] = useState(null);
+  const [ formData, setFormData ] = useState({
     name: "",
     phone: "",
     date: null, // Cambiado a null para manejar como objeto Date
@@ -28,6 +26,7 @@ const Form = ({ userId }) => {
     serviceId: "",
     userId: userId,
   });
+  const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [message, setMessage] = useState("");
   const [closedDays, setClosedDays] = useState([]);
@@ -54,6 +53,15 @@ const Form = ({ userId }) => {
       }
     };
 
+    const fetchServices = async () => {
+      try {
+        const response = await getServices(userId);
+        setServices(response.data);
+      } catch (error) {
+        console.error("Error fetching holidays:", error);
+      }
+    };
+
     const fetchHolidays = async () => {
       try {
         const response = await getUpcomingHolidays(userId);
@@ -64,6 +72,7 @@ const Form = ({ userId }) => {
     };
 
     fetchUserInfo();
+    fetchServices();
     fetchHolidays();
   }, [userId]);
 
@@ -194,8 +203,7 @@ const Form = ({ userId }) => {
     }
   };  
 
-  if (loading) return <Loading />;
-  if (error) return <div>Error: {error}</div>;
+  if (!userInfo) return <Loading />;
 
   return (
     <>
