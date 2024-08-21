@@ -7,6 +7,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import Modal from 'react-modal';
 import moment from 'moment';
 import 'moment/locale/es';
+import Link from 'next/link';
+import { FaWhatsapp } from 'react-icons/fa';
 
 moment.locale('es');
 
@@ -14,6 +16,8 @@ const CalendarView = ({ appointments, fixedappointments, services, userConfigura
   const { dayStartTime, dayEndTime } = userConfiguration;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const whatsappUrl = `https://wa.me/${selectedEvent?.client.phone}`;
 
   const serviceMap = services.reduce((map, service) => {
     map[service.id] = service.name;
@@ -101,7 +105,7 @@ const CalendarView = ({ appointments, fixedappointments, services, userConfigura
             <p><strong>Precio total:</strong> {selectedEvent.totalPrice}</p>
             <div className='flex flex-col gap-2'>
               <button className='text-2xl font-bold absolute top-2 right-4' onClick={closeModal}>x</button>
-              <button className='border py-2 bg-green-300 rounded-md' onClick={() => alert('Funcionalidad de mensaje por implementar')}>Enviar mensaje</button>
+              <Link className='flex items-center gap-2 mx-auto bg-green-400 py-2 px-4 rounded-lg font-bold' href={whatsappUrl} target="_blank" rel="noopener noreferrer">Enviar mensaje <FaWhatsapp /></Link>
             </div>
           </div>
         )}
