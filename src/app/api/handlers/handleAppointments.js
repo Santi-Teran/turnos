@@ -9,9 +9,10 @@ export const useAppointments = (id) => {
 
   useEffect(() => {
     const fetchAppointmentsAndServices = async () => {
+      const token = localStorage.getItem('token');
       try {
         const [appointmentsResponse, servicesResponse] = await Promise.all([
-          getAppointments(id),
+          getAppointments(id, token),
           getServices(id),
         ]);
 

@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useAppointments } from "@/app/api/handlers/handleAppointments";
 import {
   createAppointment,
-  getUserInfo,
-  getAppointments,
   getHolidays,
+  getConfigurationInfo,
+  getUpcomingHolidays,
 } from "@/app/api/api";
 import Loading from "./Loading";
 import DatePicker from "react-datepicker";
@@ -39,14 +39,13 @@ const Form = ({ userId }) => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await getUserInfo(userId);
+        const response = await getConfigurationInfo(userId);
         const userInfo = response.data;
-        const businessConfiguration = userInfo?.userConfiguration;
-        const times = businessConfiguration.dailySchedules.split(";");
+        const times = userInfo.dailySchedules.split(";");
         setUserInfo(userInfo);
         setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
         setClosedDays(
-          businessConfiguration.daysOff
+            userInfo.daysOff
             .split(";")
             .map((day) => convertDayToIndex(day))
         );
@@ -57,8 +56,8 @@ const Form = ({ userId }) => {
 
     const fetchHolidays = async () => {
       try {
-        const response = await getHolidays(userId);
-        setHolidays(response.data.map((holiday) => new Date(holiday.date)));
+        const response = await getUpcomingHolidays(userId);
+        setHolidays(response.data.holidays.map((holiday) => new Date(holiday.date)));
       } catch (error) {
         console.error("Error fetching holidays:", error);
       }
@@ -204,13 +203,13 @@ const Form = ({ userId }) => {
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 bg-gray-100 p-8 md:px-20 rounded-lg shadow">
         <div className="flex flex-col items-center gap-2 w-full">
           <Image
-            src={userInfo?.userConfiguration.logoData}
+            src={userInfo?.logoData}
             alt="Logo"
             width={80}
             height={80}
           />
           <h1 className="text-center text-dark-blue text-2xl font-bold uppercase">
-            {userInfo?.userConfiguration.businessName || "Nombre del Negocio"}
+            {userInfo?.businessName || "Nombre del Negocio"}
           </h1>
           <h2 className="text-center text-black text-lg font-bold">
             Agendar Turno

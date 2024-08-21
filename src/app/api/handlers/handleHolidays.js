@@ -10,9 +10,10 @@ export const useServiceConfiguration = (initialUserData) => {
   });
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchHolidays = async () => {
       if (initialUserData.id) {
-        const result = await getHolidays(initialUserData.id);
+        const result = await getHolidays(initialUserData.id, token);
         if (result.success) {
           setHolidays(result.data);
         } else {

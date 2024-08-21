@@ -33,9 +33,20 @@ export const loginUser = async (formData) => {
   }
 };
 
-export const getUserInfo = async (userId) => {
+export const getUserInfo = async (userId, token) => {
   try {
-    const response = await axios.get(`${API_URL}/Users/${userId}`);
+    const response = await axios.get(`${API_URL}/Users/${userId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const getConfigurationInfo = async (userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Users/configuration/${userId}`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, message: error.response ? error.response.statusText : error.message };
@@ -95,9 +106,11 @@ export const deleteService = async (serviceId, token) => {
   }
 };
 
-export const getAppointments = async (userId) => {
+export const getAppointments = async (userId, token) => {
   try {
-    const response = await axios.get(`${API_URL}/Appointments/${userId}`);
+    const response = await axios.get(`${API_URL}/Appointments/${userId}`, {
+      headers: { 'Authorization': `Bearer ${token}`}
+    });
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, message: error.response ? error.response.statusText : error.message };
@@ -160,9 +173,20 @@ export const deleteFixedAppointment = async (fixedAppointmentId, phone) => {
 };
 
 // Holidays CRUD
-export const getHolidays = async (userId) => {
+export const getHolidays = async (userId, token) => {
   try {
-    const response = await axios.get(`${API_URL}/Holidays/${userId}`);
+    const response = await axios.get(`${API_URL}/Holidays/${userId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const getUpcomingHolidays = async (userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Holidays/upcoming/${userId}`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, message: error.response ? error.response.statusText : error.message };
