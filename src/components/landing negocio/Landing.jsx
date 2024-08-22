@@ -4,8 +4,7 @@ import Link from 'next/link';
 const nunito = Nunito({ subsets: ["latin"] });
 
 const Landing = ({ config }) => {
-  const { userConfiguration, id } = config;
-  const { businessName, description, fixedAppointmentsAvailable  } = userConfiguration;
+  const { businessName, description, fixedAppointmentsAvailable, id } = config;
 
   return (
     <div className="flex flex-col lg:flex-row justify-center items-center mx-5 sm:mx-10 md:mx-20 gap-10 lg:gap-40 md:mt-32 mt-20">

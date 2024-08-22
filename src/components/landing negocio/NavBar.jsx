@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const NavBar = ({ config }) => {
-  
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -15,7 +14,7 @@ const NavBar = ({ config }) => {
   return (
     <div className='bg-dark-gray flex justify-center items-center fixed w-full z-20 p-6'>
       <div className='absolute left-5'>
-        <Image src={config.userConfiguration.logoData} alt={config.userConfiguration.businessName} width={40} height={0} />
+        <Image src={config?.logoData} alt={config?.businessName} width={40} height={0} />
       </div>
       <div className='hidden md:flex gap-20 items-center'>
         <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>

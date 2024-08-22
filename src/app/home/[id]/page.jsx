@@ -5,7 +5,7 @@ import About from "@/components/landing negocio/About";
 import Contact from "@/components/landing negocio/Contact";
 import Landing from "@/components/landing negocio/Landing";
 import NavBar from "@/components/landing negocio/NavBar";
-import { getServices, getUserInfo } from '@/app/api/api';
+import { getConfigurationInfo, getServices } from '@/app/api/api';
 import Services from '@/components/landing negocio/Services';
 import Loading from '@/components/Loading';
 
@@ -25,7 +25,7 @@ const HomePage = ({ params }) => {
   const fetchBusinessInfo = async (id) => {
     try {
       
-      const config = await getUserInfo(id);
+      const config = await getConfigurationInfo(id);
       const services = await getServices(id);
       if (config.success) {
         setConfig(config.data);

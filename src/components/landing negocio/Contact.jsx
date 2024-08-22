@@ -12,9 +12,9 @@ const Contact = ({ config }) => {
           <h1 className="text-2xl md:text-4xl text-verde-agua font-black">Contactanos!</h1>
           <h2 className={`${nunito.className} text-lg md:text-xl font-light`}>Estamos aquí para ayudarte. Completa el formulario a continuación o utiliza nuestras vías de contacto</h2>
           <ul className="flex flex-col gap-4 md:gap-10">
-            <li className="flex items-center gap-2"><MdMailOutline className="text-lg md:text-xl text-verde-agua" />{config.userConfiguration.email || "Email del negocio..."}</li>
-            <li className="flex items-center gap-2"><BiBuildingHouse className="text-lg md:text-xl text-verde-agua" />{config.userConfiguration.address || "Dirección del negocio..."}</li>
-            <li className="flex items-center gap-2"><BiPhone className="text-lg md:text-xl text-verde-agua" />{config.userConfiguration.phone || "Teléfono del negocio..."}</li>
+            <li className="flex items-center gap-2"><MdMailOutline className="text-lg md:text-xl text-verde-agua" />{config.email || "Email del negocio..."}</li>
+            <li className="flex items-center gap-2"><BiBuildingHouse className="text-lg md:text-xl text-verde-agua" />{config.address || "Dirección del negocio..."}</li>
+            <li className="flex items-center gap-2"><BiPhone className="text-lg md:text-xl text-verde-agua" />{config.phone || "Teléfono del negocio..."}</li>
           </ul>
         </div>
 
