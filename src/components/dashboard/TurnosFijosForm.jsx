@@ -76,7 +76,7 @@ const TurnosFijosForm = ({ userInfo, services }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-6 bg-gray-100 p-8 md:px-20 rounded-lg shadow"
+      className="flex flex-col items-center gap-6 bg-gray-100 p-8 rounded-lg shadow"
     >
       <div className="flex flex-col items-center gap-2 w-full">
         <h2 className="text-center text-black text-lg font-bold">

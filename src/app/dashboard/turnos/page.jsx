@@ -1,5 +1,4 @@
 'use client'
-import ServiceDetail from '@/components/dashboard/ServiceDetail';
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
 import { useServiceConfiguration } from '@/app/api/handlers/handleServices';
@@ -16,8 +15,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 const TurnosPage = () => {
   const { userInfo, loading, error } = handleUser();
-  const { services, formData, handleChange, handleSubmit, handleUpdate, handleDelete } = useServiceConfiguration({ id: userInfo?.id });
-  const { appointments, loading: appointmentsLoading, error: appointmentsError } = useAppointments(userInfo?.id);
+  const { services } = useServiceConfiguration({ id: userInfo?.id });
+  const { appointments, loading: appointmentsLoading, handleUpdate, handleFixedUpdate, handleDelete, handleFixedDelete } = useAppointments(userInfo?.id);
 
   const appointmentList = appointments.appointments;
   const fixedAppointmentList = appointments.fixedAppointments;
@@ -46,9 +45,9 @@ const TurnosPage = () => {
               <TurnosFijosForm userInfo={userInfo} services={services} />
               <TurnosDetail
               services={services}
-              appointments={appointmentList}
-              handleUpdate={handleUpdate}
-              handleDelete={handleDelete}
+              appointments={fixedAppointmentList}
+              handleUpdate={handleFixedUpdate}
+              handleDelete={handleFixedDelete}
             />
             </div>
           </div>

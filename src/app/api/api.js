@@ -144,6 +144,50 @@ export const createFixedAppointment = async (data) => {
   }
 };
 
+export const updateAppointment = async (data, token) => {
+  try {
+    const response = await axios.post(`${API_URL}/Appointments/update`, data, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const updateFixedAppointment = async (data, token) => {
+  try {
+    const response = await axios.post(`${API_URL}/Appointments/fixed/update`, data, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const deleteAppointmentt = async (appointmentId, token) => {
+  try {
+    const response = await axios.delete(`${API_URL}/Appointments/delete/${appointmentId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
+export const deleteFixedAppointmentt = async (appointmentId, token) => {
+  try {
+    const response = await axios.delete(`${API_URL}/Appointments/fixed/delete/${appointmentId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
 export const deleteAppointment = async (appointmentId, phone) => {
   try {
     const response = await axios.delete(`${API_URL}/Appointments/client-delete/${appointmentId}?phone=${phone}`, {

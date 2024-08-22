@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
-import Pagination from './Pagination'; // Importar el componente de paginación
+import Pagination from './Pagination';
 
 const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) => {
   const [editingId, setEditingId] = useState(null);
@@ -53,6 +53,11 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
     return service ? service.name : 'Servicio no encontrado';
   };
 
+  const getDayName = (dayNumber) => {
+    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    return days[dayNumber];
+  };
+
   return (
     <div className="p-4 border rounded-md shadow-lg bg-white w-full overflow-x-auto">
       <h2 className="text-xl font-bold mb-4">Lista de Turnos</h2>
@@ -61,7 +66,9 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
           <tr className='bg-gray-200 text-gray-600 uppercase text-sm leading-normal'>
             <th className="py-3 px-6 text-left">Nombre</th>
             <th className="py-3 px-6 text-left">Teléfono</th>
-            <th className="py-3 px-6 text-center">Fecha</th>
+            <th className="py-3 px-6 text-center">
+              {currentAppointments.some(appointment => !appointment.date) ? 'Día' : 'Fecha'}
+            </th>
             <th className="py-3 px-6 text-center">Hora</th>
             <th className="py-3 px-6 text-center">Servicio</th>
             <th className="py-3 px-6 text-center">Acciones</th>
@@ -106,7 +113,7 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
                     className="w-full px-2 py-1 border rounded"
                   />
                 ) : (
-                  appointment.date
+                  appointment.date ? appointment.date : getDayName(appointment.day)
                 )}
               </td>
               <td className="py-3 px-6 text-center">
