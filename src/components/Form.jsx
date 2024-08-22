@@ -15,20 +15,18 @@ import "react-phone-input-2/lib/style.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const Form = ({ userId }) => {
-  const [ userInfo, setUserInfo ] = useState(null);
-  const [ formData, setFormData ] = useState({
+  const [userInfo, setUserInfo] = useState(null);
+  const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    date: null, // Cambiado a null para manejar como objeto Date
+    date: null,
     hour: "",
     serviceId: "",
     userId: userId,
   });
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
-  const [message, setMessage] = useState("");
   const [closedDays, setClosedDays] = useState([]);
   const [holidays, setHolidays] = useState([]);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
@@ -44,9 +42,7 @@ const Form = ({ userId }) => {
         setUserInfo(userInfo);
         setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
         setClosedDays(
-            userInfo.daysOff
-            .split(";")
-            .map((day) => convertDayToIndex(day))
+          userInfo.daysOff.split(";").map((day) => convertDayToIndex(day))
         );
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -65,7 +61,9 @@ const Form = ({ userId }) => {
     const fetchHolidays = async () => {
       try {
         const response = await getUpcomingHolidays(userId);
-        setHolidays(response.data.holidays.map((holiday) => new Date(holiday.date)));
+        setHolidays(
+          response.data.holidays.map((holiday) => new Date(holiday.date))
+        );
       } catch (error) {
         console.error("Error fetching holidays:", error);
       }
@@ -123,7 +121,7 @@ const Form = ({ userId }) => {
       return;
     }
     setFormData({ ...formData, date: date });
-  };  
+  };
 
   const handlePhoneChange = (value) => {
     setFormData({ ...formData, phone: value });
@@ -145,37 +143,14 @@ const Form = ({ userId }) => {
     }
   };
 
-  const handleErrors = (errorMessage) => {
-    switch (errorMessage) {
-      case "DATE_CONFLICT":
-        toast.error("La fecha seleccionada no está disponible.");
-        break;
-      case "TIME_CONFLICT":
-        toast.error("Ya hay demasiados turnos en esta hora.");
-        break;
-      case "HOLIDAY":
-        toast.error("El día seleccionado es un feriado.");
-        break;
-      case "INVALID_PHONE":
-        toast.error("El número de teléfono no es válido.");
-        break;
-      case "INVALID_NAME":
-        toast.error("El nombre ingresado no es válido.");
-        break;
-      default:
-        toast.error("Ocurrió un error al agendar el turno.");
-        break;
-    }
-  };  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isPhoneVerified) {
       toast.error("Debe verificar su teléfono antes de agendar el turno");
       return;
     }
-  
+
     const appointmentData = {
       date: formData.date.toISOString().split("T")[0], // Convertir a formato ISO
       hour: formData.hour,
@@ -185,13 +160,19 @@ const Form = ({ userId }) => {
       },
       serviceId: parseInt(formData.serviceId),
     };
-  
+
     try {
       const result = await createAppointment(appointmentData);
-  
+
       if (result.success) {
         toast.success("Turno agendado con éxito");
-        setFormData({ name: "", phone: "", date: null, hour: "", serviceId: "" });
+        setFormData({
+          name: "",
+          phone: "",
+          date: null,
+          hour: "",
+          serviceId: "",
+        });
         setTimeout(() => {
           window.location.href = "/mis-turnos";
         }, 2000);
@@ -201,21 +182,19 @@ const Form = ({ userId }) => {
     } catch (error) {
       toast.error("Error del servidor, por favor intente nuevamente");
     }
-  };  
+  };
 
   if (!userInfo) return <Loading />;
 
   return (
     <>
-    <ToastContainer />
-      <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 bg-gray-100 p-8 md:px-20 rounded-lg shadow">
+      <ToastContainer />
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center gap-6 bg-gray-100 p-8 md:px-20 rounded-lg shadow"
+      >
         <div className="flex flex-col items-center gap-2 w-full">
-          <Image
-            src={userInfo?.logoData}
-            alt="Logo"
-            width={80}
-            height={80}
-          />
+          <Image src={userInfo?.logoData} alt="Logo" width={80} height={80} />
           <h1 className="text-center text-dark-blue text-2xl font-bold uppercase">
             {userInfo?.businessName || "Nombre del Negocio"}
           </h1>
@@ -239,23 +218,23 @@ const Form = ({ userId }) => {
         {isPhoneVerified ? (
           <></>
         ) : (
-        <div className="flex flex-col items-center gap-2 w-full text-black">
-          <PhoneInput
-            country={"ar"}
-            value={formData.phone}
-            onChange={handlePhoneChange}
-            className="focus:outline-none focus:ring-0"
-            placeholder="Teléfono"
-            required
-          />
-          <button
+          <div className="flex flex-col items-center gap-2 w-full text-black">
+            <PhoneInput
+              country={"ar"}
+              value={formData.phone}
+              onChange={handlePhoneChange}
+              className="focus:outline-none focus:ring-0"
+              placeholder="Teléfono"
+              required
+            />
+            <button
               type="button"
               onClick={sendVerificationCode}
               className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold"
             >
               Enviar Código
             </button>
-        </div>
+          </div>
         )}
 
         {/* Verificación del teléfono */}
@@ -300,9 +279,13 @@ const Form = ({ userId }) => {
                 className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
                 required
               >
-                <option value="" disabled>Selecciona la hora</option>
+                <option value="" disabled>
+                  Selecciona la hora
+                </option>
                 {availableTimes.map((time) => (
-                  <option key={time} value={time}>{time}</option>
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
                 ))}
               </select>
               <select
@@ -312,7 +295,9 @@ const Form = ({ userId }) => {
                 className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
                 required
               >
-                <option value="" disabled>Selecciona el servicio</option>
+                <option value="" disabled>
+                  Selecciona el servicio
+                </option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
                     {service.name}
@@ -328,16 +313,6 @@ const Form = ({ userId }) => {
               Agendar Turno
             </button>
           </>
-        )}
-
-        {message && (
-          <div
-            className={`mt-4 ${
-              message.startsWith("Error") ? "text-red-600" : "text-green-600"
-            }`}
-          >
-            {message}
-          </div>
         )}
       </form>
     </>

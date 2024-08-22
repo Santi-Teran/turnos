@@ -6,7 +6,6 @@ import Loading from "@/components/Loading";
 import { useAppointments } from '@/app/api/handlers/handleAppointments';
 import { handleUser } from "../api/handlers/handleUser";
 import BusinessSummary from "@/components/dashboard/BusinessSummary";
-import Link from "next/link";
 import withAuth from "@/components/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
