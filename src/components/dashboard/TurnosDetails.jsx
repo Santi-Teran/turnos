@@ -4,14 +4,17 @@ import Pagination from './Pagination';
 
 const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) => {
   const [editingId, setEditingId] = useState(null);
-  const [editedAppointment, setEditedAppointment] = useState({ id: '', name: '', phone: '', date: '', hour: '', serviceId: true });
+  const [editedAppointment, setEditedAppointment] = useState({
+    id: '',
+    client: { name: '', phone: '' },
+    date: '',
+    hour: '',
+    serviceId: '',
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const appointmentsPerPage = 5;
 
-  // Ordenar los turnos para mostrar los más recientes primero
   const sortedAppointments = [...appointments].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  // Paginación
   const totalPages = Math.ceil(sortedAppointments.length / appointmentsPerPage);
   const indexOfLastAppointment = currentPage * appointmentsPerPage;
   const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
@@ -25,10 +28,18 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditedAppointment(prevData => ({
-      ...prevData,
-      [name]: name === 'serviceId' ? JSON.parse(value) : value
-    }));
+    setEditedAppointment(prevData => {
+      if (name === 'name' || name === 'phone') {
+        return {
+          ...prevData,
+          client: { ...prevData.client, [name]: value }
+        };
+      }
+      return {
+        ...prevData,
+        [name]: value
+      };
+    });
   };
 
   const startEditing = (appointment) => {
@@ -38,14 +49,26 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
 
   const cancelEditing = () => {
     setEditingId(null);
-    setEditedAppointment({ id: '', name: '', phone: '', date: '', hour: '', serviceId: true });
+    setEditedAppointment({
+      id: '',
+      client: { name: '', phone: '' },
+      date: '',
+      hour: '',
+      serviceId: '',
+    });
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     await handleUpdate(editedAppointment);
     setEditingId(null);
-    setEditedAppointment({ id: '', name: '', phone: '', date: '', hour: '', serviceId: true });
+    setEditedAppointment({
+      id: '',
+      client: { name: '', phone: '' },
+      date: '',
+      hour: '',
+      serviceId: '',
+    });
   };
 
   const getServiceName = (serviceId) => {
@@ -119,7 +142,7 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
               <td className="py-3 px-6 text-center">
                 {editingId === appointment.id ? (
                   <input
-                    type="text"
+                    type="time"
                     name="hour"
                     value={editedAppointment.hour}
                     onChange={handleEditChange}
@@ -131,13 +154,18 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
               </td>
               <td className="py-3 px-6 text-center">
                 {editingId === appointment.id ? (
-                  <input
-                    type="text"
+                  <select
                     name="serviceId"
                     value={editedAppointment.serviceId}
                     onChange={handleEditChange}
                     className="w-full px-2 py-1 border rounded"
-                  />
+                  >
+                    {services.map(service => (
+                      <option key={service.id} value={service.id}>
+                        {service.name}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
                   getServiceName(appointment.serviceId)
                 )}
@@ -167,12 +195,11 @@ const TurnosDetail = ({ appointments, services, handleUpdate, handleDelete }) =>
           ))}
         </tbody>
       </table>
-
-      {/* Integrar el componente de paginación */}
-      <Pagination 
-        currentPage={currentPage}
-        totalPages={totalPages}
+      <Pagination
+        totalAppointments={sortedAppointments.length}
+        appointmentsPerPage={appointmentsPerPage}
         paginate={paginate}
+        currentPage={currentPage}
       />
     </div>
   );
