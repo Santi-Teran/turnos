@@ -13,7 +13,7 @@ export default function Footer() {
     <div className='flex justify-between p-2 shadoww bg-dark-blue text-arena flex-col items-center md:flex-row'>
       <div className='flex items-center gap-x-2'>
         <FaRegCopyright />
-        <p className="text-sm lg:text-base">2024 Marea Tech.</p>
+        <p className="text-sm lg:text-base">Turnorver | Powered by <Link href={'https://marea-tech.vercel.app/'} target='_BLANK' className='border-b hover:text-gray-400'>Marea Tech</Link>.</p>
       </div>
       <div className='flex text-lg lg:text-xl items-center gap-x-3'>
           <Link href={whatsappUrl} target="_blank" rel="noopener noreferrer" ><FaWhatsapp /></Link>

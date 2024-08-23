@@ -8,7 +8,7 @@ const nunito = Nunito({ subsets: ["latin"] });
 const Services = () => {
   return (
     <div className="flex flex-col items-center justify-center mx-4 md:mx-20 gap-10">
-      <h1 className={`${nunito.className} text-2xl md:text-4xl text-center font-bold mx-8 md:mx-32`}>Lo que podés hacer!</h1>
+      <h1 className={`${nunito.className} text-2xl md:text-4xl text-center font-bold mx-8 md:mx-32`}>Lo que podés hacer con Turnover</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mx-4 md:mx-20">
         {service.map((service, index) => (
           <div key={index} className="flex flex-col shadoww items-center gap-4 p-8 rounded-2xl dark:hover:bg-arena dark:hover:text-dark-blue transition-all hover:bg-dark-blue hover:text-arena">
