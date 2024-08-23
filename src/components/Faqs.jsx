@@ -15,7 +15,7 @@ const FaqsPage = () => {
     {
       question: "¿Cómo configuro los servicios y horarios de mi negocio?",
       answer:
-        "Desde el dashboard, selecciona la opción 'Servicios' para agregar, editar o eliminar servicios. Para configurar los horarios de apertura y cierre, ve a 'Negocio' y ajusta los tiempos según las necesidades de tu negocio.",
+        "Desde el dashboard, selecciona la opción 'Servicios' para agregar, editar o eliminar servicios. Para configurar los horarios de apertura y cierre, ve a 'Horarios' y ajusta los tiempos según las necesidades de tu negocio.",
     },
     {
       question: "¿Puedo agregar turnos manualmente?",
@@ -49,7 +49,7 @@ const FaqsPage = () => {
     return (
       <div className="border-b">
         <button
-          className={`w-full flex justify-between items-center py-4 text-lg text-left font-medium focus:outline-none ${isOpen ? 'text-black' : ''}`}
+          className={`w-full flex justify-between items-center py-4 text-lg text-left font-medium focus:outline-none transition-all ${isOpen ? 'text-black' : ''}`}
           onClick={() => setIsOpen(!isOpen)}
         >
           {question}
@@ -61,7 +61,12 @@ const FaqsPage = () => {
             <FaAngleDown />
           </span>
         </button>
-        {isOpen && <div className="py-2 text-gray-200">{answer}</div>}
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-screen" : "max-h-0"}`}
+          style={{ maxHeight: isOpen ? "1000px" : "0" }}
+        >
+          <div className="py-2 text-gray-200">{answer}</div>
+        </div>
       </div>
     );
   };
