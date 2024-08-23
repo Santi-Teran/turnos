@@ -25,7 +25,7 @@ const Sidebar = () => {
     <>
       <div className='w-1/6 bg-white text-dark-blue border-r border-light-gray md:flex flex-col hidden'>
         <Image src='/turnover-letra-dark.svg' alt="Turnover" width={200} height={100} className="mx-auto my-5" priority={true} />
-        <ul className='flex flex-col my-10'>
+        <ul className='flex flex-col'>
           <NavLink href='/dashboard' icon={FaHouse} label='Dashboard' isActive={isActive('/dashboard')} />
           <NavLink href='/dashboard/calendario' icon={FaCalendarAlt} label='Calendario' isActive={isActive('/dashboard/calendario')} />
           <NavLink href='/dashboard/turnos' icon={FaCalendarCheck} label='Turnos' isActive={isActive('/dashboard/turnos')} />
