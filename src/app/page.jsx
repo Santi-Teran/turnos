@@ -7,6 +7,7 @@ import Plans from "@/components/Plans";
 import Contact from "@/components/Contact";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import FaqsPage from "@/components/Faqs";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <CallToAction />
       {/* <Testimonies /> */}
       <Plans />
+      <FaqsPage />
       <Contact />
       <CallToAction />
       <Footer />
