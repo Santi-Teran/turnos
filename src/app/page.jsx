@@ -16,7 +16,7 @@ export default function Home() {
       <Services />
       <Proposal />
       <CallToAction />
-      <Testimonies />
+      {/* <Testimonies /> */}
       <Plans />
       <Contact />
       <CallToAction />

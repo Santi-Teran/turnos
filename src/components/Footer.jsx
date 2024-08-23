@@ -16,6 +16,7 @@ export default function Footer() {
         <p className="text-sm lg:text-base">Turnorver | Powered by <Link href={'https://marea-tech.vercel.app/'} target='_BLANK' className='border-b hover:text-gray-400'>Marea Tech</Link>.</p>
       </div>
       <div className='flex text-lg lg:text-xl items-center gap-x-3'>
+          <Link href={'/legal'} className='text-xs hover:underline mx-5'>Legal</Link>
           <Link href={whatsappUrl} target="_blank" rel="noopener noreferrer" ><FaWhatsapp /></Link>
           <Link href={'https://www.linkedin.com/company/marea-tech/'} target='_BLANK'><FaLinkedinIn /></Link>
           <Link href={'https://www.instagram.com/marea__tech/'} target='_BLANK'><FaInstagram /></Link>
