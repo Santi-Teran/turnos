@@ -16,7 +16,7 @@ const NavBar = () => {
       <div className='hidden md:flex gap-20'>
         <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>
         <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/servicios'>Servicios</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Trabajos</Link>
+        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Portafolio</Link>
         <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/planes'>Planes</Link>
       </div>
       <div className='md:hidden absolute right-0 m-5'>
@@ -31,7 +31,7 @@ const NavBar = () => {
             <nav className='flex flex-col items-start gap-10 p-10 pt-20 text-xl'>
               <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>
               <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/servicios'>Servicios</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Trabajos</Link>
+              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Portafolio</Link>
               <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/planes'>Planes</Link>
             </nav>
           </div>
