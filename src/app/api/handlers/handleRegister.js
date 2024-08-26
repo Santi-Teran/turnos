@@ -11,6 +11,9 @@ export const useRegister = () => {
     subscriptionId: '',
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -35,13 +38,20 @@ export const useRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await registerUser(formData);
-
-    if (result.success) {
-      console.log(result.data);
-      router.push('/login');
-    } else {
-      console.error('Error en el registro:', result.message);
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const result = await registerUser(formData);
+      if (result.success) {
+        router.push('/login');
+      } else {
+        setError(result.message);
+      }
+    } catch (error) {
+      setError('Ocurrió un error al registrar tu cuenta. Inténtalo de nuevo más tarde.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,5 +59,7 @@ export const useRegister = () => {
     formData,
     handleChange,
     handleSubmit,
+    loading,
+    error,
   };
 };

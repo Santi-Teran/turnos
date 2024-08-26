@@ -10,18 +10,18 @@ const LoginForm = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-10 mt-20 p-8 rounded-lg shadow-2xl w-full max-w-md gradient">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-20 p-8 rounded-lg shadow-2xl w-full max-w-md gradient">
         <h1 className={`${nunito.className} text-3xl md:text-4xl font-black`}>Iniciar Sesión</h1>
         <div className="flex flex-col gap-2">
-          <div className={`flex items-center bg-white p-2 gap-2 rounded-lg ${errors.email ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border-2 border-transparent'}`}>
-            <MdMail className="text-gray-400" />
+          <div className={`flex items-center border p-2 gap-2 rounded-lg ${errors.email ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border'}`}>
+            <MdMail className="text-gray-100" />
             <input
               type="email"
               name="email"
               value={formData.email}
               placeholder="Email"
               onChange={handleChange}
-              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400 ${errors.email ? 'text-red-500 placeholder-red-500' : ''}`}
+              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-100 ${errors.email ? 'text-red-500 placeholder-red-500' : ''}`}
               required
             />
           </div>
@@ -29,17 +29,24 @@ const LoginForm = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className={`flex items-center bg-white p-2 gap-2 rounded-lg ${errors.password ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border-2 border-transparent'}`}>
-            <MdLock className="text-gray-400" />
+          <div className={`flex items-center border p-2 gap-2 rounded-lg ${errors.password ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border'}`}>
+            <MdLock className="text-gray-100" />
             <input
               type="password"
               name="password"
               value={formData.password}
               placeholder="Contraseña"
               onChange={handleChange}
-              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-400 ${errors.password ? 'text-red-500 placeholder-red-500' : ''}`}
+              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-100 ${errors.password ? 'text-red-500 placeholder-red-500' : ''}`}
               required
             />
+          </div>
+          <div className="flex justify-between py-2 text-xs">
+            <label className="flex items-center gap-2 ">
+              <input type="checkbox" />
+              Recuerdame
+            </label>
+            <p>Olvidaste tu contraseña?</p>
           </div>
           {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         </div>
