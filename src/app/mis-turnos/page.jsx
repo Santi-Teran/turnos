@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
 import NavBar from '@/components/NavBar';
-import { getAppointmentsByPhone, getServices, getUserInfo, deleteAppointment, deleteFixedAppointment } from '../api/api';
+import { getAppointmentsByPhone, getServices, getUserInfo, deleteAppointment, deleteFixedAppointment, getConfigurationInfo } from '../api/api';
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { format, isPast, differenceInHours } from 'date-fns';
@@ -77,8 +77,8 @@ const MisTurnos = () => {
 
         for (const appointment of [...futureAppointments, ...futureFixedAppointments, ...pastAppointmentsList]) {
           if (!businessData[appointment.userId]) {
-            const userConfig = await getUserInfo(appointment.userId);
-            businessData[appointment.userId] = userConfig.data.userConfiguration;
+            const userConfig = await getConfigurationInfo(appointment.userId);
+            businessData[appointment.userId] = userConfig.data;
           }
 
           if (!serviceData[appointment.serviceId]) {
