@@ -96,9 +96,8 @@ export const updateService = async (data, token) => {
 
 export const deleteService = async (serviceId, token) => {
   try {
-    const response = await axios.delete(`${API_URL}/Services/delete`, {
+    const response = await axios.delete(`${API_URL}/Services/delete/${serviceId}`, {
       headers: { 'Authorization': `Bearer ${token}` },
-      data: { id: serviceId }
     });
     return { success: true, data: response.data };
   } catch (error) {
