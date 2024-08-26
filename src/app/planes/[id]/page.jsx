@@ -11,7 +11,7 @@ const PlansDetail = () => {
     <div>
       <NavBar />
       <div
-        className={`${nunito.className} flex justify-center items-center h-screen px-4 bg-blue`}
+        className={`${nunito.className} flex justify-center items-center h-screen px-4 bg-bluee`}
       >
         <div className="flex flex-col gap-4 w-full max-w-2xl p-6 rounded-lg shadow-lg bg-dark-blue">
           <div className="flex justify-between items-center">
