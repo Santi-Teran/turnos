@@ -17,10 +17,9 @@ const NavBar = ({ config }) => {
         <Image src={config?.logoData} alt={config?.businessName} width={40} height={0} />
       </div>
       <div className='hidden md:flex gap-20 items-center'>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/servicios'>Servicios</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Turnos</Link>
-        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href='/planes'>Contacto</Link>
+        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href={`/home/${config.id}`}>Inicio</Link>
+        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href={`/turnos/${config.id}`}>Sacar Turno</Link>
+        <Link className='hover:scale-105 hover:border-b border-arena transition-all' href={`/mis-turnos`}>Mis Turnos</Link>
       </div>
       <div className='md:hidden absolute right-0 m-5'>
         <button onClick={toggleMenu} className='text-3xl focus:outline-none'>
@@ -33,9 +32,8 @@ const NavBar = ({ config }) => {
             <button onClick={toggleMenu} className='absolute right-0 m-5 text-3xl'><FiX /></button>
             <nav className='flex flex-col items-start gap-10 p-10 pt-20 text-xl'>
               <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/'>Inicio</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/servicios'>Servicios</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/portafolio'>Turnos</Link>
-              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href='/planes'>Contacto</Link>
+              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href={`/turnos/${config.id}`}>Sacar Turno</Link>
+              <Link onClick={toggleMenu} className='hover:scale-105 hover:border-b border-arena transition-all' href={`/mis-turnos`}>Mis Turnos</Link>
             </nav>
           </div>
         </div>
