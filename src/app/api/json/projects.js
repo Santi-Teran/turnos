@@ -1,7 +1,7 @@
 const projects = [
   { 
     id: 1,
-    image: "/galeria/home.png",
+    image: "/galeria/home.PNG",
   },
   { 
     id: 2,
@@ -9,7 +9,7 @@ const projects = [
   },
   { 
     id: 3,
-    image: "/galeria/calendario.png",
+    image: "/galeria/calendario.PNG",
   },
 ];
 
