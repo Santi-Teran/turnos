@@ -11,6 +11,19 @@ export const registerUser = async (formData) => {
   }
 };
 
+export const verifyCode = async (email, code) => {
+  try {
+    // Enviar los datos en el formato esperado por la API
+    const response = await axios.post(`${API_URL}/Users/validate-code`, {
+      phoneNumber: email,  // Enviar el email en el campo 'phoneNumber'
+      code: code,          // Enviar el código de verificación
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, message: error.response ? error.response.statusText : error.message };
+  }
+};
+
 export const businessConfiguration = async (formData, token) => {
   try {
     const response = await axios.post(`${API_URL}/Users/update`, formData, {
