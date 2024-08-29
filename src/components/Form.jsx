@@ -5,6 +5,8 @@ import {
   getConfigurationInfo,
   getUpcomingHolidays,
   getServices,
+  verifyPhonee,
+  verifyPhoneCode,
 } from "@/app/api/api";
 import Loading from "./Loading";
 import DatePicker from "react-datepicker";
@@ -30,6 +32,8 @@ const Form = ({ userId }) => {
   const [closedDays, setClosedDays] = useState([]);
   const [holidays, setHolidays] = useState([]);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [phoneChecked, setPhoneChecked] = useState(false);
+  const [verificationStep, setVerificationStep] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
 
@@ -128,18 +132,38 @@ const Form = ({ userId }) => {
   };
 
   const sendVerificationCode = async () => {
-    // Aquí enviarías el código de verificación al teléfono del usuario.
-    // Simulamos el código de verificación como "1234" por simplicidad.
-    setVerificationCode("1234");
-    alert("Código de verificación enviado");
+    try {
+      const response = await verifyPhonee(formData.phone);
+      if (response.data.phone_verified) {
+        setIsPhoneVerified(true);
+        setPhoneChecked(true);
+      } else {
+        // Guardar el código de verificación en el estado
+        setVerificationCode(response.data.verification_code);
+        setVerificationStep(true); // Mostrar el campo para ingresar el código
+        toast.success("Código de verificación enviado");
+      }
+    } catch (error) {
+      console.error("Error sending verification code:", error);
+      toast.error("Error al enviar el código de verificación.");
+    }
   };
 
-  const verifyPhone = () => {
-    if (enteredCode === verificationCode) {
-      setIsPhoneVerified(true);
-      alert("Teléfono verificado con éxito");
-    } else {
-      alert("Código incorrecto. Inténtalo de nuevo.");
+  const verifyPhone = async () => {
+    try {
+      const response = await verifyPhoneCode(formData.phone, enteredCode);
+      console.log(response);
+      if (response.success) {
+        setIsPhoneVerified(true);
+        setPhoneChecked(true);
+        setVerificationStep(false);
+        toast.success("Teléfono verificado con éxito");
+      } else {
+        toast.error("Código incorrecto. Inténtalo de nuevo.");
+      }
+    } catch (error) {
+      console.error("Error verifying phone code:", error);
+      toast.error("Error al verificar el código. Inténtalo de nuevo.");
     }
   };
 
@@ -203,116 +227,112 @@ const Form = ({ userId }) => {
           </h2>
         </div>
 
-        <div className="flex flex-col gap-1 w-full text-black">
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-            placeholder="Nombre"
-            required
-          />
-        </div>
-
-        {isPhoneVerified ? (
-          <></>
+        {phoneChecked ? (
+          <>
+            {isPhoneVerified && (
+              <>
+                <div className="flex flex-col gap-6 w-full text-black">
+                  <div className="flex flex-col gap-1 w-full text-black">
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+                      placeholder="Nombre"
+                      required
+                    />
+                  </div>
+                  <DatePicker
+                    name="date"
+                    selected={formData.date}
+                    onChange={handleDateChange}
+                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                    placeholderText="Selecciona la fecha"
+                    filterDate={(date) => !isDayOff(date)}
+                    minDate={new Date()}
+                  />
+                  <select
+                    name="hour"
+                    value={formData.hour}
+                    onChange={handleChange}
+                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecciona la hora
+                    </option>
+                    {availableTimes.map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    name="serviceId"
+                    value={formData.serviceId}
+                    onChange={handleChange}
+                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecciona el servicio
+                    </option>
+                    {services.map((service) => (
+                      <option key={service.id} value={service.id}>
+                        {service.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
+                >
+                  Agendar
+                </button>
+              </>
+            )}
+          </>
         ) : (
-          <div className="flex flex-col items-center gap-2 w-full text-black">
+          <div className="flex flex-col gap-4 w-full text-black">
+            <label className="font-semibold">Ingresa tu numero telefono</label>
             <PhoneInput
               country={"ar"}
               value={formData.phone}
               onChange={handlePhoneChange}
-              className="focus:outline-none focus:ring-0"
-              placeholder="Teléfono"
-              required
+              placeholder="Número de teléfono"
+              inputProps={{ name: "phone", required: true }}
             />
             <button
               type="button"
               onClick={sendVerificationCode}
-              className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold"
-            >
-              Enviar Código
-            </button>
-          </div>
-        )}
-
-        {/* Verificación del teléfono */}
-        {!isPhoneVerified && (
-          <>
-            <div className="flex flex-col w-full text-black">
-              <input
-                type="text"
-                value={enteredCode}
-                onChange={(e) => setEnteredCode(e.target.value)}
-                className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-                placeholder="Ingrese el Código"
-                required
-              />
-            </div>
-            <button
-              type="button"
-              onClick={verifyPhone}
-              className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
+              className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
             >
               Verificar Teléfono
             </button>
-          </>
-        )}
-
-        {isPhoneVerified && (
-          <>
-            <div className="flex flex-col gap-6 w-full text-black">
-              <DatePicker
-                name="date"
-                selected={formData.date} // Debe ser un objeto Date
-                onChange={handleDateChange}
-                className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                placeholderText="Selecciona la fecha"
-                filterDate={(date) => !isDayOff(date)}
-                minDate={new Date()}
-              />
-              <select
-                name="hour"
-                value={formData.hour}
-                onChange={handleChange}
-                className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                required
-              >
-                <option value="" disabled>
-                  Selecciona la hora
-                </option>
-                {availableTimes.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="serviceId"
-                value={formData.serviceId}
-                onChange={handleChange}
-                className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                required
-              >
-                <option value="" disabled>
-                  Selecciona el servicio
-                </option>
-                {services.map((service) => (
-                  <option key={service.id} value={service.id}>
-                    {service.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="submit"
-              className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-            >
-              Agendar Turno
-            </button>
-          </>
+            {verificationStep && (
+              <div className="flex flex-col gap-4 w-full text-black">
+                <label className="mt-8 font-semibold">
+                  Ingresa el codigo que te llego
+                </label>
+                <input
+                  type="text"
+                  value={enteredCode}
+                  onChange={(e) => setEnteredCode(e.target.value)}
+                  className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+                  placeholder="Código de verificación"
+                />
+                <button
+                  type="button"
+                  onClick={verifyPhone}
+                  className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
+                >
+                  Enviar Código
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </form>
     </>
