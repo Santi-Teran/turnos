@@ -1,7 +1,8 @@
-'use client'
+"use client";
 import { Nunito } from "next/font/google";
 import { MdMail, MdLock } from "react-icons/md";
 import { useLogin } from "../api/handlers/handleLogin";
+import Link from "next/link";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -10,10 +11,21 @@ const LoginForm = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-20 p-8 rounded-lg shadow-2xl w-full max-w-md gradient">
-        <h1 className={`${nunito.className} text-3xl md:text-4xl font-black`}>Iniciar Sesión</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-5 mt-20 p-8 rounded-lg shadow-2xl w-full max-w-md gradient"
+      >
+        <h1 className={`${nunito.className} text-3xl md:text-4xl font-black`}>
+          Iniciar Sesión
+        </h1>
         <div className="flex flex-col gap-2">
-          <div className={`flex items-center border p-2 gap-2 rounded-lg ${errors.email ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border'}`}>
+          <div
+            className={`flex items-center border p-2 gap-2 rounded-lg ${
+              errors.email
+                ? "border-2 border-red-500 focus-within:ring-red-500"
+                : "border"
+            }`}
+          >
             <MdMail className="text-gray-100" />
             <input
               type="email"
@@ -21,15 +33,25 @@ const LoginForm = () => {
               value={formData.email}
               placeholder="Email"
               onChange={handleChange}
-              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-100 ${errors.email ? 'text-red-500 placeholder-red-500' : ''}`}
+              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-100 ${
+                errors.email ? "text-red-500 placeholder-red-500" : ""
+              }`}
               required
             />
           </div>
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className={`flex items-center border p-2 gap-2 rounded-lg ${errors.password ? 'border-2 border-red-500 focus-within:ring-red-500' : 'border'}`}>
+          <div
+            className={`flex items-center border p-2 gap-2 rounded-lg ${
+              errors.password
+                ? "border-2 border-red-500 focus-within:ring-red-500"
+                : "border"
+            }`}
+          >
             <MdLock className="text-gray-100" />
             <input
               type="password"
@@ -37,7 +59,9 @@ const LoginForm = () => {
               value={formData.password}
               placeholder="Contraseña"
               onChange={handleChange}
-              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-100 ${errors.password ? 'text-red-500 placeholder-red-500' : ''}`}
+              className={`bg-transparent focus:outline-none focus:ring-0 w-full text-black placeholder:text-gray-100 ${
+                errors.password ? "text-red-500 placeholder-red-500" : ""
+              }`}
               required
             />
           </div>
@@ -46,16 +70,20 @@ const LoginForm = () => {
               <input type="checkbox" />
               Recuerdame
             </label>
-            <p>Olvidaste tu contraseña?</p>
+            <Link href="/restore" className="hover:underline">
+              Olvidaste tu contraseña?
+            </Link>
           </div>
-          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password}</p>
+          )}
         </div>
         <button
           type="submit"
           className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`}
           disabled={loading}
         >
-          {loading ? 'Cargando...' : 'Iniciar Sesión'}
+          {loading ? "Cargando..." : "Iniciar Sesión"}
         </button>
       </form>
     </div>
