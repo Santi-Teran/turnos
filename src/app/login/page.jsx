@@ -3,11 +3,14 @@ import { Nunito } from "next/font/google";
 import { MdMail, MdLock } from "react-icons/md";
 import { useLogin } from "../api/handlers/handleLogin";
 import Link from "next/link";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
 const LoginForm = () => {
   const { formData, handleChange, handleSubmit, loading, errors } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -54,7 +57,7 @@ const LoginForm = () => {
           >
             <MdLock className="text-gray-100" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               placeholder="Contraseña"
@@ -64,6 +67,17 @@ const LoginForm = () => {
               }`}
               required
             />
+            {showPassword ? (
+              <FaEyeSlash
+                onClick={() => setShowPassword(!showPassword)}
+                className="cursor-pointer"
+              />
+            ) : (
+              <FaEye
+                onClick={() => setShowPassword(!showPassword)}
+                className="cursor-pointer"
+              />
+            )}
           </div>
           <div className="flex justify-between py-2 text-xs">
             <label className="flex items-center gap-2 ">
