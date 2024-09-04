@@ -9,37 +9,55 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const nunito = Nunito({ subsets: ["latin"] });
 
 const RestorePassword = () => {
-  const [step, setStep] = useState(1); // Paso 1: solicitar email, Paso 2: ingresar código, Paso 3: cambiar contraseña
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [token, setToken] = useState(""); // Token para cambiar la contraseña
+  const [token, setToken] = useState("");
   const [canResend, setCanResend] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [codeValid, setCodeValid] = useState(null); // null = no verificado, true = correcto, false = incorrecto
   const router = useRouter();
 
   const handleEmailSubmit = async () => {
+    setIsLoading(true);
+    setFeedbackMessage("Enviando correo...");
     try {
       const response = await axios.post(
         `https://www.misturnos.somee.com/api/Users/verify-identity?email=${email}`
       );
       if (response.status === 200) {
         setStep(2);
-        startResendTimer(); // Inicia el temporizador para permitir reenvío
+        setFeedbackMessage("");
+        startResendTimer();
       } else {
-        console.error("Error al enviar el código");
+        setFeedbackMessage("Error al enviar el código. Intente de nuevo.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      setFeedbackMessage("Error al enviar el código. Intente de nuevo.");
+    } finally {
+      setIsLoading(false);
     }
+
+    setTimeout(() => {
+      if (step === 2 && !token) {
+        setFeedbackMessage(
+          "El correo puede tardar en llegar. Por favor, revise su bandeja de entrada."
+        );
+      }
+    }, 60000); // 1 minuto
   };
 
   const startResendTimer = () => {
     setCanResend(false);
-    setTimeout(() => setCanResend(true), 60000); // Espera 1 minuto para permitir reenvío
+    setTimeout(() => setCanResend(true), 60000);
   };
 
   const handleCodeSubmit = async () => {
+    setIsLoading(true);
+    setFeedbackMessage("Verificando código...");
     try {
       const response = await axios.post(
         "https://www.misturnos.somee.com/api/Users/validate-code?flag=true",
@@ -51,15 +69,23 @@ const RestorePassword = () => {
       if (response.status === 200) {
         setToken(response.data.token);
         setStep(3);
+        setCodeValid(true);
+        setFeedbackMessage("");
       } else {
-        console.error("Código inválido");
+        setCodeValid(false);
+        setFeedbackMessage("Código incorrecto. Inténtelo de nuevo.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      setCodeValid(false);
+      setFeedbackMessage("Error al verificar el código.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handlePasswordChange = async () => {
+    setIsLoading(true);
+    setFeedbackMessage("Cambiando contraseña...");
     try {
       const response = await axios.post(
         "https://www.misturnos.somee.com/api/Users/change-password",
@@ -68,19 +94,21 @@ const RestorePassword = () => {
           password: newPassword,
         },
         {
-          headers: { Authorization: `Bearer ${token}` }, // Coloca el token en el header
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       if (response.status === 200) {
-        console.log("Contraseña cambiada con éxito");
+        setFeedbackMessage("Contraseña cambiada con éxito. Redirigiendo...");
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {
-        console.error("Error al cambiar la contraseña");
+        setFeedbackMessage("Error al cambiar la contraseña.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      setFeedbackMessage("Error al cambiar la contraseña.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,9 +134,10 @@ const RestorePassword = () => {
             <button
               type="button"
               onClick={handleEmailSubmit}
+              disabled={isLoading}
               className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`}
             >
-              Enviar código
+              {isLoading ? "Enviando..." : "Enviar código"}
             </button>
           </>
         )}
@@ -125,10 +154,19 @@ const RestorePassword = () => {
             <button
               type="button"
               onClick={handleCodeSubmit}
+              disabled={isLoading}
               className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`}
             >
-              Verificar código
+              {isLoading ? "Verificando..." : "Verificar código"}
             </button>
+            {codeValid === false && (
+              <p className="text-red-600">
+                Código incorrecto. Inténtelo de nuevo.
+              </p>
+            )}
+            {feedbackMessage && (
+              <p className="text-gray-600 mt-2">{feedbackMessage}</p>
+            )}
           </>
         )}
 
@@ -158,10 +196,14 @@ const RestorePassword = () => {
             <button
               type="button"
               onClick={handlePasswordChange}
+              disabled={isLoading}
               className={`${nunito.className} text-lg bg-arena text-dark-blue font-black px-6 py-2 rounded-lg`}
             >
-              Cambiar contraseña
+              {isLoading ? "Cambiando..." : "Cambiar contraseña"}
             </button>
+            {feedbackMessage && (
+              <p className="text-gray-600 mt-2">{feedbackMessage}</p>
+            )}
           </>
         )}
       </form>
