@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
-import { businessConfiguration } from '../api';
+import { useState, useEffect } from "react";
+import { businessConfiguration } from "../api";
 
 export const useBusinessConfiguration = (initialUserData) => {
   const [formData, setFormData] = useState({
-    id: '',
-    email: '',
-    name: '',
-    address: '',
+    id: "",
+    email: "",
+    name: "",
+    address: "",
     userConfiguration: {
-      businessName: '',
-      description: '',
-      logoData: '',
-      currency: '',
-      language: '',
-      instagramLink: '',
-      phone: '',
-      mision: '',
-      vision: '',
-      history: '',
-      appointmentDuration: '',
-      timeBetweenAppointments: '',
-      dayStartTime: '',
-      dayEndTime: '',
-      breakStartHour: '',
-      breakDuration: '',
-      daysOff: '',
+      businessName: "",
+      description: "",
+      logoData: "",
+      currency: "",
+      language: "",
+      instagramLink: "",
+      phone: "",
+      mision: "",
+      vision: "",
+      history: "",
+      appointmentDuration: "",
+      timeBetweenAppointments: "",
+      dayStartTime: "",
+      dayEndTime: "",
+      breakStartHour: "",
+      breakDuration: "",
+      daysOff: "",
       dailySchedules: null,
       fixedAppointmentsAvailable: true,
-    }
+    },
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -46,15 +46,15 @@ export const useBusinessConfiguration = (initialUserData) => {
 
   const handleChange = (e) => {
     const { name, value, type, files, checked } = e.target;
-    if (type === 'checkbox') {
+    if (type === "checkbox") {
       setFormData((prevData) => ({
         ...prevData,
         userConfiguration: {
           ...prevData.userConfiguration,
           [name]: checked,
-        }
+        },
       }));
-    } else if (type === 'file') {
+    } else if (type === "file") {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prevData) => ({
@@ -62,19 +62,21 @@ export const useBusinessConfiguration = (initialUserData) => {
           userConfiguration: {
             ...prevData.userConfiguration,
             logoData: reader.result,
-          }
+          },
         }));
       };
       reader.readAsDataURL(files[0]);
-    } else if (name === 'daysOff') {
+    } else if (name === "daysOff") {
       const options = e.target.selectedOptions;
-      const values = Array.from(options).map(option => option.value).join(';');
+      const values = Array.from(options)
+        .map((option) => option.value)
+        .join(";");
       setFormData((prevData) => ({
         ...prevData,
         userConfiguration: {
           ...prevData.userConfiguration,
           daysOff: values,
-        }
+        },
       }));
     } else {
       setFormData((prevData) => ({
@@ -82,34 +84,37 @@ export const useBusinessConfiguration = (initialUserData) => {
         userConfiguration: {
           ...prevData.userConfiguration,
           [name]: value,
-        }
+        },
       }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const parsedFormData = {
       ...formData,
       userConfiguration: {
         ...formData.userConfiguration,
-        appointmentDuration: parseInt(formData.userConfiguration.appointmentDuration, 10),
-        timeBetweenAppointments: parseInt(formData.userConfiguration.timeBetweenAppointments, 10),
-        dayStartTime: parseInt(formData.userConfiguration.dayStartTime, 10),
-        dayEndTime: parseInt(formData.userConfiguration.dayEndTime, 10),
-        breakStartHour: parseInt(formData.userConfiguration.breakStartHour, 10),
-        breakDuration: parseInt(formData.userConfiguration.breakDuration, 10)
-      }
+        appointmentDuration: parseInt(
+          formData.userConfiguration.appointmentDuration,
+          10
+        ),
+        timeBetweenAppointments: parseInt(
+          formData.userConfiguration.timeBetweenAppointments,
+          10
+        ),
+        breakDuration: parseInt(formData.userConfiguration.breakDuration, 10),
+      },
     };
 
     const result = await businessConfiguration(parsedFormData, token);
 
     if (result.success) {
-      console.log(result.data, formData);
+      console.log(formData.userConfiguration);
       setIsEditing(false);
     } else {
-      console.error('Error en el registro:', result.message);
+      console.error("Error en el registro:", result.message);
     }
   };
 

@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { FaQuestion, FaQuestionCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 export const BusinessNameInput = ({ formData, handleChange, isEditing }) => {
@@ -142,7 +143,11 @@ export const BusinessLogoInput = ({ formData, handleChange, isEditing }) => {
   );
 };
 
-export const BusinessDescriptionInput = ({ formData, handleChange, isEditing }) => {
+export const BusinessDescriptionInput = ({
+  formData,
+  handleChange,
+  isEditing,
+}) => {
   const userConfig = formData.userConfiguration || {};
 
   return (
@@ -163,6 +168,14 @@ export const BusinessDescriptionInput = ({ formData, handleChange, isEditing }) 
 
 export const BusinessHours = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
+  const [breakDuration, setBreakDuration] = useState(
+    userConfig.breakDuration || 0
+  );
+
+  const handleRangeChange = (e) => {
+    setBreakDuration(e.target.value);
+    handleChange(e); // Esto es para manejar cualquier otra lógica que tengas en handleChange
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -170,7 +183,7 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Horario de Apertura</label>
           <input
-            type="number"
+            type={isEditing ? "time" : "text"}
             name="dayStartTime"
             defaultValue={userConfig.dayStartTime || ""}
             onChange={handleChange}
@@ -183,7 +196,7 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Horario de Cierre</label>
           <input
-            type="number"
+            type={isEditing ? "time" : "text"}
             name="dayEndTime"
             defaultValue={userConfig.dayEndTime || ""}
             onChange={handleChange}
@@ -194,11 +207,11 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
           />
         </div>
       </div>
-      <div className="flex md:flex-row flex-col gap-2 justify-center">
-        <div className="flex flex-col gap-2 md:w-1/2">
+      <div className="flex flex-col gap-4 justify-center">
+        <div className="flex flex-col gap-2">
           <label className="font-semibold">Inicio del descanso</label>
           <input
-            type="number"
+            type={isEditing ? "time" : "text"}
             name="breakStartHour"
             defaultValue={userConfig.breakStartHour || ""}
             onChange={handleChange}
@@ -207,17 +220,30 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
             readOnly={!isEditing}
           />
         </div>
-        <div className="flex flex-col gap-2 md:w-1/2">
+        <div className="flex flex-col gap-2">
           <label className="font-semibold">Duracion del descanso</label>
-          <input
-            type="number"
-            name="breakDuration"
-            defaultValue={userConfig.breakDuration || ""}
-            onChange={handleChange}
-            placeholder="Duracion del descanso (HH)"
-            className="bg-transparent border-2 p-2 rounded-lg"
-            readOnly={!isEditing}
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type={isEditing ? "range" : "text"}
+              min="0"
+              max="60"
+              value={`${breakDuration} minutos`}
+              name="breakDuration"
+              onChange={handleRangeChange}
+              placeholder="Duracion del descanso (HH)"
+              className={
+                isEditing
+                  ? "w-3/4"
+                  : "bg-transparent w-full border-2 p-2 rounded-lg"
+              }
+              readOnly={!isEditing}
+            />
+            {isEditing ? (
+              <span className="w-1/4">{breakDuration} min</span>
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -226,34 +252,71 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
 
 export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
+  const [appointmentDuration, setAppointmentDuration] = useState(
+    userConfig.appointmentDuration || 0
+  );
+  const [timeBetweenAppointments, setTimeBetweenAppointments] = useState(
+    userConfig.timeBetweenAppointments || 0
+  );
+
+  const handleRangeChange = (e) => {
+    setAppointmentDuration(e.target.value);
+    handleChange(e); // Esto es para manejar cualquier otra lógica que tengas en handleChange
+  };
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <label className="font-semibold">Duracion del turno (minutos)</label>
-        <input
-          type="number"
-          name="appointmentDuration"
-          defaultValue={userConfig.appointmentDuration || ""}
-          onChange={handleChange}
-          placeholder="Duracion del turno"
-          className="bg-transparent border-2 p-2 rounded-lg"
-          readOnly={!isEditing}
-          required
-        />
+        <label className="font-semibold">Duracion del turno</label>
+        <div className="flex items-center gap-2">
+          <input
+            type={isEditing ? "range" : "text"}
+            name="appointmentDuration"
+            min="0"
+            max="60"
+            value={`${appointmentDuration} minutos`}
+            onChange={handleRangeChange}
+            placeholder="Duracion del turno"
+            className={
+              isEditing
+                ? "w-3/4"
+                : "bg-transparent w-full border-2 p-2 rounded-lg"
+            }
+            readOnly={!isEditing}
+            required
+          />
+          {isEditing ? (
+            <span className="w-1/4">{appointmentDuration} min</span>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
       <div className="flex flex-col gap-2">
-        <label className="font-semibold">Tiempo entre turnos (minutos)</label>
-        <input
-          type="number"
-          name="timeBetweenAppointments"
-          defaultValue={userConfig.timeBetweenAppointments || ""}
-          onChange={handleChange}
-          placeholder="Tiempo entre turnos"
-          className="bg-transparent border-2 p-2 rounded-lg"
-          readOnly={!isEditing}
-          required
-        />
+        <label className="font-semibold">Tiempo entre turnos</label>
+        <div className="flex items-center gap-2">
+          <input
+            type={isEditing ? "range" : "text"}
+            min="0"
+            max="60"
+            name="timeBetweenAppointments"
+            value={`${timeBetweenAppointments} minutos`}
+            onChange={handleChange}
+            placeholder="Tiempo entre turnos"
+            className={
+              isEditing
+                ? "w-3/4"
+                : "bg-transparent w-full border-2 p-2 rounded-lg"
+            }
+            readOnly={!isEditing}
+            required
+          />
+          {isEditing ? (
+            <span className="w-1/4">{timeBetweenAppointments} min</span>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -261,10 +324,23 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
 
 export const BusinessDays = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="font-semibold">Dias cerrados</label>
+      <div className="flex gap-2">
+        <label className="font-semibold">Dias cerrados</label>
+        <FaQuestionCircle
+          onMouseEnter={() => setShowModal(true)}
+          onMouseLeave={() => setShowModal(false)}
+          className="cursor-pointer"
+        />
+        {showModal && (
+          <div className="absolute  bg-white text-black p-2 border border-gray-300 rounded shadow-lg w-40">
+            Para seleccionar dos o más días, mantenga apretado CTRL.
+          </div>
+        )}
+      </div>
       <select
         name="daysOff"
         defaultValue={userConfig.daysOff ? userConfig.daysOff.split(";") : []}
@@ -361,5 +437,5 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
         </div>
       </div>
     </div>
-  )
+  );
 };
