@@ -172,9 +172,18 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
     userConfig.breakDuration || 0
   );
 
+  useEffect(() => {
+    // Set break duration only if the user config changes
+    setBreakDuration(userConfig.breakDuration || 0);
+  }, [userConfig.breakDuration]);
+
   const handleRangeChange = (e) => {
-    setBreakDuration(e.target.value);
-    handleChange(e); // Esto es para manejar cualquier otra lógica que tengas en handleChange
+    const value = parseInt(e.target.value, 10); // Convert to integer
+    setBreakDuration(value);
+    handleChange({
+      ...e,
+      target: { ...e.target, value },
+    });
   };
 
   return (
@@ -227,10 +236,10 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
               type={isEditing ? "range" : "text"}
               min="0"
               max="60"
-              value={`${breakDuration} minutos`}
+              value={breakDuration}
               name="breakDuration"
               onChange={handleRangeChange}
-              placeholder="Duracion del descanso (HH)"
+              placeholder="Duracion del descanso (min)"
               className={
                 isEditing
                   ? "w-3/4"
@@ -259,9 +268,20 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
     userConfig.timeBetweenAppointments || 0
   );
 
+  useEffect(() => {
+    // Set appointment duration and time between appointments only if user config changes
+    setAppointmentDuration(userConfig.appointmentDuration || 0);
+    setTimeBetweenAppointments(userConfig.timeBetweenAppointments || 0);
+  }, [userConfig.appointmentDuration, userConfig.timeBetweenAppointments]);
+
   const handleRangeChange = (e) => {
-    setAppointmentDuration(e.target.value);
-    handleChange(e); // Esto es para manejar cualquier otra lógica que tengas en handleChange
+    const { name, value } = e.target; // Asegúrate de que name está definido
+    const intValue = parseInt(value, 10);
+
+    // Actualiza el formData correctamente
+    handleChange({
+      target: { name, value: intValue }, // Verifica que name no sea undefined
+    });
   };
 
   return (
@@ -274,7 +294,7 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
             name="appointmentDuration"
             min="0"
             max="60"
-            value={`${appointmentDuration} minutos`}
+            value={appointmentDuration}
             onChange={handleRangeChange}
             placeholder="Duracion del turno"
             className={
@@ -300,8 +320,8 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
             min="0"
             max="60"
             name="timeBetweenAppointments"
-            value={`${timeBetweenAppointments} minutos`}
-            onChange={handleChange}
+            value={timeBetweenAppointments}
+            onChange={handleRangeChange}
             placeholder="Tiempo entre turnos"
             className={
               isEditing
@@ -336,7 +356,7 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
           className="cursor-pointer"
         />
         {showModal && (
-          <div className="absolute  bg-white text-black p-2 border border-gray-300 rounded shadow-lg w-40">
+          <div className="z-20 bg-white text-black p-2 border border-gray-300 rounded shadow-lg w-40">
             Para seleccionar dos o más días, mantenga apretado CTRL.
           </div>
         )}
