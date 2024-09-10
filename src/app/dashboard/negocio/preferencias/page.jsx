@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { handleUser } from "@/app/api/handlers/handleUser";
 import BusinessPreferencesForm from "@/components/dashboard/BusinessPreferencesForm";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -18,14 +18,14 @@ const PreferencesPage = () => {
   return (
     <div className={`${inter.className} flex`}>
       <Sidebar />
-      <div className='bg-grayy md:w-5/6'>
+      <div className="bg-grayy md:w-5/6">
         <TopBar />
         <div>
           <BusinessPreferencesForm initialData={userInfo} />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default withAuth(PreferencesPage);

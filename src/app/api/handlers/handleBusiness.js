@@ -13,7 +13,7 @@ export const useBusinessConfiguration = (initialUserData) => {
     name: "",
     userConfiguration: {
       address: {
-        adressLine: "",
+        addressLine: "",
         city: "",
         state: "",
         country: "",
@@ -50,7 +50,13 @@ export const useBusinessConfiguration = (initialUserData) => {
         name: initialUserData.name,
         userConfiguration: {
           ...prevData.userConfiguration,
-          address: initialUserData.userConfiguration.address,
+          address: {
+            ...prevData.address,
+            addressLine: initialUserData.userConfiguration.address.addressLine,
+            city: initialUserData.userConfiguration.address.city,
+            state: initialUserData.userConfiguration.address.state,
+            country: initialUserData.userConfiguration.address.country,
+          },
           businessName: initialUserData.userConfiguration.businessName,
           description: initialUserData.userConfiguration.description,
           logoData: initialUserData.userConfiguration.logoData,
@@ -81,6 +87,7 @@ export const useBusinessConfiguration = (initialUserData) => {
   const handleChange = (e) => {
     const { name, value, type, files, checked } = e.target;
 
+    // Manejo de archivos (por ejemplo, logo)
     if (type === "file") {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -93,7 +100,9 @@ export const useBusinessConfiguration = (initialUserData) => {
         }));
       };
       reader.readAsDataURL(files[0]);
-    } else if (type === "checkbox") {
+    }
+    // Manejo de checkbox
+    else if (type === "checkbox") {
       setFormData((prevData) => ({
         ...prevData,
         userConfiguration: {
@@ -101,7 +110,9 @@ export const useBusinessConfiguration = (initialUserData) => {
           [name]: checked,
         },
       }));
-    } else if (type === "range") {
+    }
+    // Manejo de rangos
+    else if (type === "range") {
       setFormData((prevData) => ({
         ...prevData,
         userConfiguration: {
@@ -109,7 +120,22 @@ export const useBusinessConfiguration = (initialUserData) => {
           [name]: parseInt(value, 10),
         },
       }));
-    } else if (name === "daysOff") {
+    }
+    // Manejo de los campos de la dirección (guardando dentro de `address`)
+    else if (["country", "state", "city", "addressLine"].includes(name)) {
+      setFormData((prevData) => ({
+        ...prevData,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          address: {
+            ...prevData.userConfiguration.address,
+            [name]: value,
+          },
+        },
+      }));
+    }
+    // Manejo de días libres (selección múltiple)
+    else if (name === "daysOff") {
       const values = Array.from(
         e.target.selectedOptions,
         (option) => option.value
@@ -121,7 +147,9 @@ export const useBusinessConfiguration = (initialUserData) => {
           daysOff: values,
         },
       }));
-    } else if (
+    }
+    // Manejo de tiempos (ej. horas de inicio y fin del día)
+    else if (
       name === "dayStartTime" ||
       name === "dayEndTime" ||
       name === "breakStartHour"
@@ -133,7 +161,9 @@ export const useBusinessConfiguration = (initialUserData) => {
           [name]: formatTime(value),
         },
       }));
-    } else {
+    }
+    // Otros cambios generales
+    else {
       setFormData((prevData) => ({
         ...prevData,
         userConfiguration: {

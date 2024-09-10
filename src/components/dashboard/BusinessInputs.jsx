@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { FaQuestion, FaQuestionCircle } from "react-icons/fa";
+import { FaQuestionCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 export const BusinessNameInput = ({ formData, handleChange, isEditing }) => {
@@ -428,6 +428,7 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
           />
         </div>
       </div>
+
       <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">WhatsApp</label>
@@ -450,6 +451,64 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
             defaultValue={userConfig.instagramLink || ""}
             onChange={handleChange}
             placeholder="Instagram"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
+            required
+          />
+        </div>
+      </div>
+      <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
+        <div className="flex flex-col gap-2 md:w-1/2">
+          <label className="font-semibold">País</label>
+          <input
+            type="text"
+            name="country"
+            defaultValue={userConfig.address.country || ""}
+            onChange={handleChange}
+            placeholder="Pais"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-2 md:w-1/2">
+          <label className="font-semibold">Estado o Provincia</label>
+          <input
+            type="text"
+            name="state"
+            defaultValue={userConfig.address.state || ""}
+            onChange={handleChange}
+            placeholder="Estado o Provincia"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
+        <div className="flex flex-col gap-2 md:w-1/2">
+          <label className="font-semibold">Ciudad</label>
+          <input
+            type="text"
+            name="city"
+            defaultValue={userConfig.address.city || ""}
+            onChange={handleChange}
+            placeholder="Ciudad"
+            className="bg-transparent border-2 p-2 rounded-lg"
+            readOnly={!isEditing}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-2 md:w-1/2">
+          <label className="font-semibold">Dirección</label>
+          <input
+            type="text"
+            name="adressLine"
+            defaultValue={userConfig.address.addressLine || ""}
+            onChange={handleChange}
+            placeholder="Dirección"
             className="bg-transparent border-2 p-2 rounded-lg"
             readOnly={!isEditing}
             required

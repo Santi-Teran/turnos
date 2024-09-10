@@ -1,5 +1,11 @@
 import Image from "next/image";
-import { BusinessDescriptionInput, BusinessHistoryInput, BusinessMisionInput, BusinessNameInput, BusinessVisionInput } from "./BusinessInputs";
+import {
+  BusinessDescriptionInput,
+  BusinessHistoryInput,
+  BusinessMisionInput,
+  BusinessNameInput,
+  BusinessVisionInput,
+} from "./BusinessInputs";
 import BusinessLinks from "./BusinessLinks";
 
 const BusinessGeneralDetail = ({ formData, setIsEditing }) => {
