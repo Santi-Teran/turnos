@@ -161,7 +161,16 @@ export const useBusinessConfiguration = (initialUserData) => {
           [name]: formatTime(value),
         },
       }));
+    } else if (name === "breakDuration") {
+      setFormData((prevData) => ({
+        ...prevData,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          [name]: parseInt(value, 10),
+        },
+      }));
     }
+
     // Otros cambios generales
     else {
       setFormData((prevData) => ({

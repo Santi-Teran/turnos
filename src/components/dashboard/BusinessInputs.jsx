@@ -173,16 +173,16 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
   );
 
   useEffect(() => {
-    // Set break duration only if the user config changes
     setBreakDuration(userConfig.breakDuration || 0);
   }, [userConfig.breakDuration]);
 
   const handleRangeChange = (e) => {
-    const value = parseInt(e.target.value, 10); // Convert to integer
-    setBreakDuration(value);
+    const { name, value } = e.target; // Asegúrate de que name está definido
+    const intValue = parseInt(value, 10);
+
+    // Actualiza el formData correctamente
     handleChange({
-      ...e,
-      target: { ...e.target, value },
+      target: { name, value: intValue }, // Verifica que name no sea undefined
     });
   };
 
