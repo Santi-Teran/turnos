@@ -293,7 +293,7 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
             type={isEditing ? "range" : "text"}
             name="appointmentDuration"
             min="0"
-            max="60"
+            max="120"
             value={appointmentDuration}
             onChange={handleRangeChange}
             placeholder="Duracion del turno"
