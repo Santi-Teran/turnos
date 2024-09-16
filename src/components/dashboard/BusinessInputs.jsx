@@ -346,10 +346,37 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
   const [showModal, setShowModal] = useState(false);
 
+  const days = [
+    { label: "Lunes", value: "lunes" },
+    { label: "Martes", value: "martes" },
+    { label: "Miércoles", value: "miércoles" },
+    { label: "Jueves", value: "jueves" },
+    { label: "Viernes", value: "viernes" },
+    { label: "Sábado", value: "sábado" },
+    { label: "Domingo", value: "domingo" },
+  ];
+
+  const selectedDays = userConfig.daysOff ? userConfig.daysOff.split(";") : [];
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    const updatedDays = checked
+      ? [...selectedDays, value]
+      : selectedDays.filter((day) => day !== value);
+
+    const event = {
+      target: {
+        name: "daysOff",
+        value: updatedDays.join(";"),
+      },
+    };
+    handleChange(event);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-2">
-        <label className="font-semibold">Dias cerrados</label>
+        <label className="font-semibold">Días cerrados</label>
         <FaQuestionCircle
           onMouseEnter={() => setShowModal(true)}
           onMouseLeave={() => setShowModal(false)}
@@ -357,26 +384,30 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
         />
         {showModal && (
           <div className="z-20 bg-white text-black p-2 border border-gray-300 rounded shadow-lg w-40">
-            Para seleccionar dos o más días, mantenga apretado CTRL.
+            Seleccione los días en los que estará cerrado.
           </div>
         )}
       </div>
-      <select
-        name="daysOff"
-        defaultValue={userConfig.daysOff ? userConfig.daysOff.split(";") : []}
-        onChange={handleChange}
-        multiple
-        className="bg-transparent h-40 overflow-hidden border-2 p-2 rounded-lg"
-        readOnly={!isEditing}
-      >
-        <option value="lunes">Lunes</option>
-        <option value="martes">Martes</option>
-        <option value="miércoles">Miércoles</option>
-        <option value="jueves">Jueves</option>
-        <option value="viernes">Viernes</option>
-        <option value="sábado">Sábado</option>
-        <option value="domingo">Domingo</option>
-      </select>
+
+      {/* Checkbox para cada día */}
+      <div className="flex flex-col gap-2">
+        {days.map((day) => (
+          <label key={day.value} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="daysOff"
+              value={day.value}
+              checked={selectedDays.includes(day.value)}
+              onChange={handleCheckboxChange}
+              className="bg-transparent border-2 p-2 rounded-lg"
+              disabled={!isEditing}
+            />
+            {day.label}
+          </label>
+        ))}
+      </div>
+
+      {/* Turnos fijos */}
       <div className="flex flex-col gap-2">
         <label className="font-semibold">Turnos fijos</label>
         <label className="flex gap-2">
@@ -401,34 +432,42 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
+        {/* Moneda */}
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Moneda</label>
-          <input
-            type="text"
+          <select
             name="currency"
             defaultValue={userConfig.currency || ""}
             onChange={handleChange}
-            placeholder="Moneda"
             className="bg-transparent border-2 p-2 rounded-lg"
-            readOnly={!isEditing}
+            disabled={!isEditing}
             required
-          />
+          >
+            <option value="">Seleccionar moneda</option>
+            <option value="ARS">Pesos Argentinos</option>
+            <option value="USD">Dólares</option>
+          </select>
         </div>
+
+        {/* Lenguaje */}
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Lenguaje</label>
-          <input
-            type="text"
+          <select
             name="language"
             defaultValue={userConfig.language || ""}
             onChange={handleChange}
-            placeholder="Lenguaje"
             className="bg-transparent border-2 p-2 rounded-lg"
-            readOnly={!isEditing}
+            disabled={!isEditing}
             required
-          />
+          >
+            <option value="">Seleccionar lenguaje</option>
+            <option value="es">Español</option>
+            <option value="en">Inglés</option>
+          </select>
         </div>
       </div>
 
+      {/* WhatsApp e Instagram */}
       <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">WhatsApp</label>
@@ -457,13 +496,15 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
           />
         </div>
       </div>
+
+      {/* País y Estado/Provincia */}
       <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">País</label>
           <input
             type="text"
             name="country"
-            defaultValue={userConfig.address.country || ""}
+            defaultValue={userConfig.address?.country || ""}
             onChange={handleChange}
             placeholder="Pais"
             className="bg-transparent border-2 p-2 rounded-lg"
@@ -476,7 +517,7 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
           <input
             type="text"
             name="state"
-            defaultValue={userConfig.address.state || ""}
+            defaultValue={userConfig.address?.state || ""}
             onChange={handleChange}
             placeholder="Estado o Provincia"
             className="bg-transparent border-2 p-2 rounded-lg"
@@ -486,13 +527,14 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
         </div>
       </div>
 
+      {/* Ciudad y Dirección */}
       <div className="flex md:flex-row flex-col gap-10 md:gap-20 justify-center">
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Ciudad</label>
           <input
             type="text"
             name="city"
-            defaultValue={userConfig.address.city || ""}
+            defaultValue={userConfig.address?.city || ""}
             onChange={handleChange}
             placeholder="Ciudad"
             className="bg-transparent border-2 p-2 rounded-lg"
@@ -505,8 +547,8 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
           <label className="font-semibold">Dirección</label>
           <input
             type="text"
-            name="adressLine"
-            defaultValue={userConfig.address.addressLine || ""}
+            name="addressLine"
+            defaultValue={userConfig.address?.addressLine || ""}
             onChange={handleChange}
             placeholder="Dirección"
             className="bg-transparent border-2 p-2 rounded-lg"

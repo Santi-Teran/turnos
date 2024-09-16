@@ -27,7 +27,9 @@ const Contact = ({ config }) => {
               <Link
                 target="_BLANK"
                 className="hover:scale-125 transition-all"
-                href={config.instagramLink ? config.instagramLink : ""}
+                href={`https://www.instagram.com/${
+                  config.instagramLink ? config.instagramLink : ""
+                }/`}
               >
                 <FaInstagram />
               </Link>
@@ -50,10 +52,6 @@ const Contact = ({ config }) => {
               {config.address.city + ", " || ""}
               {config.address.state + ", " || ""}
               {config.address.country || ""}
-            </li>
-            <li className="flex items-center gap-2">
-              <BiPhone className="text-lg md:text-xl text-verde-agua" />
-              {config.phone || "Teléfono del negocio..."}
             </li>
           </ul>
         </div>

@@ -134,20 +134,6 @@ export const useBusinessConfiguration = (initialUserData) => {
         },
       }));
     }
-    // Manejo de días libres (selección múltiple)
-    else if (name === "daysOff") {
-      const values = Array.from(
-        e.target.selectedOptions,
-        (option) => option.value
-      ).join(";");
-      setFormData((prevData) => ({
-        ...prevData,
-        userConfiguration: {
-          ...prevData.userConfiguration,
-          daysOff: values,
-        },
-      }));
-    }
     // Manejo de tiempos (ej. horas de inicio y fin del día)
     else if (
       name === "dayStartTime" ||
