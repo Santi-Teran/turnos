@@ -79,11 +79,7 @@ const LoginForm = () => {
               />
             )}
           </div>
-          <div className="flex justify-between py-2 text-xs">
-            <label className="flex items-center gap-2 ">
-              <input type="checkbox" />
-              Recuerdame
-            </label>
+          <div className="flex justify-end py-2 text-xs">
             <Link href="/restore" className="hover:underline">
               Olvidaste tu contraseña?
             </Link>

@@ -1,29 +1,21 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const withAuth = (WrappedComponent) => {
   return (props) => {
     const router = useRouter();
 
     useEffect(() => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       // Verificación inicial del token
       if (!token) {
-        router.push('/login'); // Redirige al login si no hay token
+        router.push("/login"); // Redirige al login si no hay token
       }
 
-      // Borrar el token al cerrar la página (no en recarga)
-      const handleUnload = () => {
-        localStorage.removeItem('token');
-      };
-
-      window.addEventListener('unload', handleUnload);
-
-      // Limpieza del evento al desmontar el componente
-      return () => {
-        window.removeEventListener('unload', handleUnload);
-      };
+      // No eliminar el token en recarga o cierre de página
+      // Eliminamos este listener para que no borre el token en ningún caso
+      // El token debería ser eliminado solo cuando el usuario hace un logout explícito
     }, [router]);
 
     return <WrappedComponent {...props} />;
