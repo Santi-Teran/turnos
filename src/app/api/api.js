@@ -75,7 +75,6 @@ export const getUserInfo = async (userId, token) => {
   } catch (error) {
     return {
       success: false,
-      message: error.response ? error.response.statusText : error.message,
     };
   }
 };
