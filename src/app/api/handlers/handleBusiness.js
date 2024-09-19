@@ -32,6 +32,7 @@ export const useBusinessConfiguration = (initialUserData) => {
       timeBetweenAppointments: "",
       dayStartTime: "",
       dayEndTime: "",
+      haveBreak: false,
       breakStartHour: "",
       breakDuration: "",
       daysOff: "",
@@ -73,6 +74,7 @@ export const useBusinessConfiguration = (initialUserData) => {
             initialUserData.userConfiguration.timeBetweenAppointments,
           dayStartTime: initialUserData.userConfiguration.dayStartTime,
           dayEndTime: initialUserData.userConfiguration.dayEndTime,
+          haveBreak: initialUserData.userConfiguration.haveBreak,
           breakStartHour: initialUserData.userConfiguration.breakStartHour,
           breakDuration: initialUserData.userConfiguration.breakDuration,
           daysOff: initialUserData.userConfiguration.daysOff,
@@ -135,7 +137,15 @@ export const useBusinessConfiguration = (initialUserData) => {
       }));
     }
     // Manejo de tiempos (ej. horas de inicio y fin del día)
-    else if (
+    else if (name === "closingNextDay") {
+      setFormData((prevData) => ({
+        ...prevData,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          closingNextDay: value === "true",
+        },
+      }));
+    } else if (
       name === "dayStartTime" ||
       name === "dayEndTime" ||
       name === "breakStartHour"
@@ -171,6 +181,27 @@ export const useBusinessConfiguration = (initialUserData) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { dayStartTime, dayEndTime, breakStartHour } =
+      formData.userConfiguration;
+    // Función para convertir horas a formato continuo (ej: 02:00 am = 26)
+    const convertToContinuousHour = (hour) => {
+      const [hours, minutes] = hour.split(":").map(Number);
+      return hours < 9 ? hours + 24 : hours; // 9 es solo un ejemplo, puedes ajustarlo según el negocio
+    };
+
+    // Convertir horas
+    const start = convertToContinuousHour(dayStartTime);
+    let end = convertToContinuousHour(dayEndTime);
+    const breakHour = convertToContinuousHour(breakStartHour);
+
+    // Validar que breakStartHour esté dentro del rango de dayStartTime y dayEndTime
+    if (breakHour < start || breakHour > end) {
+      alert(
+        "El inicio del descanso debe estar entre el horario de apertura y cierre."
+      );
+      return; // Evita que se envíe el formulario
+    }
+
     const token = localStorage.getItem("token");
     const parsedFormData = {
       ...formData,
@@ -188,8 +219,10 @@ export const useBusinessConfiguration = (initialUserData) => {
     const result = await businessConfiguration(parsedFormData, token);
 
     if (result.success) {
+      console.log(formData);
       setIsEditing(false);
     } else {
+      console.log(formData);
       console.error("Error en el registro:", result.message);
     }
   };

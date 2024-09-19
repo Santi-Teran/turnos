@@ -177,13 +177,26 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
   }, [userConfig.breakDuration]);
 
   const handleRangeChange = (e) => {
-    const { name, value } = e.target; // Asegúrate de que name está definido
+    const { name, value } = e.target;
     const intValue = parseInt(value, 10);
 
-    // Actualiza el formData correctamente
     handleChange({
-      target: { name, value: intValue }, // Verifica que name no sea undefined
+      target: { name, value: intValue },
     });
+  };
+
+  // Determina automáticamente si cierra al siguiente día
+  const isClosingNextDay = () => {
+    const startTime = userConfig.dayStartTime || "";
+    const endTime = userConfig.dayEndTime || "";
+
+    if (startTime && endTime) {
+      const startTimeInt = parseInt(startTime.replace(":", ""), 10);
+      const endTimeInt = parseInt(endTime.replace(":", ""), 10);
+      // Si el cierre es después de las 00:00 y menor al horario de apertura, se cierra al día siguiente
+      return endTimeInt > 0 && endTimeInt < startTimeInt;
+    }
+    return false;
   };
 
   return (
@@ -192,11 +205,10 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Horario de Apertura</label>
           <input
-            type={isEditing ? "time" : "text"}
+            type="time"
             name="dayStartTime"
             defaultValue={userConfig.dayStartTime || ""}
             onChange={handleChange}
-            placeholder="Hora de apertura (HH)"
             className="bg-transparent border-2 p-2 rounded-lg"
             readOnly={!isEditing}
             required
@@ -205,56 +217,65 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
         <div className="flex flex-col gap-2 md:w-1/2">
           <label className="font-semibold">Horario de Cierre</label>
           <input
-            type={isEditing ? "time" : "text"}
+            type="time"
             name="dayEndTime"
             defaultValue={userConfig.dayEndTime || ""}
             onChange={handleChange}
-            placeholder="Hora de cierre (HH)"
             className="bg-transparent border-2 p-2 rounded-lg"
             readOnly={!isEditing}
             required
           />
         </div>
       </div>
-      <div className="flex flex-col gap-4 justify-center">
-        <div className="flex flex-col gap-2">
-          <label className="font-semibold">Inicio del descanso</label>
+      <div className="flex flex-col gap-2">
+        <label className="font-semibold">
+          Quiere agregar tiempo de descanso?
+        </label>
+        <label className="flex gap-2">
           <input
-            type={isEditing ? "time" : "text"}
-            name="breakStartHour"
-            defaultValue={userConfig.breakStartHour || ""}
+            type="checkbox"
+            name="haveBreak"
+            defaultChecked={!!userConfig.haveBreak}
             onChange={handleChange}
-            placeholder="Inicio del descanso (HH)"
             className="bg-transparent border-2 p-2 rounded-lg"
             readOnly={!isEditing}
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="font-semibold">Duracion del descanso</label>
-          <div className="flex items-center gap-2">
+          Sí
+        </label>
+      </div>
+      {userConfig.haveBreak ? (
+        <div className="flex flex-col gap-4 justify-center">
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold">Inicio del descanso</label>
             <input
-              type={isEditing ? "range" : "text"}
-              min="0"
-              max="60"
-              value={breakDuration}
-              name="breakDuration"
-              onChange={handleRangeChange}
-              placeholder="Duracion del descanso (min)"
-              className={
-                isEditing
-                  ? "w-3/4"
-                  : "bg-transparent w-full border-2 p-2 rounded-lg"
-              }
+              type="time"
+              name="breakStartHour"
+              defaultValue={userConfig.breakStartHour || ""}
+              onChange={handleChange}
+              className="bg-transparent border-2 p-2 rounded-lg"
               readOnly={!isEditing}
             />
-            {isEditing ? (
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold">Duración del descanso</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min="0"
+                max="60"
+                value={breakDuration}
+                name="breakDuration"
+                onChange={handleRangeChange}
+                className="w-3/4"
+                readOnly={!isEditing}
+              />
               <span className="w-1/4">{breakDuration} min</span>
-            ) : (
-              <></>
-            )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
