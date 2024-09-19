@@ -374,7 +374,6 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
 
 export const BusinessDays = ({ formData, handleChange, isEditing }) => {
   const userConfig = formData.userConfiguration || {};
-  const [showModal, setShowModal] = useState(false);
 
   const days = [
     { label: "Lunes", value: "lunes" },
@@ -407,16 +406,6 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
     <div className="flex flex-col gap-2">
       <div className="flex gap-2">
         <label className="font-semibold">Días cerrados</label>
-        <FaQuestionCircle
-          onMouseEnter={() => setShowModal(true)}
-          onMouseLeave={() => setShowModal(false)}
-          className="cursor-pointer"
-        />
-        {showModal && (
-          <div className="z-20 bg-white text-black p-2 border border-gray-300 rounded shadow-lg w-40">
-            Seleccione los días en los que estará cerrado.
-          </div>
-        )}
       </div>
 
       {/* Checkbox para cada día */}
@@ -579,10 +568,9 @@ export const BusinessPreferences = ({ formData, handleChange, isEditing }) => {
             type="text"
             name="addressLine"
             defaultValue={userConfig.address?.addressLine || ""}
-            onChange={handleChange}
             placeholder="Dirección"
             className="bg-transparent border-2 p-2 rounded-lg"
-            readOnly={!isEditing}
+            readOnly
             required
           />
         </div>
