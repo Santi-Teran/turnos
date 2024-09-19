@@ -260,16 +260,25 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
             <label className="font-semibold">Duración del descanso</label>
             <div className="flex items-center gap-2">
               <input
-                type="range"
+                type={isEditing ? "range" : "text"}
                 min="0"
                 max="60"
                 value={breakDuration}
                 name="breakDuration"
                 onChange={handleRangeChange}
-                className="w-3/4"
+                className={
+                  isEditing
+                    ? "w-3/4"
+                    : "bg-transparent w-full border-2 p-2 rounded-lg"
+                }
                 readOnly={!isEditing}
+                required
               />
-              <span className="w-1/4">{breakDuration} min</span>
+              {isEditing ? (
+                <span className="w-1/4">{breakDuration} min</span>
+              ) : (
+                <></>
+              )}{" "}
             </div>
           </div>
         </div>
