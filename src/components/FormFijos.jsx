@@ -48,10 +48,19 @@ const FormFijos = ({ userId }) => {
   };
 
   const handleModalConfirm = () => {
+    // Avanzar al día siguiente
     const nextDay = new Date(selectedDate);
     nextDay.setDate(nextDay.getDate() + 1);
+
+    // Cambiar el día seleccionado en el form
+    const nextDayIndex = (parseInt(formData.day) + 1) % 7; // Ciclar entre 0 y 6 (días de la semana)
+
     setSelectedDate(nextDay);
-    setFormData({ ...formData, date: nextDay, hour: selectedTime });
+    setFormData({
+      ...formData,
+      day: nextDayIndex.toString(),
+      hour: selectedTime,
+    });
     setIsModalOpen(false);
   };
 
