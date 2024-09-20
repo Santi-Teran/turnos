@@ -27,6 +27,7 @@ const Form = ({ userId }) => {
     serviceId: "",
     userId: userId,
   });
+  const [clientName, setClientName] = useState(null);
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [closedDays, setClosedDays] = useState([]);
@@ -160,6 +161,7 @@ const Form = ({ userId }) => {
     try {
       const response = await verifyPhonee(formData.phone);
       if (response.data.phone_verified) {
+        setClientName(response.data.client.name);
         setIsPhoneVerified(true);
         setPhoneChecked(true);
       } else {
@@ -255,7 +257,8 @@ const Form = ({ userId }) => {
                     <input
                       type="text"
                       name="name"
-                      value={formData.name}
+                      value={clientName ? clientName : formData.name}
+                      readOnly={clientName ? true : false}
                       onChange={handleChange}
                       placeholder="Nombre completo"
                       className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
