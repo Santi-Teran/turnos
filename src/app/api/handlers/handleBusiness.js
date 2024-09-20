@@ -219,10 +219,8 @@ export const useBusinessConfiguration = (initialUserData) => {
     const result = await businessConfiguration(parsedFormData, token);
 
     if (result.success) {
-      console.log(formData);
       setIsEditing(false);
     } else {
-      console.log(formData);
       console.error("Error en el registro:", result.message);
     }
   };

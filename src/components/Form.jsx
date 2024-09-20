@@ -336,9 +336,7 @@ const Form = ({ userId }) => {
           </>
         ) : (
           <div className="flex flex-col gap-4 w-full text-black">
-            <label className="font-semibold">
-              Ingresa tu numero de telefono
-            </label>
+            <label className="font-semibold">Ingresa tu teléfono</label>
             <div className="flex flex-col gap-4 w-full text-black">
               <PhoneInput
                 country="ar"
@@ -350,7 +348,7 @@ const Form = ({ userId }) => {
               <button
                 type="button"
                 onClick={sendVerificationCode}
-                className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
+                className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
               >
                 Verificar Teléfono
               </button>

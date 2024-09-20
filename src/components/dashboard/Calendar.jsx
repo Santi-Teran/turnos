@@ -53,15 +53,35 @@ const CalendarView = ({
     };
   });
 
-  const fixedEvents = fixedappointments.map((fixedappointment) => ({
-    title: `${fixedappointment.client.name} - ${
-      serviceMap[fixedappointment.serviceId] || "Servicio"
-    }`,
-    daysOfWeek: [fixedappointment.day], // Día de la semana (0=Domingo, 1=Lunes, etc.)
-    startTime: fixedappointment.hour, // Hora del día en que comienza
-    extendedProps: fixedappointment,
-    classNames: ["custom-fixed-event"], // Añadir clase personalizada
-  }));
+  const fixedEvents = fixedappointments.map((fixedappointment) => {
+    // Crear la fecha y hora del turno basado en un día ficticio
+    const appointmentDate = new Date();
+    appointmentDate.setHours(parseInt(fixedappointment.hour.split(":")[0]));
+    appointmentDate.setMinutes(parseInt(fixedappointment.hour.split(":")[1]));
+
+    // Verificar si el turno ocurre técnicamente en domingo (0)
+    const dayOfWeek = fixedappointment.day; // Día de la semana del turno
+    const hour = appointmentDate.getHours(); // Hora del turno
+
+    // Si el negocio está cerrado el domingo (0) pero el turno es después de medianoche
+    // Restar un día para mover el evento al sábado
+    let adjustedDay = dayOfWeek;
+    if (dayOfWeek === 0 && hour < parseInt(dayEndTime)) {
+      adjustedDay = 6; // Ajustar a sábado (6)
+    } else if (hour < parseInt(dayEndTime) && dayOfWeek !== 0) {
+      adjustedDay = dayOfWeek + 1; // Restar un día
+    }
+
+    return {
+      title: `${fixedappointment.client.name} - ${
+        serviceMap[fixedappointment.serviceId] || "Servicio"
+      }`,
+      daysOfWeek: [adjustedDay], // Ajustar al día anterior si es necesario
+      startTime: fixedappointment.hour, // Hora del día en que comienza
+      extendedProps: fixedappointment,
+      classNames: ["custom-fixed-event"], // Añadir clase personalizada
+    };
+  });
 
   const allEvents = [...normalEvents, ...fixedEvents];
 

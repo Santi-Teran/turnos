@@ -153,6 +153,16 @@ const MisTurnos = () => {
     }
   };
 
+  const dayNames = [
+    "domingo",
+    "lunes",
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado",
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
@@ -207,7 +217,7 @@ const MisTurnos = () => {
                     const updatedDate = addDays(appointment.date, 1);
                     const formattedDate = format(
                       new Date(updatedDate),
-                      "dd 'de' MMMM 'de' yyyy",
+                      "EEEE 'de' dd 'de' MMMM 'de' yyyy",
                       { locale: es }
                     );
                     const appointmentDate = new Date(
@@ -231,7 +241,7 @@ const MisTurnos = () => {
                           <strong>Servicio:</strong>{" "}
                           {service.name || "Servicio no especificado"}
                         </p>
-                        <p>
+                        <p className="capitalize">
                           <strong>Fecha:</strong> {formattedDate}
                         </p>
                         <p>

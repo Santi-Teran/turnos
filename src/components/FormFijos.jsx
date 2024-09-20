@@ -32,6 +32,32 @@ const FormFijos = ({ userId }) => {
   const [verificationStep, setVerificationStep] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleTimeChange = (event) => {
+    const time = event.target.value;
+    setSelectedTime(time);
+    const [hours] = time.split(":").map(Number);
+    if (hours >= 0 && hours < 6) {
+      setIsModalOpen(true);
+    } else {
+      setFormData({ ...formData, hour: time });
+    }
+  };
+
+  const handleModalConfirm = () => {
+    const nextDay = new Date(selectedDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    setSelectedDate(nextDay);
+    setFormData({ ...formData, date: nextDay, hour: selectedTime });
+    setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -69,7 +95,6 @@ const FormFijos = ({ userId }) => {
     } else if (period === "AM" && hours === 12) {
       hours = 0;
     }
-
     return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
       .padStart(2, "0")}`;
@@ -208,7 +233,7 @@ const FormFijos = ({ userId }) => {
                       name="day"
                       value={formData.day}
                       onChange={handleChange}
-                      className="px-3 py-2 rounded-md cursor-pointer"
+                      className="px-3 py-2 rounded-md cursor-pointer capitalize"
                       required
                     >
                       <option value="" disabled>
@@ -227,8 +252,8 @@ const FormFijos = ({ userId }) => {
                   </div>
                   <select
                     name="hour"
-                    value={formData.hour}
-                    onChange={handleChange}
+                    value={selectedTime}
+                    onChange={handleTimeChange}
                     className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
                     required
                   >
@@ -274,7 +299,6 @@ const FormFijos = ({ userId }) => {
               country={"ar"}
               value={formData.phone}
               onChange={handlePhoneChange}
-              inputClass="!w-full !py-2 !rounded-md !bg-transparent !text-black !border !border-gray-300 !shadow-sm"
             />
             <button
               type="button"
@@ -310,6 +334,32 @@ const FormFijos = ({ userId }) => {
           </div>
         )}
       </form>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center text-black bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Confirmar Fecha</h2>
+            <p className="mb-6">
+              Has seleccionado un horario después de la medianoche, lo cual
+              indica que es al día siguiente. ¿Deseas agendar para el día
+              siguiente?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={handleModalClose}
+              >
+                Cancelar
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleModalConfirm}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
