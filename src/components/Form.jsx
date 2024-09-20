@@ -27,7 +27,7 @@ const Form = ({ userId }) => {
     serviceId: "",
     userId: userId,
   });
-  const [clientName, setClientName] = useState(null);
+  const [clientName, setClientName] = useState("");
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [closedDays, setClosedDays] = useState([]);
@@ -202,7 +202,7 @@ const Form = ({ userId }) => {
       date: selectedDate.toISOString().split("T")[0],
       hour: selectedTime,
       client: {
-        name: formData.name,
+        name: clientName ? clientName : formData.name,
         phone: formData.phone,
       },
       serviceId: parseInt(formData.serviceId),
