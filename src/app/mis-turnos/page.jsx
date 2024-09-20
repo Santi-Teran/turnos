@@ -30,7 +30,7 @@ const MisTurnos = () => {
   const handleChange = (value) => {
     setPhone(value);
   };
-
+  console.log(fixedAppointments);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -154,13 +154,13 @@ const MisTurnos = () => {
   };
 
   const dayNames = [
-    "domingo",
-    "lunes",
-    "martes",
-    "miércoles",
-    "jueves",
-    "viernes",
-    "sábado",
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
   ];
 
   return (
@@ -280,7 +280,7 @@ const MisTurnos = () => {
                       new Date()
                     );
                     const dayName =
-                      dayNames[appointment.days] || "Día no especificado";
+                      dayNames[appointment.day] || "Día no especificado";
 
                     return (
                       <div
