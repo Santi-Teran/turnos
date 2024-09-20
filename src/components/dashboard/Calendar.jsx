@@ -28,15 +28,30 @@ const CalendarView = ({
     return map;
   }, {});
 
-  const normalEvents = appointments.map((appointment) => ({
-    title: `${appointment.client.name} - ${
-      serviceMap[appointment.serviceId] || "Servicio"
-    }`,
-    start: new Date(`${appointment.date}T${appointment.hour}`),
-    end: new Date(`${appointment.date}T${appointment.hour}`),
-    extendedProps: appointment,
-    classNames: ["custom-event"], // Añadir clase personalizada
-  }));
+  const normalEvents = appointments.map((appointment) => {
+    // Crear la fecha y hora del turno
+    const appointmentDate = new Date(`${appointment.date}T${appointment.hour}`);
+
+    // Verifica si el día es domingo (0) y la hora es temprana (ej. después de la medianoche)
+    const dayOfWeek = appointmentDate.getDay();
+    const hour = appointmentDate.getHours();
+
+    // Si el negocio está cerrado los domingos (0) pero el turno es después de medianoche
+    if (dayOfWeek === 0 && hour < parseInt(dayEndTime)) {
+      // Restar un día para mover el evento al sábado
+      appointmentDate.setDate(appointmentDate.getDate() - 1);
+    }
+
+    return {
+      title: `${appointment.client.name} - ${
+        serviceMap[appointment.serviceId] || "Servicio"
+      }`,
+      start: appointmentDate, // Usa la fecha ajustada
+      end: appointmentDate,
+      extendedProps: appointment,
+      classNames: ["custom-event"], // Añadir clase personalizada
+    };
+  });
 
   const fixedEvents = fixedappointments.map((fixedappointment) => ({
     title: `${fixedappointment.client.name} - ${
@@ -66,6 +81,7 @@ const CalendarView = ({
       ? `${parseInt(dayEndTime) + 24}:00`
       : `${dayEndTime}:00`;
 
+  console.log(appointments);
   return (
     <div className="px-4 py-4 md:px-20 md:py-10 mb-20 text-dark-blue bg-dark">
       <FullCalendar
