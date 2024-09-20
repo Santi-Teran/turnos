@@ -101,7 +101,6 @@ const CalendarView = ({
       ? `${parseInt(dayEndTime) + 25}:00`
       : `${dayEndTime}:00`;
 
-  console.log(appointments);
   return (
     <div className="px-4 py-4 md:px-20 md:py-10 mb-20 text-dark-blue bg-dark">
       <FullCalendar

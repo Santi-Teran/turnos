@@ -30,7 +30,6 @@ const MisTurnos = () => {
   const handleChange = (value) => {
     setPhone(value);
   };
-  console.log(fixedAppointments);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
