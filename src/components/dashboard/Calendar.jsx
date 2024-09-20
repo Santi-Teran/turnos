@@ -69,7 +69,7 @@ const CalendarView = ({
     if (dayOfWeek === 0 && hour < parseInt(dayEndTime)) {
       adjustedDay = 6; // Ajustar a sábado (6)
     } else if (hour < parseInt(dayEndTime) && dayOfWeek !== 0) {
-      adjustedDay = dayOfWeek + 1; // Restar un día
+      adjustedDay = dayOfWeek + 1; // Sumar un día
     }
 
     return {
@@ -98,7 +98,7 @@ const CalendarView = ({
   // Ajuste para manejar horario de cierre al día siguiente
   const adjustedEndTime =
     parseInt(dayEndTime) < parseInt(dayStartTime)
-      ? `${parseInt(dayEndTime) + 24}:00`
+      ? `${parseInt(dayEndTime) + 25}:00`
       : `${dayEndTime}:00`;
 
   console.log(appointments);
