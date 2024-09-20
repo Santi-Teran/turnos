@@ -231,16 +231,31 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
         <label className="font-semibold">
           Quiere agregar tiempo de descanso?
         </label>
-        <label className="flex gap-2">
+        <label className="flex gap-2 items-center">
           <input
             type="checkbox"
             name="haveBreak"
             defaultChecked={!!userConfig.haveBreak}
             onChange={handleChange}
-            className="bg-transparent border-2 p-2 rounded-lg"
+            className="hidden"
             readOnly={!isEditing}
           />
-          Sí
+          <span
+            className={`relative inline-flex items-center cursor-pointer ${
+              isEditing ? "cursor-pointer" : "cursor-not-allowed"
+            }`}
+          >
+            <span
+              className={`block w-10 h-6 rounded-full ${
+                userConfig.haveBreak ? "bg-bluee" : "bg-gray-400"
+              }`}
+            ></span>
+            <span
+              className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                userConfig.haveBreak ? "translate-x-4" : "translate-x-0"
+              }`}
+            ></span>
+          </span>
         </label>
       </div>
       {userConfig.haveBreak ? (
@@ -387,7 +402,7 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
 
   const selectedDays = userConfig.daysOff ? userConfig.daysOff.split(";") : [];
 
-  const handleCheckboxChange = (e) => {
+  const handleToggleChange = (e) => {
     const { value, checked } = e.target;
     const updatedDays = checked
       ? [...selectedDays, value]
@@ -417,11 +432,29 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
               name="daysOff"
               value={day.value}
               checked={selectedDays.includes(day.value)}
-              onChange={handleCheckboxChange}
-              className="bg-transparent border-2 p-2 rounded-lg"
+              onChange={handleToggleChange}
+              className="hidden"
               disabled={!isEditing}
             />
-            {day.label}
+            <span
+              className={`relative inline-flex items-center cursor-pointer ${
+                isEditing ? "cursor-pointer" : "cursor-not-allowed"
+              }`}
+            >
+              <span
+                className={`block w-10 h-6 rounded-full ${
+                  selectedDays.includes(day.value) ? "bg-bluee" : "bg-gray-400"
+                }`}
+              ></span>
+              <span
+                className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                  selectedDays.includes(day.value)
+                    ? "translate-x-4"
+                    : "translate-x-0"
+                }`}
+              ></span>
+              <span className="ml-2">{day.label}</span>
+            </span>
           </label>
         ))}
       </div>
@@ -429,16 +462,36 @@ export const BusinessDays = ({ formData, handleChange, isEditing }) => {
       {/* Turnos fijos */}
       <div className="flex flex-col gap-2">
         <label className="font-semibold">Turnos fijos</label>
-        <label className="flex gap-2">
+        <label className="flex gap-2 items-center">
           <input
             type="checkbox"
             name="fixedAppointmentsAvailable"
             defaultChecked={!!userConfig.fixedAppointmentsAvailable}
             onChange={handleChange}
-            className="bg-transparent border-2 p-2 rounded-lg"
+            className="hidden"
             readOnly={!isEditing}
           />
-          Sí
+          <span
+            className={`relative inline-flex items-center cursor-pointer ${
+              isEditing ? "cursor-pointer" : "cursor-not-allowed"
+            }`}
+          >
+            <span
+              className={`block w-10 h-6 rounded-full ${
+                userConfig.fixedAppointmentsAvailable
+                  ? "bg-bluee"
+                  : "bg-gray-400"
+              }`}
+            ></span>
+            <span
+              className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                userConfig.fixedAppointmentsAvailable
+                  ? "translate-x-4"
+                  : "translate-x-0"
+              }`}
+            ></span>
+            <span className="ml-2">Sí</span>
+          </span>
         </label>
       </div>
     </div>

@@ -36,6 +36,32 @@ const Form = ({ userId }) => {
   const [verificationStep, setVerificationStep] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleTimeChange = (event) => {
+    const time = event.target.value;
+    setSelectedTime(time);
+    const [hours] = time.split(":").map(Number);
+    if (hours >= 0 && hours < 6) {
+      setIsModalOpen(true);
+    } else {
+      setFormData({ ...formData, hour: time });
+    }
+  };
+
+  const handleModalConfirm = () => {
+    const nextDay = new Date(selectedDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    setSelectedDate(nextDay);
+    setFormData({ ...formData, date: nextDay, hour: selectedTime });
+    setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -44,7 +70,7 @@ const Form = ({ userId }) => {
         const userInfo = response.data;
         const times = userInfo.dailySchedules.split(";");
         setUserInfo(userInfo);
-        setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
+        setAvailableTimes(times.map((time) => formatHour(time)));
         setClosedDays(
           userInfo.daysOff.split(";").map((day) => convertDayToIndex(day))
         );
@@ -58,7 +84,7 @@ const Form = ({ userId }) => {
         const response = await getServices(userId);
         setServices(response.data);
       } catch (error) {
-        console.error("Error fetching holidays:", error);
+        console.error("Error fetching services:", error);
       }
     };
 
@@ -81,13 +107,11 @@ const Form = ({ userId }) => {
   const formatHour = (hour) => {
     const [time, period] = hour.split(" ");
     let [hours, minutes] = time.split(":").map(Number);
-
     if (period === "PM" && hours < 12) {
       hours += 12;
     } else if (period === "AM" && hours === 12) {
       hours = 0;
     }
-
     return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
       .padStart(2, "0")}`;
@@ -125,6 +149,7 @@ const Form = ({ userId }) => {
       return;
     }
     setFormData({ ...formData, date: date });
+    setSelectedDate(date);
   };
 
   const handlePhoneChange = (value) => {
@@ -138,9 +163,8 @@ const Form = ({ userId }) => {
         setIsPhoneVerified(true);
         setPhoneChecked(true);
       } else {
-        // Guardar el código de verificación en el estado
         setVerificationCode(response.data.verification_code);
-        setVerificationStep(true); // Mostrar el campo para ingresar el código
+        setVerificationStep(true);
         toast.success("Código de verificación enviado");
       }
     } catch (error) {
@@ -152,7 +176,6 @@ const Form = ({ userId }) => {
   const verifyPhone = async () => {
     try {
       const response = await verifyPhoneCode(formData.phone, enteredCode);
-      console.log(response);
       if (response.success) {
         setIsPhoneVerified(true);
         setPhoneChecked(true);
@@ -169,25 +192,21 @@ const Form = ({ userId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!isPhoneVerified) {
       toast.error("Debe verificar su teléfono antes de agendar el turno");
       return;
     }
-
     const appointmentData = {
-      date: formData.date.toISOString().split("T")[0], // Convertir a formato ISO
-      hour: formData.hour,
+      date: selectedDate.toISOString().split("T")[0],
+      hour: selectedTime,
       client: {
         name: formData.name,
         phone: formData.phone,
       },
       serviceId: parseInt(formData.serviceId),
     };
-
     try {
       const result = await createAppointment(appointmentData);
-
       if (result.success) {
         toast.success("Turno agendado con éxito");
         setFormData({
@@ -201,7 +220,7 @@ const Form = ({ userId }) => {
           window.location.href = "/mis-turnos";
         }, 2000);
       } else {
-        handleErrors(result.message);
+        toast.error("Error al agendar el turno.");
       }
     } catch (error) {
       toast.error("Error del servidor, por favor intente nuevamente");
@@ -238,103 +257,134 @@ const Form = ({ userId }) => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
+                      placeholder="Nombre completo"
                       className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-                      placeholder="Nombre"
-                      required
                     />
                   </div>
-                  <DatePicker
-                    name="date"
-                    selected={formData.date}
-                    onChange={handleDateChange}
-                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                    placeholderText="Selecciona la fecha"
-                    filterDate={(date) => !isDayOff(date)}
-                    minDate={new Date()}
-                  />
-                  <select
-                    name="hour"
-                    value={formData.hour}
-                    onChange={handleChange}
-                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                    required
+                  <div className="flex flex-col gap-1 w-full text-black">
+                    <DatePicker
+                      name="date"
+                      selected={formData.date}
+                      onChange={handleDateChange}
+                      className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                      placeholderText="Selecciona la fecha"
+                      filterDate={(date) => !isDayOff(date)}
+                      dateFormat="dd-MM-yyyy"
+                      minDate={new Date()}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1 w-full text-black">
+                    <select
+                      value={selectedTime}
+                      onChange={handleTimeChange}
+                      className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                    >
+                      <option value="">Selecciona un horario</option>
+                      {availableTimes.map((time) => (
+                        <option key={time} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1 w-full text-black">
+                    <select
+                      name="serviceId"
+                      value={formData.serviceId}
+                      onChange={handleChange}
+                      className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                    >
+                      <option value="">Selecciona un servicio</option>
+                      {services.map((service) => (
+                        <option key={service.id} value={service.id}>
+                          {service.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
                   >
-                    <option value="" disabled>
-                      Selecciona la hora
-                    </option>
-                    {availableTimes.map((time) => (
-                      <option key={time} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    name="serviceId"
-                    value={formData.serviceId}
-                    onChange={handleChange}
-                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                    required
-                  >
-                    <option value="" disabled>
-                      Selecciona el servicio
-                    </option>
-                    {services.map((service) => (
-                      <option key={service.id} value={service.id}>
-                        {service.name}
-                      </option>
-                    ))}
-                  </select>
+                    Agendar Turno
+                  </button>
                 </div>
-                <button
-                  type="submit"
-                  className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-                >
-                  Agendar
-                </button>
+              </>
+            )}
+            {verificationStep && (
+              <>
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-center">
+                    Ingrese el código enviado a su teléfono:
+                  </p>
+                  <input
+                    type="text"
+                    value={enteredCode}
+                    onChange={(e) => setEnteredCode(e.target.value)}
+                    className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+                    placeholder="Código de verificación"
+                  />
+                  <button
+                    onClick={verifyPhone}
+                    className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
+                  >
+                    Verificar
+                  </button>
+                </div>
               </>
             )}
           </>
         ) : (
           <div className="flex flex-col gap-4 w-full text-black">
-            <label className="font-semibold">Ingresa tu numero telefono</label>
-            <PhoneInput
-              country={"ar"}
-              value={formData.phone}
-              onChange={handlePhoneChange}
-              placeholder="Número de teléfono"
-              inputProps={{ name: "phone", required: true }}
-            />
-            <button
-              type="button"
-              onClick={sendVerificationCode}
-              className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
-            >
-              Verificar Teléfono
-            </button>
-            {verificationStep && (
-              <div className="flex flex-col gap-4 w-full text-black">
-                <label className="mt-8 font-semibold">
-                  Ingresa el codigo que te llego
-                </label>
-                <input
-                  type="text"
-                  value={enteredCode}
-                  onChange={(e) => setEnteredCode(e.target.value)}
-                  className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-                  placeholder="Código de verificación"
-                />
-                <button
-                  type="button"
-                  onClick={verifyPhone}
-                  className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
-                >
-                  Enviar Código
-                </button>
-              </div>
-            )}
+            <label className="font-semibold">
+              Ingresa tu numero de telefono
+            </label>
+            <div className="flex flex-col gap-4 w-full text-black">
+              <PhoneInput
+                country="ar"
+                value={formData.phone}
+                onChange={handlePhoneChange}
+                placeholder="Ingrese su número de teléfono"
+                className="input"
+              />
+              <button
+                type="button"
+                onClick={sendVerificationCode}
+                className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
+              >
+                Verificar Teléfono
+              </button>
+            </div>
           </div>
         )}
       </form>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center text-black bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Confirmar Fecha</h2>
+            <p className="mb-6">
+              Has seleccionado un horario después de la medianoche, lo cual
+              indica que es al día siguiente. ¿Deseas agendar para el día
+              siguiente?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={handleModalClose}
+              >
+                Cancelar
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleModalConfirm}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
