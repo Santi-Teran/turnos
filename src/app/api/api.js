@@ -2,15 +2,28 @@ import axios from "axios";
 
 const API_URL = "https://www.misturnos.somee.com/api";
 
+const handleError = (error) => {
+  if (error.response) {
+    return {
+      success: false,
+      message: error.response.data.message || "Error del servidor",
+    };
+  } else if (error.request) {
+    return {
+      success: false,
+      message: "No se recibió respuesta del servidor",
+    };
+  } else {
+    return { success: false, message: "Error al realizar la solicitud" };
+  }
+};
+
 export const getUsers = async () => {
   try {
     const response = await axios.get(`${API_URL}/Users`);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -19,10 +32,7 @@ export const registerUser = async (formData) => {
     const response = await axios.post(`${API_URL}/Users/signup`, formData);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -34,10 +44,7 @@ export const verifyCode = async (email, code) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -48,10 +55,7 @@ export const businessConfiguration = async (formData, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -62,7 +66,7 @@ export const loginUser = async (formData) => {
     localStorage.setItem("token", response.data.token);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, message: error.response.data };
+    return handleError(error);
   }
 };
 
@@ -73,9 +77,7 @@ export const getUserInfo = async (userId, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-    };
+    return handleError(error);
   }
 };
 
@@ -86,10 +88,7 @@ export const getConfigurationInfo = async (userId) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -99,10 +98,7 @@ export const getServices = async (userId) => {
     const response = await axios.get(`${API_URL}/Services/${userId}`);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -111,10 +107,7 @@ export const getService = async (serviceId) => {
     const response = await axios.get(`${API_URL}/Services/get/${serviceId}`);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -125,10 +118,7 @@ export const createService = async (data, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -139,10 +129,7 @@ export const updateService = async (data, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -156,13 +143,11 @@ export const deleteService = async (serviceId, token) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
+// Appointments
 export const getAppointments = async (userId, token) => {
   try {
     const response = await axios.get(`${API_URL}/Appointments/${userId}`, {
@@ -170,10 +155,7 @@ export const getAppointments = async (userId, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -184,10 +166,7 @@ export const getAppointmentsByPhone = async (phone) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -196,10 +175,7 @@ export const createAppointment = async (data) => {
     const response = await axios.post(`${API_URL}/Appointments/add`, data);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -211,10 +187,7 @@ export const createFixedAppointment = async (data) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -230,8 +203,7 @@ export const verifyPhonee = async (phone) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error al cancelar el turno:", error);
-    return { success: false };
+    return handleError(error);
   }
 };
 
@@ -243,10 +215,7 @@ export const verifyPhoneCode = async (phone, code) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -257,10 +226,7 @@ export const updateAppointment = async (data, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -275,10 +241,7 @@ export const updateFixedAppointment = async (data, token) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -292,27 +255,21 @@ export const deleteAppointmentt = async (appointmentId, token) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
 export const deleteFixedAppointmentt = async (appointmentId, token) => {
+  const response = await axios.delete(
+    `${API_URL}/Appointments/fixed/delete/${appointmentId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   try {
-    const response = await axios.delete(
-      `${API_URL}/Appointments/fixed/delete/${appointmentId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -328,8 +285,7 @@ export const deleteAppointment = async (appointmentId, phone) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error al cancelar el turno:", error);
-    return { success: false };
+    return handleError(error);
   }
 };
 
@@ -345,8 +301,7 @@ export const deleteFixedAppointment = async (fixedAppointmentId, phone) => {
     );
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error al cancelar el turno fijo:", error);
-    return { success: false };
+    return handleError(error);
   }
 };
 
@@ -358,10 +313,7 @@ export const getHolidays = async (userId, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -370,10 +322,7 @@ export const getUpcomingHolidays = async (userId) => {
     const response = await axios.get(`${API_URL}/Holidays/upcoming/${userId}`);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -382,10 +331,7 @@ export const getHoliday = async (holidayId) => {
     const response = await axios.get(`${API_URL}/Holidays/get/${holidayId}`);
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -396,10 +342,7 @@ export const createHoliday = async (data, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
@@ -410,24 +353,20 @@ export const updateHoliday = async (data, token) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };
 
 export const deleteHoliday = async (holidayId, token) => {
   try {
-    const response = await axios.delete(`${API_URL}/Holidays/delete`, {
-      headers: { Authorization: `Bearer ${token}` },
-      data: { id: holidayId },
-    });
+    const response = await axios.delete(
+      `${API_URL}/Holidays/delete/${holidayId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      message: error.response ? error.response.statusText : error.message,
-    };
+    return handleError(error);
   }
 };

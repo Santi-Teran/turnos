@@ -12,10 +12,6 @@ const withAuth = (WrappedComponent) => {
       if (!token) {
         router.push("/login"); // Redirige al login si no hay token
       }
-
-      // No eliminar el token en recarga o cierre de página
-      // Eliminamos este listener para que no borre el token en ningún caso
-      // El token debería ser eliminado solo cuando el usuario hace un logout explícito
     }, [router]);
 
     return <WrappedComponent {...props} />;

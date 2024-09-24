@@ -76,7 +76,7 @@ const Form = ({ userId }) => {
           userInfo.daysOff.split(";").map((day) => convertDayToIndex(day))
         );
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        toast.error("Error del servidor:", error);
       }
     };
 
@@ -85,7 +85,7 @@ const Form = ({ userId }) => {
         const response = await getServices(userId);
         setServices(response.data);
       } catch (error) {
-        console.error("Error fetching services:", error);
+        toast.error("Error del servidor:", error);
       }
     };
 
@@ -96,7 +96,7 @@ const Form = ({ userId }) => {
           response.data.holidays.map((holiday) => new Date(holiday.date))
         );
       } catch (error) {
-        console.error("Error fetching holidays:", error);
+        toast.error("Error del servidor:", error);
       }
     };
 
@@ -170,7 +170,6 @@ const Form = ({ userId }) => {
         toast.success("Código de verificación enviado");
       }
     } catch (error) {
-      console.error("Error sending verification code:", error);
       toast.error("Error al enviar el código de verificación.");
     }
   };
@@ -187,7 +186,6 @@ const Form = ({ userId }) => {
         toast.error("Código incorrecto. Inténtalo de nuevo.");
       }
     } catch (error) {
-      console.error("Error verifying phone code:", error);
       toast.error("Error al verificar el código. Inténtalo de nuevo.");
     }
   };

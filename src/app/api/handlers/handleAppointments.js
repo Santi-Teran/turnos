@@ -7,6 +7,28 @@ import {
   updateAppointment,
   updateFixedAppointment,
 } from "../api";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// Función para obtener el token, evitando repetición de código
+const getToken = () => localStorage.getItem("token");
+
+// Manejo centralizado de actualización y eliminación de citas
+const handleAction = async (actionFn, successMessage, id, setAppointments) => {
+  const token = getToken();
+  const result = await actionFn(token);
+  if (result.success) {
+    toast.success(successMessage);
+    const appointmentsResult = await getAppointments(id, token);
+    if (appointmentsResult.success) {
+      setAppointments(appointmentsResult.data);
+    } else {
+      toast.error("Error:", appointmentsResult.message);
+    }
+  } else {
+    toast.error("Error:", result.message);
+  }
+};
 
 export const useAppointments = (id) => {
   const [appointments, setAppointments] = useState([]);
@@ -16,7 +38,7 @@ export const useAppointments = (id) => {
 
   useEffect(() => {
     const fetchAppointmentsAndServices = async () => {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       try {
         const [appointmentsResponse, servicesResponse] = await Promise.all([
           getAppointments(id, token),
@@ -27,10 +49,12 @@ export const useAppointments = (id) => {
           setAppointments(appointmentsResponse.data || []);
           setServices(servicesResponse.data || []);
         } else {
-          setError(appointmentsResponse.message || servicesResponse.message);
+          setError(
+            appointmentsResponse.message || servicesResponse.message || "Error"
+          );
         }
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message || "Error");
       } finally {
         setLoading(false);
       }
@@ -39,64 +63,41 @@ export const useAppointments = (id) => {
     if (id) fetchAppointmentsAndServices();
   }, [id]);
 
+  // Funciones para manejar las acciones
   const handleUpdate = async (editedAppointment) => {
-    const token = localStorage.getItem("token");
-    const dataToSend = {
-      ...editedAppointment,
-    };
-
-    const result = await updateAppointment(dataToSend, token);
-    if (result.success) {
-      const appointmentsResult = await getAppointments(id, token);
-      if (appointmentsResult.success) {
-        setAppointments(appointmentsResult.data);
-      }
-    } else {
-      console.error("Error updating appointment:", result.message);
-    }
+    await handleAction(
+      (token) => updateAppointment(editedAppointment, token),
+      "Turno actualizado correctamente!",
+      id,
+      setAppointments
+    );
   };
 
   const handleFixedUpdate = async (editedAppointment) => {
-    const token = localStorage.getItem("token");
-    const dataToSend = {
-      ...editedAppointment,
-    };
-
-    const result = await updateFixedAppointment(dataToSend, token);
-    if (result.success) {
-      const appointmentsResult = await getAppointments(id, token);
-      if (appointmentsResult.success) {
-        setAppointments(appointmentsResult.data);
-      }
-    } else {
-      console.error("Error updating appointment:", result.message);
-    }
+    await handleAction(
+      (token) => updateFixedAppointment(editedAppointment, token),
+      "Fixed Turno actualizado correctamente!",
+      id,
+      setAppointments
+    );
   };
 
   const handleDelete = async (appointmentId) => {
-    const token = localStorage.getItem("token");
-    const result = await deleteAppointmentt(appointmentId, token);
-    if (result.success) {
-      const appointmentsResult = await getAppointments(id, token);
-      if (appointmentsResult.success) {
-        setAppointments(appointmentsResult.data);
-      }
-    } else {
-      console.error("Error deleting service:", result.message);
-    }
+    await handleAction(
+      (token) => deleteAppointmentt(appointmentId, token),
+      "Turno borrado correctamente!",
+      id,
+      setAppointments
+    );
   };
 
   const handleFixedDelete = async (appointmentId) => {
-    const token = localStorage.getItem("token");
-    const result = await deleteFixedAppointmentt(appointmentId, token);
-    if (result.success) {
-      const appointmentsResult = await getAppointments(id, token);
-      if (appointmentsResult.success) {
-        setAppointments(appointmentsResult.data);
-      }
-    } else {
-      console.error("Error deleting service:", result.message);
-    }
+    await handleAction(
+      (token) => deleteFixedAppointmentt(appointmentId, token),
+      "Fixed Turno borrado correctamente!",
+      id,
+      setAppointments
+    );
   };
 
   return {

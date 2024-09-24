@@ -79,7 +79,7 @@ const FormFijos = ({ userId }) => {
         setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
         setClosedDays(userInfo.daysOff.split(";"));
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        toast.error("Error del servidor:", error);
       }
     };
 
@@ -88,7 +88,7 @@ const FormFijos = ({ userId }) => {
         const response = await getServices(userId);
         setServices(response.data);
       } catch (error) {
-        console.error("Error fetching holidays:", error);
+        toast.error("Error del servidor:", error);
       }
     };
 
@@ -133,7 +133,6 @@ const FormFijos = ({ userId }) => {
         toast.success("Código de verificación enviado");
       }
     } catch (error) {
-      console.error("Error sending verification code:", error);
       toast.error("Error al enviar el código de verificación.");
     }
   };
@@ -150,7 +149,6 @@ const FormFijos = ({ userId }) => {
         toast.error("Código incorrecto. Inténtalo de nuevo.");
       }
     } catch (error) {
-      console.error("Error verifying phone code:", error);
       toast.error("Error al verificar el código. Inténtalo de nuevo.");
     }
   };
@@ -183,10 +181,10 @@ const FormFijos = ({ userId }) => {
           window.location.href = "/mis-turnos";
         }, 2000);
       } else {
-        handleErrors(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
-      toast.error("Error del servidor, por favor intente nuevamente");
+      toast.error("Error del servidor");
     }
   };
 
