@@ -10,11 +10,20 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
     date: "",
   });
 
+  // Formatear la fecha a dd-mm-aaaa
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Meses van de 0 a 11
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditedHoliday((prevData) => ({
       ...prevData,
-      [name]: name === "" ? JSON.parse(value) : value,
+      [name]: value,
     }));
   };
 
@@ -37,7 +46,7 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
 
   return (
     <div className="p-4 border rounded shadow-lg bg-white w-full overflow-x-auto">
-      <h2 className="text-xl font-bold mb-4">Lista de Servicios</h2>
+      <h2 className="text-xl font-bold mb-4">Lista de Feriados</h2>
       <table className="w-full table-auto">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -75,7 +84,7 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
                     className="w-full px-2 py-1 border rounded"
                   />
                 ) : (
-                  holiday.date
+                  formatDate(holiday.date)
                 )}
               </td>
               <td className="py-3 px-6">
