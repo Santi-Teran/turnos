@@ -37,26 +37,24 @@ const TurnosPage = () => {
       <Sidebar />
       <div className="bg-grayy md:w-5/6 w-full">
         <TopBar />
-        <div className="p-8">
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex flex-col md:flex-row gap-8 border-b-2 pb-4">
-              <TurnosForm userInfo={userInfo} services={services} />
-              <TurnosDetail
-                services={services}
-                appointments={appointmentList}
-                handleUpdate={handleUpdate}
-                handleDelete={handleDelete}
-              />
-            </div>
-            <div className="flex flex-col md:flex-row gap-8 mb-12">
-              <TurnosFijosForm userInfo={userInfo} services={services} />
-              <TurnosDetail
-                services={services}
-                appointments={fixedAppointmentList}
-                handleUpdate={handleFixedUpdate}
-                handleDelete={handleFixedDelete}
-              />
-            </div>
+        <div className="p-4">
+          <div className="flex flex-col md:flex-row gap-4 border-b-2 pb-4">
+            <TurnosForm userInfo={userInfo} services={services} />
+            <TurnosDetail
+              services={services}
+              appointments={appointmentList}
+              handleUpdate={handleUpdate}
+              handleDelete={handleDelete}
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 mt-4 mb-12">
+            <TurnosFijosForm userInfo={userInfo} services={services} />
+            <TurnosDetail
+              services={services}
+              appointments={fixedAppointmentList}
+              handleUpdate={handleFixedUpdate}
+              handleDelete={handleFixedDelete}
+            />
           </div>
         </div>
       </div>
