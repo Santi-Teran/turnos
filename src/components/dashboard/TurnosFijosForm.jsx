@@ -74,104 +74,99 @@ const TurnosFijosForm = ({ userInfo, services }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-6 bg-gray-100 p-8 rounded-lg shadow"
-    >
-      <div className="flex flex-col items-center gap-2 w-full">
-        <h2 className="text-center text-black text-lg font-bold">
-          Agendar Turno Fijo
-        </h2>
-      </div>
+    <div className="p-4 border rounded shadow-lg bg-white w-fit flex flex-col gap-6">
+      <h2 className="text-center text-black text-lg font-bold">
+        Agendar Turno Fijo
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <div className="flex flex-col gap-1 w-full text-black">
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+            placeholder="Nombre"
+            required
+          />
+        </div>
 
-      <div className="flex flex-col gap-1 w-full text-black">
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-          placeholder="Nombre"
+        <PhoneInput
+          country={"ar"}
+          value={formData.phone}
+          onChange={handlePhoneChange}
+          className="focus:outline-none focus:ring-0"
+          placeholder="Teléfono"
           required
         />
-      </div>
 
-      <PhoneInput
-        country={"ar"}
-        value={formData.phone}
-        onChange={handlePhoneChange}
-        className="focus:outline-none focus:ring-0"
-        placeholder="Teléfono"
-        required
-      />
-
-      <div className="flex flex-col gap-1 w-full text-black">
-        <select
-          name="day"
-          value={formData.day}
-          onChange={handleChange}
-          className="px-3 py-2 rounded-md cursor-pointer"
-          required
-        >
-          <option value="" disabled>
-            Selecciona un día
-          </option>
-          <option value="0">Domingo</option>
-          <option value="1">Lunes</option>
-          <option value="2">Martes</option>
-          <option value="3">Miércoles</option>
-          <option value="4">Jueves</option>
-          <option value="5">Viernes</option>
-          <option value="6">Sábado</option>
-        </select>
-      </div>
-
-      <div className="flex flex-col gap-1 w-full text-black">
-        <select
-          name="hour"
-          value={formData.hour}
-          onChange={handleChange}
-          className="px-3 py-2 rounded-md cursor-pointer"
-          required
-        >
-          <option value="" disabled>
-            Selecciona una hora
-          </option>
-          {availableTimes.map((time) => (
-            <option key={time} value={time}>
-              {time}
+        <div className="flex flex-col gap-1 w-full text-black">
+          <select
+            name="day"
+            value={formData.day}
+            onChange={handleChange}
+            className="px-3 py-2 rounded-md cursor-pointer"
+            required
+          >
+            <option value="" disabled>
+              Selecciona un día
             </option>
-          ))}
-        </select>
-      </div>
+            <option value="0">Domingo</option>
+            <option value="1">Lunes</option>
+            <option value="2">Martes</option>
+            <option value="3">Miércoles</option>
+            <option value="4">Jueves</option>
+            <option value="5">Viernes</option>
+            <option value="6">Sábado</option>
+          </select>
+        </div>
 
-      <div className="flex flex-col gap-1 w-full text-black">
-        <select
-          name="serviceId"
-          value={formData.serviceId}
-          onChange={handleChange}
-          className="px-3 py-2 rounded-md cursor-pointer"
-          required
-        >
-          <option value="" disabled>
-            Selecciona un servicio
-          </option>
-          {services.map((service) => (
-            <option key={service.id} value={service.id}>
-              {service.name}
+        <div className="flex flex-col gap-1 w-full text-black">
+          <select
+            name="hour"
+            value={formData.hour}
+            onChange={handleChange}
+            className="px-3 py-2 rounded-md cursor-pointer"
+            required
+          >
+            <option value="" disabled>
+              Selecciona una hora
             </option>
-          ))}
-        </select>
-      </div>
+            {availableTimes.map((time) => (
+              <option key={time} value={time}>
+                {time}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <button
-        type="submit"
-        className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-      >
-        Agendar Turno Fijo
-      </button>
+        <div className="flex flex-col gap-1 w-full text-black">
+          <select
+            name="serviceId"
+            value={formData.serviceId}
+            onChange={handleChange}
+            className="px-3 py-2 rounded-md cursor-pointer"
+            required
+          >
+            <option value="" disabled>
+              Selecciona un servicio
+            </option>
+            {services.map((service) => (
+              <option key={service.id} value={service.id}>
+                {service.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-    </form>
+        <button
+          type="submit"
+          className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
+        >
+          Agendar Turno Fijo
+        </button>
+      </form>
+    </div>
   );
 };
 

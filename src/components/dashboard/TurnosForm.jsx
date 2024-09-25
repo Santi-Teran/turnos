@@ -1,9 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  createAppointment,
-  getUpcomingHolidays,
-} from "@/app/api/api";
+import { createAppointment, getUpcomingHolidays } from "@/app/api/api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PhoneInput from "react-phone-input-2";
@@ -28,7 +25,7 @@ const Form = ({ userInfo, services }) => {
         const times = userInfo.userConfiguration.dailySchedules.split(";");
         setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
         setClosedDays(
-            userInfo.userConfiguration.daysOff
+          userInfo.userConfiguration.daysOff
             .split(";")
             .map((day) => convertDayToIndex(day))
         );
@@ -133,22 +130,15 @@ const Form = ({ userInfo, services }) => {
       } else {
         handleErrors(result.message);
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-6 bg-gray-100 p-8 rounded-lg shadow"
-      >
-              <div className="flex flex-col items-center gap-2 w-full">
-        <h2 className="text-center text-black text-lg font-bold">
-          Agendar Turno
-        </h2>
-      </div>
+    <div className="p-4 border rounded shadow-lg bg-white w-fit flex flex-col gap-6">
+      <h2 className="text-center text-black text-lg font-bold">
+        Agendar Turno
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div className="flex flex-col gap-1 w-full text-black">
           <input
             type="text"
@@ -224,7 +214,7 @@ const Form = ({ userInfo, services }) => {
           </button>
         </>
       </form>
-    </>
+    </div>
   );
 };
 

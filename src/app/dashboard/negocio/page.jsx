@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { handleUser } from "@/app/api/handlers/handleUser";
 import BusinessGeneralForm from "@/components/dashboard/BusinessGeneralForm";
 import Sidebar from "@/components/dashboard/Sidebar";
@@ -18,12 +18,12 @@ const BusinessPage = () => {
   return (
     <div className={`${inter.className} flex`}>
       <Sidebar />
-      <div className='bg-grayy md:w-5/6'>
+      <div className="bg-grayy md:w-5/6 w-full">
         <TopBar />
         <BusinessGeneralForm initialData={userInfo} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default withAuth(BusinessPage);

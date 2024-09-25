@@ -1,19 +1,26 @@
-'use client'
-import ServiceForm from '@/components/dashboard/ServiceForm';
-import ServiceDetail from '@/components/dashboard/ServiceDetail';
+"use client";
+import ServiceForm from "@/components/dashboard/ServiceForm";
+import ServiceDetail from "@/components/dashboard/ServiceDetail";
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopBar from "@/components/dashboard/TopBar";
-import { useServiceConfiguration } from '@/app/api/handlers/handleServices';
+import { useServiceConfiguration } from "@/app/api/handlers/handleServices";
 import { Inter } from "next/font/google";
-import { handleUser } from '@/app/api/handlers/handleUser';
-import Loading from '@/components/Loading';
-import withAuth from '@/components/withAuth';
+import { handleUser } from "@/app/api/handlers/handleUser";
+import Loading from "@/components/Loading";
+import withAuth from "@/components/withAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const ServicePage = () => {
   const { userInfo, loading, error } = handleUser();
-  const { services, formData, handleChange, handleSubmit, handleUpdate, handleDelete } = useServiceConfiguration({ id: userInfo?.id });
+  const {
+    services,
+    formData,
+    handleChange,
+    handleSubmit,
+    handleUpdate,
+    handleDelete,
+  } = useServiceConfiguration({ id: userInfo?.id });
 
   if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
@@ -21,10 +28,10 @@ const ServicePage = () => {
   return (
     <div className={`${inter.className} flex text-dark-blue`}>
       <Sidebar />
-      <div className='bg-grayy md:w-5/6'>
+      <div className="bg-grayy md:w-5/6 w-full">
         <TopBar />
         <div className="p-4">
-          <div className="flex flex-col items-center gap-8">
+          <div className="flex flex-col items-center gap-8 mb-12">
             <ServiceForm
               formData={formData}
               handleChange={handleChange}

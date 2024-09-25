@@ -22,7 +22,7 @@ const Pagination = ({ currentPage, totalPages, paginate }) => {
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="flex justify-center items-center mt-4">
+    <div className="flex justify-center items-center mt-4 overflow-x-auto">
       {/* FLECHA IZQUIERDA */}
       <button
         onClick={() => paginate(currentPage - 1)}

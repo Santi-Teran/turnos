@@ -28,7 +28,7 @@ const HolidaysPage = () => {
   return (
     <div className={`${inter.className} flex text-dark-blue`}>
       <Sidebar />
-      <div className="bg-grayy md:w-5/6">
+      <div className="bg-grayy md:w-5/6 w-full">
         <TopBar />
         <div className="p-4">
           <div className="flex flex-col md:flex-row gap-8">

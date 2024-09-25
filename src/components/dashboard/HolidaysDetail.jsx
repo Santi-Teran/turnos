@@ -50,9 +50,9 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
       <table className="w-full table-auto">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-            <th className="py-3 px-6 text-left">Nombre</th>
-            <th className="py-3 px-6 text-left">Fecha</th>
-            <th className="py-3 px-6 text-center">Acciones</th>
+            <th className="py-3 px-3 text-left">Nombre</th>
+            <th className="py-3 px-3 text-left">Fecha</th>
+            <th className="py-3 px-3 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
@@ -61,7 +61,7 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
               key={holiday.id}
               className="border-b border-gray-200 hover:bg-gray-100"
             >
-              <td className="py-3 px-6 text-left">
+              <td className="py-3 px-3 text-left">
                 {editingId === holiday.id ? (
                   <input
                     type="text"
@@ -74,7 +74,7 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
                   holiday.name
                 )}
               </td>
-              <td className="py-3 px-6 text-left">
+              <td className="py-3 px-3 text-left">
                 {editingId === holiday.id ? (
                   <input
                     type="date"
@@ -87,7 +87,7 @@ const HolidaysDetail = ({ holidays, handleUpdate, handleDelete }) => {
                   formatDate(holiday.date)
                 )}
               </td>
-              <td className="py-3 px-6">
+              <td className="py-3 px-3">
                 {editingId === holiday.id ? (
                   <div className="flex items-center justify-center space-x-2 text-lg">
                     <button
