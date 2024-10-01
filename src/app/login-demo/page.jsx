@@ -12,6 +12,9 @@ const LoginForm = () => {
   const { formData, handleChange, handleSubmit, loading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
+  formData.email = "demo@gmail.com";
+  formData.password = "1234";
+
   return (
     <div className="flex justify-center items-center h-screen">
       <form
@@ -21,6 +24,11 @@ const LoginForm = () => {
         <h1 className={`${nunito.className} text-3xl md:text-4xl font-black`}>
           Iniciar Sesión
         </h1>
+        <h2
+          className={`${nunito.className} text-2xl md:text-3xl font-bold text-center`}
+        >
+          Demo
+        </h2>
         <div className="flex flex-col gap-2">
           <div className={`flex items-center border p-2 gap-2 rounded-lg`}>
             <MdMail className="text-gray-100" />
@@ -59,11 +67,6 @@ const LoginForm = () => {
                 className="cursor-pointer"
               />
             )}
-          </div>
-          <div className="flex justify-end py-2 text-xs">
-            <Link href="/restore" className="hover:underline">
-              Olvidaste tu contraseña?
-            </Link>
           </div>
         </div>
         <button
