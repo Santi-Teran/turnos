@@ -15,24 +15,21 @@ const Form = ({ userInfo, services }) => {
     serviceId: "",
     userId: userInfo.id,
   });
-  const [availableTimes, setAvailableTimes] = useState([]);
   const [closedDays, setClosedDays] = useState([]);
   const [holidays, setHolidays] = useState([]);
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchServices = async () => {
       try {
-        const times = userInfo.userConfiguration.dailySchedules.split(";");
-        setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
-        setClosedDays(
-          userInfo.userConfiguration.daysOff
-            .split(";")
-            .map((day) => convertDayToIndex(day))
-        );
+        checkClosedDays(services);
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        toast.error("Error del servidor:", error);
       }
     };
+
     const fetchHolidays = async () => {
       try {
         const response = await getUpcomingHolidays(userInfo.id);
@@ -44,36 +41,47 @@ const Form = ({ userInfo, services }) => {
       }
     };
 
-    fetchUserInfo();
+    fetchServices();
     fetchHolidays();
   }, [userInfo.id]);
 
-  const formatHour = (hour) => {
-    const [time, period] = hour.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
+  const handleTimeChange = (event) => {
+    const time = event.target.value;
+    setSelectedTime(time);
+    const [hours] = time.split(":").map(Number);
 
-    if (period === "PM" && hours < 12) {
-      hours += 12;
-    } else if (period === "AM" && hours === 12) {
-      hours = 0;
+    // Check if the time is after midnight (for example, between 00:00 and 01:59)
+    if (hours === 0 || hours === 1) {
+      setIsModalOpen(true);
+    } else {
+      setFormData({ ...formData, hour: time });
     }
-
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
   };
 
-  const convertDayToIndex = (day) => {
-    const daysOfWeek = {
-      domingo: 0,
-      lunes: 1,
-      martes: 2,
-      miércoles: 3,
-      jueves: 4,
-      viernes: 5,
-      sábado: 6,
-    };
-    return daysOfWeek[day.toLowerCase()];
+  const handleModalConfirm = () => {
+    const nextDay = new Date(selectedDate);
+    nextDay.setDate(nextDay.getDate() + 1); // Increment the date by one day
+    setSelectedDate(nextDay);
+
+    // Keep the originally selected time even if it's not available
+    setFormData({ ...formData, date: nextDay, hour: selectedTime });
+    setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const checkClosedDays = (services) => {
+    const closed = [];
+    services.forEach((service) => {
+      service.weeklySchedule.forEach((schedule, dayIndex) => {
+        if (schedule.hours === "") {
+          closed.push(dayIndex);
+        }
+      });
+    });
+    setClosedDays(closed);
   };
 
   const isDayOff = (date) => {
@@ -91,9 +99,11 @@ const Form = ({ userInfo, services }) => {
 
   const handleDateChange = (date) => {
     if (isDayOff(date)) {
+      toast.error("El día seleccionado no está disponible.");
       return;
     }
     setFormData({ ...formData, date: date });
+    setSelectedDate(date);
   };
 
   const handlePhoneChange = (value) => {
@@ -104,8 +114,8 @@ const Form = ({ userInfo, services }) => {
     e.preventDefault();
 
     const appointmentData = {
-      date: formData.date.toISOString().split("T")[0], // Convertir a formato ISO
-      hour: formData.hour,
+      date: selectedDate.toISOString().split("T")[0], // Se enviará la fecha con un día sumado si corresponde
+      hour: selectedTime,
       client: {
         name: formData.name,
         phone: formData.phone,
@@ -162,6 +172,22 @@ const Form = ({ userInfo, services }) => {
           />
         </div>
         <>
+          <div className="flex flex-col gap-1 w-full text-black">
+            <select
+              name="serviceId"
+              value={formData.serviceId}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
+              required
+            >
+              <option value="">Selecciona un Servicio</option>
+              {services.map((service) => (
+                <option key={service.id} value={service.id}>
+                  {service.name} - ${service.price}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex flex-col gap-6 w-full text-black">
             <DatePicker
               name="date"
@@ -172,38 +198,43 @@ const Form = ({ userInfo, services }) => {
               filterDate={(date) => !isDayOff(date)}
               minDate={new Date()}
             />
-            <select
-              name="hour"
-              value={formData.hour}
-              onChange={handleChange}
-              className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-              required
-            >
-              <option value="" disabled>
-                Selecciona la hora
-              </option>
-              {availableTimes.map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))}
-            </select>
-            <select
-              name="serviceId"
-              value={formData.serviceId}
-              onChange={handleChange}
-              className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-              required
-            >
-              <option value="" disabled>
-                Selecciona el servicio
-              </option>
-              {services.map((service) => (
-                <option key={service.id} value={service.id}>
-                  {service.name}
-                </option>
-              ))}
-            </select>
+            {formData.serviceId && selectedDate ? (
+              <div className="flex flex-col gap-1 w-full text-black">
+                <select
+                  name="hour"
+                  value={selectedTime}
+                  onChange={handleTimeChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
+                >
+                  <option value="">Selecciona un Horario</option>
+                  {services
+                    .find(
+                      (service) => service.id === parseInt(formData.serviceId)
+                    )
+                    ?.weeklySchedule[selectedDate.getDay()].hours.split(";")
+                    .map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+
+                  {/* Si el horario seleccionado previamente no está en las opciones, lo agregamos manualmente */}
+                  {selectedTime &&
+                    !services
+                      .find(
+                        (service) => service.id === parseInt(formData.serviceId)
+                      )
+                      ?.weeklySchedule[selectedDate.getDay()].hours.split(";")
+                      .includes(selectedTime) && (
+                      <option value={selectedTime}>
+                        {selectedTime} (Seleccionado previamente)
+                      </option>
+                    )}
+                </select>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
 
           <button
@@ -214,6 +245,33 @@ const Form = ({ userInfo, services }) => {
           </button>
         </>
       </form>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center text-black bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Confirmar Fecha</h2>
+            <p className="mb-6">
+              Has seleccionado un horario después de la medianoche, lo cual
+              indica que es al día siguiente. ¿Deseas agendar para el día
+              siguiente?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={handleModalClose}
+              >
+                Cancelar
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleModalConfirm}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

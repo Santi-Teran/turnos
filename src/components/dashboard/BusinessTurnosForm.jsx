@@ -7,8 +7,14 @@ import {
 import BusinessTurnosDetail from "./BusinessTurnosDetail";
 
 const BusinessTurnosForm = ({ initialData }) => {
-  const { formData, handleChange, handleSubmit, isEditing, setIsEditing } =
-    useBusinessConfiguration(initialData);
+  const {
+    formData,
+    handleChange,
+    handleChangee,
+    handleSubmit,
+    isEditing,
+    setIsEditing,
+  } = useBusinessConfiguration(initialData);
 
   return (
     <div className="flex justify-center items-center">
@@ -20,22 +26,11 @@ const BusinessTurnosForm = ({ initialData }) => {
           <h1 className="font-black">Configurar</h1>
           <div className="flex gap-10">
             <div className="flex md:flex-row flex-col gap-8">
-              <div className="flex flex-col gap-8 md:w-3/5">
+              <div className="flex flex-col gap-8">
                 <BusinessHours
                   formData={formData}
                   handleChange={handleChange}
-                  isEditing={isEditing}
-                />
-                <BusinessSettings
-                  formData={formData}
-                  handleChange={handleChange}
-                  isEditing={isEditing}
-                />
-              </div>
-              <div className="md:w-2/5">
-                <BusinessDays
-                  formData={formData}
-                  handleChange={handleChange}
+                  handleChangee={handleChangee}
                   isEditing={isEditing}
                 />
               </div>

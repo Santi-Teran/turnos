@@ -17,9 +17,10 @@ const CalendarView = ({
   services,
   userConfiguration,
 }) => {
-  const { dayStartTime, dayEndTime } = userConfiguration;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
+  console.log(userConfiguration);
 
   const whatsappUrl = `https://wa.me/${selectedEvent?.client.phone}`;
 
@@ -28,58 +29,73 @@ const CalendarView = ({
     return map;
   }, {});
 
-  const normalEvents = appointments.map((appointment) => {
-    // Crear la fecha y hora del turno
+  const getEarliestOpening = () => {
+    const openTimes = userConfiguration.weeklySchedules
+      .filter((schedule) => schedule.isOpen)
+      .map((schedule) => parseInt(schedule.dayStartTime.split(":")[0]));
+    return Math.min(...openTimes);
+  };
+
+  const getLatestClosing = () => {
+    const closeTimes = userConfiguration.weeklySchedules
+      .filter((schedule) => schedule.isOpen)
+      .map((schedule) => parseInt(schedule.dayEndTime.split(":")[0]));
+    return Math.max(...closeTimes);
+  };
+
+  // Ajustamos el día laboral a 26 horas, si el cierre es después de la medianoche
+  const formatEventDate = (appointment) => {
     const appointmentDate = new Date(`${appointment.date}T${appointment.hour}`);
 
-    // Verifica si el día es domingo (0) y la hora es temprana (ej. después de la medianoche)
-    const dayOfWeek = appointmentDate.getDay();
-    const hour = appointmentDate.getHours();
-
-    // Si el negocio está cerrado los domingos (0) pero el turno es después de medianoche
-    if (dayOfWeek === 0 && hour < parseInt(dayEndTime)) {
-      // Restar un día para mover el evento al sábado
-      appointmentDate.setDate(appointmentDate.getDate() - 1);
+    const closingHour = getLatestClosing();
+    if (
+      appointmentDate.getHours() < closingHour &&
+      appointmentDate.getHours() < 6
+    ) {
+      // Si el evento es después de la medianoche y antes del cierre, lo ajustamos al día anterior.
+      appointmentDate.setDate(appointmentDate.getDate());
     }
+
+    return appointmentDate;
+  };
+
+  const normalEvents = appointments.map((appointment) => {
+    const appointmentDate = formatEventDate(appointment);
 
     return {
       title: `${appointment.client.name} - ${
-        serviceMap[appointment.serviceId] || "Servicio"
+        serviceMap[appointment.serviceId]
       }`,
-      start: appointmentDate, // Usa la fecha ajustada
+      start: appointmentDate,
       end: appointmentDate,
       extendedProps: appointment,
-      classNames: ["custom-event"], // Añadir clase personalizada
+      classNames: ["custom-event"],
     };
   });
 
   const fixedEvents = fixedappointments.map((fixedappointment) => {
-    // Crear la fecha y hora del turno basado en un día ficticio
     const appointmentDate = new Date();
     appointmentDate.setHours(parseInt(fixedappointment.hour.split(":")[0]));
     appointmentDate.setMinutes(parseInt(fixedappointment.hour.split(":")[1]));
 
-    // Verificar si el turno ocurre técnicamente en domingo (0)
-    const dayOfWeek = fixedappointment.day; // Día de la semana del turno
-    const hour = appointmentDate.getHours(); // Hora del turno
+    const dayOfWeek = fixedappointment.day;
+    const hour = appointmentDate.getHours();
 
-    // Si el negocio está cerrado el domingo (0) pero el turno es después de medianoche
-    // Restar un día para mover el evento al sábado
     let adjustedDay = dayOfWeek;
-    if (dayOfWeek === 0 && hour < parseInt(dayEndTime)) {
-      adjustedDay = 6; // Ajustar a sábado (6)
-    } else if (hour < parseInt(dayEndTime) && dayOfWeek !== 0) {
-      adjustedDay = dayOfWeek + 1; // Sumar un día
+    if (dayOfWeek === 0 && hour < getLatestClosing()) {
+      adjustedDay = 6;
+    } else if (hour < getLatestClosing() && dayOfWeek !== 0) {
+      adjustedDay = dayOfWeek + 1;
     }
 
     return {
       title: `${fixedappointment.client.name} - ${
-        serviceMap[fixedappointment.serviceId] || "Servicio"
+        serviceMap[fixedappointment.serviceId]
       }`,
-      daysOfWeek: [adjustedDay], // Ajustar al día anterior si es necesario
-      startTime: fixedappointment.hour, // Hora del día en que comienza
+      daysOfWeek: [adjustedDay],
+      startTime: fixedappointment.hour,
       extendedProps: fixedappointment,
-      classNames: ["custom-fixed-event"], // Añadir clase personalizada
+      classNames: ["custom-fixed-event"],
     };
   });
 
@@ -95,11 +111,9 @@ const CalendarView = ({
     setSelectedEvent(null);
   };
 
-  // Ajuste para manejar horario de cierre al día siguiente
-  const adjustedEndTime =
-    parseInt(dayEndTime) < parseInt(dayStartTime)
-      ? `${parseInt(dayEndTime) + 25}:00`
-      : `${dayEndTime}:00`;
+  // Ajustamos el slotMaxTime para que pueda extenderse hasta las 26 horas (2 AM del día siguiente)
+  const slotMinTime = `${getEarliestOpening()}:00`;
+  const slotMaxTime = "30:00"; // Extender hasta las 2 AM (26 horas)
 
   return (
     <div className="px-4 py-4 md:px-20 md:py-10 mb-20 text-dark-blue bg-dark">
@@ -114,8 +128,8 @@ const CalendarView = ({
         events={allEvents}
         locale="es"
         firstDay={1}
-        slotMinTime={`${dayStartTime}:00`}
-        slotMaxTime={adjustedEndTime}
+        slotMinTime={slotMinTime}
+        slotMaxTime={slotMaxTime}
         height="auto"
         buttonText={{
           today: "Hoy",
@@ -146,14 +160,17 @@ const CalendarView = ({
       >
         {selectedEvent && (
           <div className="text-dark-blue flex flex-col gap-2 w-fit shad">
-            <h2 className="mt-4">{`${selectedEvent.client.name}`}</h2>
+            <h2 className="mt-4">{selectedEvent.client.name}</h2>
             <p>{serviceMap[selectedEvent.serviceId] || "Servicio"}</p>
             <p>
-              <strong>Fecha:</strong> {selectedEvent.date}
+              <strong>Fecha:</strong>{" "}
+              {moment(selectedEvent.date).format("DD-MM-YYYY")}
             </p>
             <p>
-              <strong>Hora:</strong> {selectedEvent.hour}
+              <strong>Hora:</strong>{" "}
+              {moment(selectedEvent.hour, "HH:mm:ss").format("HH:mm")}
             </p>
+
             <p>
               <strong>Teléfono del cliente:</strong>{" "}
               {selectedEvent.client.phone}

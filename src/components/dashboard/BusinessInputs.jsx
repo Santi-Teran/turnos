@@ -166,34 +166,30 @@ export const BusinessDescriptionInput = ({
   );
 };
 
-export const BusinessHours = ({ formData, handleChange, isEditing }) => {
+// Nombres de los días de la semana
+const daysOfWeek = [
+  "Domingo",
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+];
+
+export const BusinessHours = ({
+  formData,
+  handleChange,
+  handleChangee,
+  isEditing,
+}) => {
   const userConfig = formData.userConfiguration || {};
-  const [breakDuration, setBreakDuration] = useState(
-    userConfig.breakDuration || 0
-  );
-
-  useEffect(() => {
-    setBreakDuration(userConfig.breakDuration || 0);
-  }, [userConfig.breakDuration]);
-
-  const handleRangeChange = (e) => {
-    const { name, value } = e.target;
-    const intValue = parseInt(value, 10);
-
-    handleChange({
-      target: { name, value: intValue },
-    });
-  };
 
   // Determina automáticamente si cierra al siguiente día
-  const isClosingNextDay = () => {
-    const startTime = userConfig.dayStartTime || "";
-    const endTime = userConfig.dayEndTime || "";
-
-    if (startTime && endTime) {
-      const startTimeInt = parseInt(startTime.replace(":", ""), 10);
-      const endTimeInt = parseInt(endTime.replace(":", ""), 10);
-      // Si el cierre es después de las 00:00 y menor al horario de apertura, se cierra al día siguiente
+  const isClosingNextDay = (dayStartTime, dayEndTime) => {
+    if (dayStartTime && dayEndTime) {
+      const startTimeInt = parseInt(dayStartTime.replace(":", ""), 10);
+      const endTimeInt = parseInt(dayEndTime.replace(":", ""), 10);
       return endTimeInt > 0 && endTimeInt < startTimeInt;
     }
     return false;
@@ -201,41 +197,122 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex md:flex-row flex-col gap-2 justify-center">
-        <div className="flex flex-col gap-2 md:w-1/2">
-          <label className="font-semibold">Horario de Apertura</label>
-          <input
-            type="time"
-            name="dayStartTime"
-            defaultValue={userConfig.dayStartTime || ""}
-            onChange={handleChange}
-            className="bg-transparent border-2 p-2 rounded-lg"
-            readOnly={!isEditing}
-            required
-          />
+      {userConfig.weeklySchedules.map((schedule, index) => (
+        <div key={index} className="flex gap-10">
+          {/* Toggle para abrir/cerrar el negocio en este día */}
+          <div className="flex gap-2">
+            <label className=" min-w-20">{daysOfWeek[index]}</label>
+            <label className="switch">
+              <input
+                type="checkbox"
+                name="isOpen"
+                checked={schedule.isOpen}
+                onChange={(e) => handleChangee(e, index)}
+                readOnly={!isEditing}
+              />
+              <span
+                className={`slider round ${
+                  isEditing ? "cursor-pointer" : "cursor-not-allowed"
+                }`}
+              ></span>
+            </label>
+          </div>
+
+          {/* Mostrar inputs de horario solo si está abierto */}
+          {schedule.isOpen && (
+            <div className="flex gap-5">
+              <div className="flex flex-col gap-2 w-40">
+                <label className="font-semibold">Horario de Apertura</label>
+                <input
+                  type="time"
+                  name="dayStartTime"
+                  className="border-2 p-2 rounded-lg"
+                  defaultValue={schedule.dayStartTime || ""}
+                  onChange={(e) => handleChangee(e, index)}
+                  readOnly={!isEditing}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2 w-40">
+                <label className="font-semibold">Horario de Cierre</label>
+                <input
+                  type="time"
+                  name="dayEndTime"
+                  className="border-2 p-2 rounded-lg"
+                  defaultValue={schedule.dayEndTime || ""}
+                  onChange={(e) => handleChangee(e, index)}
+                  readOnly={!isEditing}
+                />
+                {/* Verificar si cierra al día siguiente */}
+                {isClosingNextDay(
+                  schedule.dayStartTime,
+                  schedule.dayEndTime
+                ) && (
+                  <div className="flex items-center text-sm text-red-600">
+                    <span>Cierra al día siguiente</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Checkbox para agregar descanso */}
+              <div className="flex flex-col gap-2 items-center">
+                <label className="font-semibold">¿Agregar descanso?</label>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    name="haveBreak"
+                    checked={schedule.haveBreak}
+                    onChange={(e) => handleChangee(e, index)}
+                    readOnly={!isEditing}
+                  />
+                  <span
+                    className={`slider round ${
+                      isEditing ? "cursor-pointer" : "cursor-not-allowed"
+                    }`}
+                  ></span>{" "}
+                </label>
+              </div>
+
+              {/* Mostrar inputs de descanso si está habilitado */}
+              {schedule.haveBreak && (
+                <>
+                  <div className="flex flex-col gap-2 w-40">
+                    <label className="font-semibold">Inicio del descanso</label>
+                    <input
+                      type="time"
+                      name="breakStartHour"
+                      className="border-2 p-2 rounded-lg"
+                      defaultValue={schedule.breakStartHour || ""}
+                      onChange={(e) => handleChangee(e, index)}
+                      readOnly={!isEditing}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2 w-40">
+                    <label className="font-semibold">Fin del descanso</label>
+                    <input
+                      type="time"
+                      name="breakEndTime"
+                      className="border-2 p-2 rounded-lg"
+                      defaultValue={schedule.breakEndTime || ""}
+                      onChange={(e) => handleChangee(e, index)}
+                      readOnly={!isEditing}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
-        <div className="flex flex-col gap-2 md:w-1/2">
-          <label className="font-semibold">Horario de Cierre</label>
-          <input
-            type="time"
-            name="dayEndTime"
-            defaultValue={userConfig.dayEndTime || ""}
-            onChange={handleChange}
-            className="bg-transparent border-2 p-2 rounded-lg"
-            readOnly={!isEditing}
-            required
-          />
-        </div>
-      </div>
+      ))}
+      {/* Turnos fijos */}
       <div className="flex flex-col gap-2">
-        <label className="font-semibold">
-          Quiere agregar tiempo de descanso?
-        </label>
+        <label className="font-semibold">Turnos fijos</label>
         <label className="flex gap-2 items-center">
           <input
             type="checkbox"
-            name="haveBreak"
-            defaultChecked={!!userConfig.haveBreak}
+            name="fixedAppointmentsAvailable"
+            defaultChecked={!!userConfig.fixedAppointmentsAvailable}
             onChange={handleChange}
             className="hidden"
             readOnly={!isEditing}
@@ -247,59 +324,97 @@ export const BusinessHours = ({ formData, handleChange, isEditing }) => {
           >
             <span
               className={`block w-10 h-6 rounded-full ${
-                userConfig.haveBreak ? "bg-bluee" : "bg-gray-400"
+                userConfig.fixedAppointmentsAvailable
+                  ? "bg-bluee"
+                  : "bg-gray-400"
               }`}
             ></span>
             <span
               className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                userConfig.haveBreak ? "translate-x-4" : "translate-x-0"
+                userConfig.fixedAppointmentsAvailable
+                  ? "translate-x-4"
+                  : "translate-x-0"
               }`}
             ></span>
+            <span className="ml-2">Sí</span>
           </span>
         </label>
       </div>
-      {userConfig.haveBreak ? (
-        <div className="flex flex-col gap-4 justify-center">
-          <div className="flex flex-col gap-2">
-            <label className="font-semibold">Inicio del descanso</label>
+    </div>
+  );
+};
+
+export const BusinessDays = ({ formData, handleChange, isEditing }) => {
+  const userConfig = formData.userConfiguration || {};
+
+  const days = [
+    { label: "Lunes", value: "lunes" },
+    { label: "Martes", value: "martes" },
+    { label: "Miércoles", value: "miércoles" },
+    { label: "Jueves", value: "jueves" },
+    { label: "Viernes", value: "viernes" },
+    { label: "Sábado", value: "sábado" },
+    { label: "Domingo", value: "domingo" },
+  ];
+
+  const selectedDays = userConfig.daysOff ? userConfig.daysOff.split(";") : [];
+
+  const handleToggleChange = (e) => {
+    const { value, checked } = e.target;
+    const updatedDays = checked
+      ? [...selectedDays, value]
+      : selectedDays.filter((day) => day !== value);
+
+    const event = {
+      target: {
+        name: "daysOff",
+        value: updatedDays.join(";"),
+      },
+    };
+    handleChange(event);
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex gap-2">
+        <label className="font-semibold">Días cerrados</label>
+      </div>
+
+      {/* Checkbox para cada día */}
+      <div className="flex flex-col gap-2">
+        {days.map((day) => (
+          <label key={day.value} className="flex items-center gap-2">
             <input
-              type="time"
-              name="breakStartHour"
-              defaultValue={userConfig.breakStartHour || ""}
-              onChange={handleChange}
-              className="bg-transparent border-2 p-2 rounded-lg"
-              readOnly={!isEditing}
+              type="checkbox"
+              name="daysOff"
+              value={day.value}
+              checked={selectedDays.includes(day.value)}
+              onChange={handleToggleChange}
+              className="hidden"
+              disabled={!isEditing}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="font-semibold">Duración del descanso</label>
-            <div className="flex items-center gap-2">
-              <input
-                type={isEditing ? "range" : "text"}
-                min="0"
-                max="60"
-                value={breakDuration}
-                name="breakDuration"
-                onChange={handleRangeChange}
-                className={
-                  isEditing
-                    ? "w-3/4"
-                    : "bg-transparent w-full border-2 p-2 rounded-lg"
-                }
-                readOnly={!isEditing}
-                required
-              />
-              {isEditing ? (
-                <span className="w-1/4">{breakDuration} min</span>
-              ) : (
-                <></>
-              )}{" "}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
+            <span
+              className={`relative inline-flex items-center cursor-pointer ${
+                isEditing ? "cursor-pointer" : "cursor-not-allowed"
+              }`}
+            >
+              <span
+                className={`block w-10 h-6 rounded-full ${
+                  selectedDays.includes(day.value) ? "bg-bluee" : "bg-gray-400"
+                }`}
+              ></span>
+              <span
+                className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                  selectedDays.includes(day.value)
+                    ? "translate-x-4"
+                    : "translate-x-0"
+                }`}
+              ></span>
+              <span className="ml-2">{day.label}</span>
+            </span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 };
@@ -382,117 +497,6 @@ export const BusinessSettings = ({ formData, handleChange, isEditing }) => {
             <></>
           )}
         </div>
-      </div>
-    </div>
-  );
-};
-
-export const BusinessDays = ({ formData, handleChange, isEditing }) => {
-  const userConfig = formData.userConfiguration || {};
-
-  const days = [
-    { label: "Lunes", value: "lunes" },
-    { label: "Martes", value: "martes" },
-    { label: "Miércoles", value: "miércoles" },
-    { label: "Jueves", value: "jueves" },
-    { label: "Viernes", value: "viernes" },
-    { label: "Sábado", value: "sábado" },
-    { label: "Domingo", value: "domingo" },
-  ];
-
-  const selectedDays = userConfig.daysOff ? userConfig.daysOff.split(";") : [];
-
-  const handleToggleChange = (e) => {
-    const { value, checked } = e.target;
-    const updatedDays = checked
-      ? [...selectedDays, value]
-      : selectedDays.filter((day) => day !== value);
-
-    const event = {
-      target: {
-        name: "daysOff",
-        value: updatedDays.join(";"),
-      },
-    };
-    handleChange(event);
-  };
-
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
-        <label className="font-semibold">Días cerrados</label>
-      </div>
-
-      {/* Checkbox para cada día */}
-      <div className="flex flex-col gap-2">
-        {days.map((day) => (
-          <label key={day.value} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="daysOff"
-              value={day.value}
-              checked={selectedDays.includes(day.value)}
-              onChange={handleToggleChange}
-              className="hidden"
-              disabled={!isEditing}
-            />
-            <span
-              className={`relative inline-flex items-center cursor-pointer ${
-                isEditing ? "cursor-pointer" : "cursor-not-allowed"
-              }`}
-            >
-              <span
-                className={`block w-10 h-6 rounded-full ${
-                  selectedDays.includes(day.value) ? "bg-bluee" : "bg-gray-400"
-                }`}
-              ></span>
-              <span
-                className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                  selectedDays.includes(day.value)
-                    ? "translate-x-4"
-                    : "translate-x-0"
-                }`}
-              ></span>
-              <span className="ml-2">{day.label}</span>
-            </span>
-          </label>
-        ))}
-      </div>
-
-      {/* Turnos fijos */}
-      <div className="flex flex-col gap-2">
-        <label className="font-semibold">Turnos fijos</label>
-        <label className="flex gap-2 items-center">
-          <input
-            type="checkbox"
-            name="fixedAppointmentsAvailable"
-            defaultChecked={!!userConfig.fixedAppointmentsAvailable}
-            onChange={handleChange}
-            className="hidden"
-            readOnly={!isEditing}
-          />
-          <span
-            className={`relative inline-flex items-center cursor-pointer ${
-              isEditing ? "cursor-pointer" : "cursor-not-allowed"
-            }`}
-          >
-            <span
-              className={`block w-10 h-6 rounded-full ${
-                userConfig.fixedAppointmentsAvailable
-                  ? "bg-bluee"
-                  : "bg-gray-400"
-              }`}
-            ></span>
-            <span
-              className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                userConfig.fixedAppointmentsAvailable
-                  ? "translate-x-4"
-                  : "translate-x-0"
-              }`}
-            ></span>
-            <span className="ml-2">Sí</span>
-          </span>
-        </label>
       </div>
     </div>
   );

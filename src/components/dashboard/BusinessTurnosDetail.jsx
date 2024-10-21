@@ -1,4 +1,8 @@
-import { BusinessDays, BusinessHours, BusinessSettings } from "./BusinessInputs";
+import {
+  BusinessDays,
+  BusinessHours,
+  BusinessSettings,
+} from "./BusinessInputs";
 import BusinessLinks from "./BusinessLinks";
 
 const BusinessTurnosDetail = ({ formData, setIsEditing }) => {
@@ -7,12 +11,8 @@ const BusinessTurnosDetail = ({ formData, setIsEditing }) => {
       <BusinessLinks />
       <div className="flex gap-10">
         <div className="flex md:flex-row flex-col gap-8">
-          <div className="flex flex-col gap-8 md:w-3/5">
+          <div className="flex flex-col gap-8">
             <BusinessHours formData={formData} />
-            <BusinessSettings formData={formData} />
-          </div>
-          <div className="md:w-2/5">
-            <BusinessDays formData={formData} />
           </div>
         </div>
       </div>

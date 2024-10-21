@@ -31,15 +31,78 @@ export const useBusinessConfiguration = (initialUserData) => {
       mision: "",
       vision: "",
       history: "",
-      appointmentDuration: "",
-      timeBetweenAppointments: "",
-      dayStartTime: "",
-      dayEndTime: "",
-      haveBreak: false,
-      breakStartHour: "",
-      breakDuration: "",
-      daysOff: "",
-      dailySchedules: null,
+      weeklySchedules: [
+        {
+          id: 0,
+          day: 0,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+        {
+          id: 1,
+          day: 1,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+        {
+          id: 2,
+          day: 2,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+        {
+          id: 3,
+          day: 3,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+        {
+          id: 4,
+          day: 4,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+        {
+          id: 5,
+          day: 5,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+        {
+          id: 6,
+          day: 6,
+          dayStartTime: "",
+          dayEndTime: "",
+          breakStartHour: "",
+          breakEndTime: "",
+          haveBreak: false,
+          isOpen: false,
+        },
+      ],
       fixedAppointmentsAvailable: true,
     },
   });
@@ -65,6 +128,32 @@ export const useBusinessConfiguration = (initialUserData) => {
       }));
     }
   }, [initialUserData]);
+
+  const handleChangee = (e, dayIndex = null) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prevData) => {
+      const updatedWeeklySchedules = [
+        ...prevData.userConfiguration.weeklySchedules,
+      ];
+
+      if (dayIndex !== null) {
+        // Si es un día específico (horario de apertura, cierre, etc.)
+        updatedWeeklySchedules[dayIndex] = {
+          ...updatedWeeklySchedules[dayIndex],
+          [name]: type === "checkbox" ? checked : formatTime(value), // Formateamos el tiempo aquí
+        };
+      }
+
+      return {
+        ...prevData,
+        userConfiguration: {
+          ...prevData.userConfiguration,
+          weeklySchedules: updatedWeeklySchedules,
+        },
+      };
+    });
+  };
 
   // Función para manejar cambios en el formulario
   const handleChange = (e) => {
@@ -96,7 +185,7 @@ export const useBusinessConfiguration = (initialUserData) => {
         }));
       }
       // Rangos
-      else if (type === "range" || name === "breakDuration") {
+      else if (type === "range") {
         setFormData((prevData) => ({
           ...prevData,
           userConfiguration: {
@@ -119,17 +208,7 @@ export const useBusinessConfiguration = (initialUserData) => {
         }));
       }
       // Tiempos (ej. horas)
-      else if (
-        ["dayStartTime", "dayEndTime", "breakStartHour"].includes(name)
-      ) {
-        setFormData((prevData) => ({
-          ...prevData,
-          userConfiguration: {
-            ...prevData.userConfiguration,
-            [name]: formatTime(value),
-          },
-        }));
-      }
+
       // Otros cambios generales
       else {
         setFormData((prevData) => ({
@@ -167,32 +246,22 @@ export const useBusinessConfiguration = (initialUserData) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateHours()) {
-      setError("El descanso debe estar entre el horario de apertura y cierre.");
-      return;
-    }
+    // if (!validateHours()) {
+    //   setError("El descanso debe estar entre el horario de apertura y cierre.");
+    //   return;
+    // }
 
     const token = localStorage.getItem("token");
-    const parsedFormData = {
-      ...formData,
-      userConfiguration: {
-        ...formData.userConfiguration,
-        appointmentDuration:
-          parseInt(formData.userConfiguration.appointmentDuration, 10) || 0,
-        timeBetweenAppointments:
-          parseInt(formData.userConfiguration.timeBetweenAppointments, 10) || 0,
-        breakDuration:
-          parseInt(formData.userConfiguration.breakDuration, 10) || 0,
-      },
-    };
 
     try {
-      const result = await businessConfiguration(parsedFormData, token);
+      const result = await businessConfiguration(formData, token);
       if (result.success) {
+        console.log(formData);
         toast.success("Configuracion del negocio actualizada!");
         setIsEditing(false);
         setError(null); // Reseteamos el error en caso de éxito
       } else {
+        console.log(formData);
         toast.error(result.message);
       }
     } catch (error) {
@@ -203,6 +272,7 @@ export const useBusinessConfiguration = (initialUserData) => {
   return {
     formData,
     handleChange,
+    handleChangee,
     handleSubmit,
     setFormData,
     isEditing,

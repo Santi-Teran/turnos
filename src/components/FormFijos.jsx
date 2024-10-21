@@ -26,7 +26,6 @@ const FormFijos = ({ userId }) => {
   });
   const [clientName, setClientName] = useState("");
   const [services, setServices] = useState([]);
-  const [availableTimes, setAvailableTimes] = useState([]);
   const [closedDays, setClosedDays] = useState([]);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [phoneChecked, setPhoneChecked] = useState(false);
@@ -36,6 +35,51 @@ const FormFijos = ({ userId }) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await getConfigurationInfo(userId);
+        const userInfo = response.data;
+        setUserInfo(userInfo);
+      } catch (error) {
+        toast.error("Error del servidor:", error);
+      }
+    };
+
+    const fetchServices = async () => {
+      try {
+        const response = await getServices(userId);
+        setServices(response.data);
+        checkClosedDays(response.data);
+      } catch (error) {
+        toast.error("Error del servidor:", error);
+      }
+    };
+
+    fetchServices();
+    fetchUserInfo();
+  }, [userId]);
+
+  const checkClosedDays = (services) => {
+    const closed = [];
+    services.forEach((service) => {
+      service.weeklySchedule.forEach((schedule, dayIndex) => {
+        if (schedule.hours === "") {
+          closed.push(dayIndex);
+        }
+      });
+    });
+    setClosedDays(closed);
+  };
+
+  const isDayOff = (date) => {
+    const day = date;
+    return (
+      closedDays.includes(day) ||
+      holidays.some((holiday) => date.toDateString() === holiday.toDateString())
+    );
+  };
 
   const handleTimeChange = (event) => {
     const time = event.target.value;
@@ -68,33 +112,6 @@ const FormFijos = ({ userId }) => {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await getConfigurationInfo(userId);
-        const userInfo = response.data;
-        const times = userInfo.dailySchedules.split(";");
-        setUserInfo(userInfo);
-        setAvailableTimes(times.map((time) => formatHour(time))); // Formatear las horas
-        setClosedDays(userInfo.daysOff.split(";"));
-      } catch (error) {
-        toast.error("Error del servidor:", error);
-      }
-    };
-
-    const fetchServices = async () => {
-      try {
-        const response = await getServices(userId);
-        setServices(response.data);
-      } catch (error) {
-        toast.error("Error del servidor:", error);
-      }
-    };
-
-    fetchServices();
-    fetchUserInfo();
-  }, [userId]);
 
   const formatHour = (hour) => {
     const [time, period] = hour.split(" ");
@@ -200,7 +217,47 @@ const FormFijos = ({ userId }) => {
 
   const availableDays = dayNames
     .map((name, index) => ({ name, index }))
-    .filter((day) => !closedDays.includes(day.name));
+    .filter((day) => !closedDays.includes(day.index));
+
+  const getAvailableTimes = () => {
+    if (!formData.serviceId || formData.day === "") return [];
+
+    const selectedService = services.find(
+      (service) => service.id === parseInt(formData.serviceId)
+    );
+
+    if (!selectedService) return [];
+
+    // Obtiene el horario para el día seleccionado
+    const scheduleForDay = selectedService.weeklySchedule[formData.day];
+    if (!scheduleForDay || scheduleForDay.hours === "") return [];
+
+    // Suponiendo que scheduleForDay.hours tiene un formato como "08:00-12:00"
+    const [startTime, endTime] = scheduleForDay.hours
+      .split("-")
+      .map(formatHour);
+
+    return generateTimeSlots(startTime, endTime);
+  };
+
+  // Función para generar las franjas horarias entre un intervalo
+  const generateTimeSlots = (start, end) => {
+    let times = [];
+    let current = new Date();
+    current.setHours(start.split(":")[0]);
+    current.setMinutes(start.split(":")[1]);
+
+    const endTime = new Date();
+    endTime.setHours(end.split(":")[0]);
+    endTime.setMinutes(end.split(":")[1]);
+
+    while (current <= endTime) {
+      times.push(current.toTimeString().slice(0, 5)); // Obtiene HH:MM
+      current.setMinutes(current.getMinutes() + 30); // Cambia el intervalo a 30 mins (o lo que necesites)
+    }
+
+    return times;
+  };
 
   if (!userInfo) return <Loading />;
 
@@ -261,22 +318,6 @@ const FormFijos = ({ userId }) => {
                     </select>
                   </div>
                   <select
-                    name="hour"
-                    value={selectedTime}
-                    onChange={handleTimeChange}
-                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                    required
-                  >
-                    <option value="" disabled>
-                      Selecciona la hora
-                    </option>
-                    {availableTimes.map((time) => (
-                      <option key={time} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
-                  <select
                     name="serviceId"
                     value={formData.serviceId}
                     onChange={handleChange}
@@ -292,6 +333,46 @@ const FormFijos = ({ userId }) => {
                       </option>
                     ))}
                   </select>
+                  {formData.serviceId && formData.day ? (
+                    <select
+                      name="hour"
+                      value={selectedTime}
+                      onChange={handleTimeChange}
+                      className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                      required
+                    >
+                      <option value="" disabled>
+                        Selecciona la hora
+                      </option>
+                      {services
+                        .find(
+                          (service) =>
+                            service.id === parseInt(formData.serviceId)
+                        )
+                        ?.weeklySchedule[formData.day].hours.split(";")
+                        .map((time) => (
+                          <option key={time} value={time}>
+                            {time}
+                          </option>
+                        ))}
+
+                      {/* Si el horario seleccionado previamente no está en las opciones, lo agregamos manualmente */}
+                      {selectedTime &&
+                        !services
+                          .find(
+                            (service) =>
+                              service.id === parseInt(formData.serviceId)
+                          )
+                          ?.weeklySchedule[formData.day].hours.split(";")
+                          .includes(selectedTime) && (
+                          <option value={selectedTime}>
+                            {selectedTime} (Seleccionado previamente)
+                          </option>
+                        )}
+                    </select>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <button
                   type="submit"

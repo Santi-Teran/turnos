@@ -61,7 +61,8 @@ const initialFormState = (initialUserData) => ({
   name: "",
   price: "",
   description: "",
-  overlapNumber: "",
+  AppointmentDuration: "",
+  TimeBetweenAppointments: "",
   isActive: true,
 });
 
@@ -82,7 +83,8 @@ const submitService = async (formData, userId, setFormData, setServices) => {
     ...formData,
     userId,
     price: parseFloat(formData.price, 10),
-    overlapNumber: parseInt(formData.overlapNumber, 10),
+    AppointmentDuration: parseFloat(formData.AppointmentDuration, 10),
+    TimeBetweenAppointments: parseFloat(formData.TimeBetweenAppointments, 10),
   };
 
   const result = await createService(dataToSend, token);
@@ -103,7 +105,8 @@ const updateExistingService = async (editedService, userId, setServices) => {
   const dataToSend = {
     ...editedService,
     price: parseFloat(editedService.price, 10),
-    overlapNumber: parseInt(editedService.overlapNumber, 10),
+    AppointmentDuration: parseFloat(formData.AppointmentDuration, 10),
+    TimeBetweenAppointments: parseFloat(formData.TimeBetweenAppointments, 10),
   };
 
   const result = await updateService(dataToSend, token);

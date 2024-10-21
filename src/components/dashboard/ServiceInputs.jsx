@@ -42,11 +42,25 @@ export const ServicePriceInput = ({ formData, handleChange }) => (
 
 export const ServiceOverlapInput = ({ formData, handleChange }) => (
   <div className="flex flex-col gap-1 md:w-1/2">
-    <label>Turnos a la vez</label>
+    <label>Duracion del turno</label>
     <input
       type="number"
-      name="overlapNumber"
-      value={formData.overlapNumber}
+      name="AppointmentDuration"
+      value={formData.AppointmentDuration}
+      onChange={handleChange}
+      className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
+      required
+    />
+  </div>
+);
+
+export const ServiceDurationInput = ({ formData, handleChange }) => (
+  <div className="flex flex-col gap-1 md:w-1/2">
+    <label>Tiempo entre turnos</label>
+    <input
+      type="number"
+      name="TimeBetweenAppointments"
+      value={formData.TimeBetweenAppointments}
       onChange={handleChange}
       className="bg-transparent border-2 p-2 rounded-lg focus:outline-none focus:ring-0 text-black"
       required
