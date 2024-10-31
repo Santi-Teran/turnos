@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
 import Pagination from "./Pagination";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const TurnosDetail = ({
   appointments,
   services,
+  holidays,
   handleUpdate,
   handleDelete,
 }) => {
+  const [closedDays, setClosedDays] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editedAppointment, setEditedAppointment] = useState({
     id: "",
@@ -36,6 +40,29 @@ const TurnosDetail = ({
     }
   };
 
+  const checkClosedDays = (services) => {
+    const closed = [];
+    services.forEach((service) => {
+      service.weeklySchedule.forEach((schedule, dayIndex) => {
+        if (schedule.hours === "") {
+          closed.push(dayIndex);
+        }
+      });
+    });
+    setClosedDays(closed);
+  };
+
+  const isDayOff = (date) => {
+    const day = new Date(date).getDay();
+    return (
+      closedDays.includes(day) || holidays.some((holiday) => date === holiday)
+    );
+  };
+
+  if (closedDays.length === 0 && services.length > 0) {
+    checkClosedDays(services);
+  }
+
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditedAppointment((prevData) => {
@@ -43,6 +70,11 @@ const TurnosDetail = ({
         return {
           ...prevData,
           client: { ...prevData.client, [name]: value },
+        };
+      } else if (name === "date") {
+        return {
+          ...prevData,
+          date: new Date(value),
         };
       }
       return {
@@ -52,9 +84,19 @@ const TurnosDetail = ({
     });
   };
 
+  const handleDateChange = (date) => {
+    setEditedAppointment((prevData) => ({
+      ...prevData,
+      date: date, // Guarda directamente el objeto Date seleccionado
+    }));
+  };
+
   const startEditing = (appointment) => {
     setEditingId(appointment.id);
-    setEditedAppointment(appointment);
+    setEditedAppointment({
+      ...appointment,
+      date: new Date(appointment.date + "T00:00:00"), // Forzar la fecha en horario local
+    });
   };
 
   const cancelEditing = () => {
@@ -70,7 +112,22 @@ const TurnosDetail = ({
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    await handleUpdate(editedAppointment);
+
+    // Crear el objeto para actualizar basado en si es un appointment normal o fixed
+    const appointmentToUpdate = {
+      ...editedAppointment,
+      // Si tiene "day", estamos manejando un fixed appointment, y no incluimos "date"
+      ...(editedAppointment.day !== undefined
+        ? { day: editedAppointment.day }
+        : {
+            date: editedAppointment.date
+              ? new Date(editedAppointment.date).toISOString().split("T")[0] // Formato dd/MM/yyyy
+              : "",
+          }),
+    };
+
+    await handleUpdate(appointmentToUpdate);
+
     setEditingId(null);
     setEditedAppointment({
       id: "",
@@ -99,14 +156,19 @@ const TurnosDetail = ({
     return days[dayNumber];
   };
 
-  // Formatear la fecha a dd-mm-aaaa
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Meses van de 0 a 11
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+  const dayNames = [
+    "domingo",
+    "lunes",
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado",
+  ];
+
+  const availableDays = dayNames
+    .map((name, index) => ({ name, index }))
+    .filter((day) => !closedDays.includes(day.index));
 
   return (
     <div className="p-4 border rounded-md shadow-lg bg-white w-full overflow-x-auto">
@@ -116,13 +178,13 @@ const TurnosDetail = ({
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Nombre</th>
             <th className="py-3 px-6 text-left">Teléfono</th>
+            <th className="py-3 px-6 text-center">Servicio</th>
             <th className="py-3 px-6 text-center">
               {currentAppointments.some((appointment) => !appointment.date)
                 ? "Día"
                 : "Fecha"}
             </th>
             <th className="py-3 px-6 text-center">Hora</th>
-            <th className="py-3 px-6 text-center">Servicio</th>
             <th className="py-3 px-6 text-center">Acciones</th>
           </tr>
         </thead>
@@ -161,34 +223,6 @@ const TurnosDetail = ({
                 </td>
                 <td className="py-3 px-6 text-center">
                   {editingId === appointment.id ? (
-                    <input
-                      type="date"
-                      name="date"
-                      value={editedAppointment.date}
-                      onChange={handleEditChange}
-                      className="w-full px-2 py-1 border rounded"
-                    />
-                  ) : appointment.date ? (
-                    formatDate(appointment.date)
-                  ) : (
-                    getDayName(appointment.day)
-                  )}
-                </td>
-                <td className="py-3 px-6 text-center">
-                  {editingId === appointment.id ? (
-                    <input
-                      type="time"
-                      name="hour"
-                      value={editedAppointment.hour}
-                      onChange={handleEditChange}
-                      className="w-full px-2 py-1 border rounded"
-                    />
-                  ) : (
-                    appointment.hour
-                  )}
-                </td>
-                <td className="py-3 px-6 text-center">
-                  {editingId === appointment.id ? (
                     <select
                       name="serviceId"
                       value={editedAppointment.serviceId}
@@ -203,6 +237,99 @@ const TurnosDetail = ({
                     </select>
                   ) : (
                     getServiceName(appointment.serviceId)
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center">
+                  {editingId === appointment.id ? (
+                    appointment.date ? (
+                      <DatePicker
+                        selected={editedAppointment.date}
+                        onChange={handleDateChange}
+                        filterDate={(date) => !isDayOff(date)}
+                        dateFormat="dd/MM/yyyy"
+                        minDate={new Date()}
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer hover:bg-gray-200 transition-all"
+                        required
+                      />
+                    ) : (
+                      <select
+                        name="day"
+                        value={editedAppointment.day}
+                        onChange={handleEditChange}
+                        className="px-3 py-2 rounded-md cursor-pointer capitalize"
+                        required
+                      >
+                        <option value="" disabled>
+                          Selecciona un día
+                        </option>
+                        {availableDays.map((day) => (
+                          <option
+                            key={day.index}
+                            value={day.index}
+                            className="capitalize"
+                          >
+                            {day.name}
+                          </option>
+                        ))}
+                      </select>
+                    )
+                  ) : appointment.date ? (
+                    appointment.date
+                  ) : (
+                    getDayName(appointment.day)
+                  )}
+                </td>
+                <td className="py-3 px-6 text-center">
+                  {editingId === appointment.id ? (
+                    <select
+                      name="hour"
+                      value={editedAppointment.hour}
+                      onChange={handleEditChange}
+                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
+                    >
+                      <option value="">Selecciona un Horario</option>
+                      {services
+                        .find(
+                          (service) =>
+                            service.id === parseInt(editedAppointment.serviceId)
+                        )
+                        ?.weeklySchedule[
+                          editedAppointment.day
+                            ? editedAppointment.day
+                            : new Date(editedAppointment.date).getDay()
+                        ].hours.split(";")
+                        .map((time) => (
+                          <option key={time} value={time}>
+                            {time}
+                          </option>
+                        ))}
+
+                      {appointment.hour &&
+                        !services
+                          .find(
+                            (service) =>
+                              service.id === parseInt(appointment.serviceId)
+                          )
+                          ?.weeklySchedule[
+                            appointment.day
+                              ? appointment.day
+                              : new Date(appointment.date).getDay()
+                          ].hours.split(";")
+                          .includes(appointment.hour) && (
+                          <option value={appointment.hour}>
+                            {appointment.hour} (Seleccionado previamente)
+                          </option>
+                        )}
+                    </select>
+                  ) : (
+                    // <input
+                    //   type="time"
+                    //   name="hour"
+                    //   value={editedAppointment.hour}
+                    //   onChange={handleEditChange}
+                    //   className="w-full px-2 py-1 border rounded"
+                    // />
+                    appointment.hour
                   )}
                 </td>
                 <td className="py-3 px-6">

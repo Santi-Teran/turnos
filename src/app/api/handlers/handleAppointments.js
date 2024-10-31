@@ -26,7 +26,7 @@ const handleAction = async (actionFn, successMessage, id, setAppointments) => {
       toast.error("Error:", appointmentsResult.message);
     }
   } else {
-    toast.error("Error:", result.message);
+    toast.error("Error:", result.data.message);
   }
 };
 

@@ -255,14 +255,13 @@ export const useBusinessConfiguration = (initialUserData) => {
 
     try {
       const result = await businessConfiguration(formData, token);
+      console.log(formData);
       if (result.success) {
-        console.log(formData);
         toast.success("Configuracion del negocio actualizada!");
         setIsEditing(false);
         setError(null); // Reseteamos el error en caso de éxito
       } else {
-        console.log(formData);
-        toast.error(result.message);
+        toast.error(result.data.message);
       }
     } catch (error) {
       toast.error("Error del servidor");

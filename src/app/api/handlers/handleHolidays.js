@@ -69,7 +69,7 @@ const fetchAndSetHolidays = async (userId, setHolidays) => {
   if (result.success) {
     setHolidays(result.data);
   } else {
-    toast.error("Error al obtener los feriados:", result.message);
+    toast.error("Error al obtener los feriados:", result.data.message);
   }
 };
 

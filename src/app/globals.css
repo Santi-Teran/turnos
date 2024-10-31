@@ -77,7 +77,7 @@ body {
 }
 
 .custom-event {
-  background-color: #e6eff5;
+  background-color: #ebebeb;
   border-color: transparent;
   margin: 2px;
   cursor: pointer;
@@ -90,6 +90,7 @@ body {
 }
 
 .custom-fixed-event {
+  background-color: #21d3ff83;
   border-color: transparent;
   margin: 2px;
   cursor: pointer;

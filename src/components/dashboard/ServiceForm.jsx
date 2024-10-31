@@ -30,7 +30,7 @@ const ServiceForm = ({ formData, handleChange, handleSubmit }) => {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+          className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
         >
           Crear Servicio
         </button>

@@ -73,14 +73,6 @@ const FormFijos = ({ userId }) => {
     setClosedDays(closed);
   };
 
-  const isDayOff = (date) => {
-    const day = date;
-    return (
-      closedDays.includes(day) ||
-      holidays.some((holiday) => date.toDateString() === holiday.toDateString())
-    );
-  };
-
   const handleTimeChange = (event) => {
     const time = event.target.value;
     setSelectedTime(time);
@@ -113,20 +105,6 @@ const FormFijos = ({ userId }) => {
     setIsModalOpen(false);
   };
 
-  const formatHour = (hour) => {
-    const [time, period] = hour.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    if (period === "PM" && hours < 12) {
-      hours += 12;
-    } else if (period === "AM" && hours === 12) {
-      hours = 0;
-    }
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -144,9 +122,9 @@ const FormFijos = ({ userId }) => {
         setIsPhoneVerified(true);
         setPhoneChecked(true);
       } else {
-        // Guardar el código de verificación en el estado
         setVerificationCode(response.data.verification_code);
-        setVerificationStep(true); // Mostrar el campo para ingresar el código
+        setPhoneChecked(true);
+        setVerificationStep(true);
         toast.success("Código de verificación enviado");
       }
     } catch (error) {
@@ -173,11 +151,6 @@ const FormFijos = ({ userId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isPhoneVerified) {
-      toast.error("Debe verificar su teléfono antes de agendar el turno");
-      return;
-    }
-
     const fixedAppointmentData = {
       day: parseInt(formData.day),
       hour: formData.hour,
@@ -197,8 +170,6 @@ const FormFijos = ({ userId }) => {
         setTimeout(() => {
           window.location.href = "/mis-turnos";
         }, 2000);
-      } else {
-        toast.error(result.message);
       }
     } catch (error) {
       toast.error("Error del servidor");
@@ -219,46 +190,6 @@ const FormFijos = ({ userId }) => {
     .map((name, index) => ({ name, index }))
     .filter((day) => !closedDays.includes(day.index));
 
-  const getAvailableTimes = () => {
-    if (!formData.serviceId || formData.day === "") return [];
-
-    const selectedService = services.find(
-      (service) => service.id === parseInt(formData.serviceId)
-    );
-
-    if (!selectedService) return [];
-
-    // Obtiene el horario para el día seleccionado
-    const scheduleForDay = selectedService.weeklySchedule[formData.day];
-    if (!scheduleForDay || scheduleForDay.hours === "") return [];
-
-    // Suponiendo que scheduleForDay.hours tiene un formato como "08:00-12:00"
-    const [startTime, endTime] = scheduleForDay.hours
-      .split("-")
-      .map(formatHour);
-
-    return generateTimeSlots(startTime, endTime);
-  };
-
-  // Función para generar las franjas horarias entre un intervalo
-  const generateTimeSlots = (start, end) => {
-    let times = [];
-    let current = new Date();
-    current.setHours(start.split(":")[0]);
-    current.setMinutes(start.split(":")[1]);
-
-    const endTime = new Date();
-    endTime.setHours(end.split(":")[0]);
-    endTime.setMinutes(end.split(":")[1]);
-
-    while (current <= endTime) {
-      times.push(current.toTimeString().slice(0, 5)); // Obtiene HH:MM
-      current.setMinutes(current.getMinutes() + 30); // Cambia el intervalo a 30 mins (o lo que necesites)
-    }
-
-    return times;
-  };
-
   if (!userInfo) return <Loading />;
 
   return (
@@ -278,149 +209,140 @@ const FormFijos = ({ userId }) => {
           </h2>
         </div>
 
-        {phoneChecked ? (
-          <>
-            {isPhoneVerified && (
-              <>
-                <div className="flex flex-col gap-6 w-full text-black">
-                  <div className="flex flex-col gap-1 w-full text-black">
-                    <input
-                      type="text"
-                      name="name"
-                      value={clientName ? clientName : formData.name}
-                      readOnly={clientName ? true : false}
-                      onChange={handleChange}
-                      className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-                      placeholder="Nombre"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1 w-full text-black">
-                    <select
-                      name="day"
-                      value={formData.day}
-                      onChange={handleChange}
-                      className="px-3 py-2 rounded-md cursor-pointer capitalize"
-                      required
-                    >
-                      <option value="" disabled>
-                        Selecciona un día
-                      </option>
-                      {availableDays.map((day) => (
-                        <option
-                          key={day.index}
-                          value={day.index}
-                          className="capitalize"
-                        >
-                          {day.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <select
-                    name="serviceId"
-                    value={formData.serviceId}
-                    onChange={handleChange}
-                    className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                    required
-                  >
-                    <option value="" disabled>
-                      Selecciona el servicio
-                    </option>
-                    {services.map((service) => (
-                      <option key={service.id} value={service.id}>
-                        {service.name}
-                      </option>
-                    ))}
-                  </select>
-                  {formData.serviceId && formData.day ? (
-                    <select
-                      name="hour"
-                      value={selectedTime}
-                      onChange={handleTimeChange}
-                      className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
-                      required
-                    >
-                      <option value="" disabled>
-                        Selecciona la hora
-                      </option>
-                      {services
-                        .find(
-                          (service) =>
-                            service.id === parseInt(formData.serviceId)
-                        )
-                        ?.weeklySchedule[formData.day].hours.split(";")
-                        .map((time) => (
-                          <option key={time} value={time}>
-                            {time}
-                          </option>
-                        ))}
-
-                      {/* Si el horario seleccionado previamente no está en las opciones, lo agregamos manualmente */}
-                      {selectedTime &&
-                        !services
-                          .find(
-                            (service) =>
-                              service.id === parseInt(formData.serviceId)
-                          )
-                          ?.weeklySchedule[formData.day].hours.split(";")
-                          .includes(selectedTime) && (
-                          <option value={selectedTime}>
-                            {selectedTime} (Seleccionado previamente)
-                          </option>
-                        )}
-                    </select>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-                >
-                  Agendar
-                </button>
-              </>
-            )}
-          </>
-        ) : (
+        {!phoneChecked ? (
           <div className="flex flex-col gap-4 w-full text-black">
             <label className="font-semibold">Ingresa tu teléfono</label>
-            <PhoneInput
-              country={"ar"}
-              value={formData.phone}
-              onChange={handlePhoneChange}
-            />
-            <button
-              type="button"
-              onClick={sendVerificationCode}
-              className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-            >
-              Verificar Teléfono
-            </button>
+            <div className="flex flex-col gap-4 w-full text-black">
+              <PhoneInput
+                country="ar"
+                value={formData.phone}
+                onChange={handlePhoneChange}
+                placeholder="Ingrese su número de teléfono"
+                className="input"
+              />
+              <button
+                type="button"
+                onClick={sendVerificationCode}
+                className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
+              >
+                Verificar Teléfono
+              </button>
+            </div>
           </div>
-        )}
-
-        {verificationStep && (
-          <div className="flex flex-col gap-4 w-full text-black">
-            <label className="font-semibold">
-              Ingresa el código de verificación
-            </label>
+        ) : verificationStep ? (
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-center">
+              Ingrese el código enviado a su teléfono:
+            </p>
             <input
               type="text"
-              name="verificationCode"
               value={enteredCode}
               onChange={(e) => setEnteredCode(e.target.value)}
-              className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+              className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0 text-black"
               placeholder="Código de verificación"
-              required
             />
             <button
-              type="button"
               onClick={verifyPhone}
+              className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
+            >
+              Verificar
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6 w-full text-black">
+            <div className="flex flex-col gap-1 w-full text-black">
+              <input
+                type="text"
+                name="name"
+                value={clientName ? clientName : formData.name}
+                readOnly={clientName ? true : false}
+                onChange={handleChange}
+                className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+                placeholder="Nombre"
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full text-black">
+              <select
+                name="day"
+                value={formData.day}
+                onChange={handleChange}
+                className="px-3 py-2 rounded-md cursor-pointer capitalize"
+                required
+              >
+                <option value="" disabled>
+                  Selecciona un día
+                </option>
+                {availableDays.map((day) => (
+                  <option
+                    key={day.index}
+                    value={day.index}
+                    className="capitalize"
+                  >
+                    {day.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1 w-full text-black">
+              <select
+                name="serviceId"
+                value={formData.serviceId}
+                onChange={handleChange}
+                className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                required
+              >
+                <option value="" disabled>
+                  Selecciona el servicio
+                </option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {formData.serviceId && formData.day && (
+              <select
+                name="hour"
+                value={selectedTime}
+                onChange={handleTimeChange}
+                className="px-3 py-2 rounded-md cursor-pointer w-full hover:bg-gray-200 transition-all focus:outline-none focus:ring-0"
+                required
+              >
+                <option value="" disabled>
+                  Selecciona la hora
+                </option>
+                {services
+                  .find(
+                    (service) => service.id === parseInt(formData.serviceId)
+                  )
+                  ?.weeklySchedule[formData.day].hours.split(";")
+                  .map((time) => (
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
+                  ))}
+
+                {selectedTime &&
+                  !services
+                    .find(
+                      (service) => service.id === parseInt(formData.serviceId)
+                    )
+                    ?.weeklySchedule[formData.day].hours.split(";")
+                    .includes(selectedTime) && (
+                    <option value={selectedTime}>
+                      {selectedTime} (Seleccionado previamente)
+                    </option>
+                  )}
+              </select>
+            )}
+            <button
+              type="submit"
               className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
             >
-              Verificar Código
+              Agendar Turno Fijo
             </button>
           </div>
         )}

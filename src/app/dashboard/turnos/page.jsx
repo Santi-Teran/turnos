@@ -10,6 +10,7 @@ import TurnosForm from "@/components/dashboard/TurnosForm";
 import TurnosDetail from "@/components/dashboard/TurnosDetails";
 import { useAppointments } from "@/app/api/handlers/handleAppointments";
 import TurnosFijosForm from "@/components/dashboard/TurnosFijosForm";
+import { useHolidayConfiguration } from "@/app/api/handlers/handleHolidays";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ const TurnosPage = () => {
     handleDelete,
     handleFixedDelete,
   } = useAppointments(userInfo?.id);
+  const { holidays } = useHolidayConfiguration({ id: userInfo?.id });
 
   const appointmentList = appointments.appointments;
   const fixedAppointmentList = appointments.fixedAppointments;
@@ -42,6 +44,7 @@ const TurnosPage = () => {
             <TurnosForm userInfo={userInfo} services={services} />
             <TurnosDetail
               services={services}
+              holidays={holidays}
               appointments={appointmentList}
               handleUpdate={handleUpdate}
               handleDelete={handleDelete}
@@ -51,6 +54,7 @@ const TurnosPage = () => {
             <TurnosFijosForm userInfo={userInfo} services={services} />
             <TurnosDetail
               services={services}
+              holidays={holidays}
               appointments={fixedAppointmentList}
               handleUpdate={handleFixedUpdate}
               handleDelete={handleFixedDelete}

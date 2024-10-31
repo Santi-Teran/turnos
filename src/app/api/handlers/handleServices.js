@@ -61,8 +61,8 @@ const initialFormState = (initialUserData) => ({
   name: "",
   price: "",
   description: "",
-  AppointmentDuration: "",
-  TimeBetweenAppointments: "",
+  appointmentDuration: "",
+  timeBetweenAppointments: "",
   isActive: true,
 });
 
@@ -72,7 +72,7 @@ const fetchAndSetServices = async (userId, setServices) => {
   if (result.success) {
     setServices(result.data);
   } else {
-    toast.error("Error al obtener los servicios:", result.message);
+    toast.error("Error al obtener los servicios:", result.data.message);
   }
 };
 
@@ -83,8 +83,8 @@ const submitService = async (formData, userId, setFormData, setServices) => {
     ...formData,
     userId,
     price: parseFloat(formData.price, 10),
-    AppointmentDuration: parseFloat(formData.AppointmentDuration, 10),
-    TimeBetweenAppointments: parseFloat(formData.TimeBetweenAppointments, 10),
+    appointmentDuration: parseFloat(formData.appointmentDuration, 10),
+    timeBetweenAppointments: parseFloat(formData.timeBetweenAppointments, 10),
   };
 
   const result = await createService(dataToSend, token);
@@ -95,7 +95,7 @@ const submitService = async (formData, userId, setFormData, setServices) => {
     await refreshServices(userId, setServices);
     toast.success("Servicio creado con éxito!");
   } else {
-    toast.error("Error al crear el servicio:", result.message);
+    toast.error("Error al crear el servicio:", result.data.message);
   }
 };
 
@@ -105,8 +105,11 @@ const updateExistingService = async (editedService, userId, setServices) => {
   const dataToSend = {
     ...editedService,
     price: parseFloat(editedService.price, 10),
-    AppointmentDuration: parseFloat(formData.AppointmentDuration, 10),
-    TimeBetweenAppointments: parseFloat(formData.TimeBetweenAppointments, 10),
+    appointmentDuration: parseFloat(editedService.appointmentDuration, 10),
+    timeBetweenAppointments: parseFloat(
+      editedService.timeBetweenAppointments,
+      10
+    ),
   };
 
   const result = await updateService(dataToSend, token);
@@ -114,7 +117,7 @@ const updateExistingService = async (editedService, userId, setServices) => {
     await refreshServices(userId, setServices);
     toast.success("Servicio actualizado con éxito!");
   } else {
-    toast.error("Error al actualizar el servicio:", result.message);
+    toast.error("Error al actualizar el servicio:", result.data.message);
   }
 };
 
@@ -126,7 +129,7 @@ const deleteExistingService = async (serviceId, userId, setServices) => {
     await refreshServices(userId, setServices);
     toast.success("Servicio eliminado con éxito!");
   } else {
-    toast.error("Error al eliminar el servicio:", result.message);
+    toast.error("Error al eliminar el servicio:", result.data.message);
   }
 };
 
@@ -136,6 +139,6 @@ const refreshServices = async (userId, setServices) => {
   if (result.success) {
     setServices(result.data);
   } else {
-    toast.error("Error al refrescar los servicios:", result.message);
+    toast.error("Error al refrescar los servicios:", result.data.message);
   }
 };

@@ -308,7 +308,7 @@ export const BusinessHours = ({
       {/* Turnos fijos */}
       <div className="flex flex-col gap-2">
         <label className="font-semibold">Turnos fijos</label>
-        <label className="flex gap-2 items-center">
+        <label className="switch">
           <input
             type="checkbox"
             name="fixedAppointmentsAvailable"
@@ -318,26 +318,10 @@ export const BusinessHours = ({
             readOnly={!isEditing}
           />
           <span
-            className={`relative inline-flex items-center cursor-pointer ${
+            className={`slider round ${
               isEditing ? "cursor-pointer" : "cursor-not-allowed"
             }`}
-          >
-            <span
-              className={`block w-10 h-6 rounded-full ${
-                userConfig.fixedAppointmentsAvailable
-                  ? "bg-bluee"
-                  : "bg-gray-400"
-              }`}
-            ></span>
-            <span
-              className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                userConfig.fixedAppointmentsAvailable
-                  ? "translate-x-4"
-                  : "translate-x-0"
-              }`}
-            ></span>
-            <span className="ml-2">Sí</span>
-          </span>
+          ></span>
         </label>
       </div>
     </div>

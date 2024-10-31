@@ -151,6 +151,7 @@ const Form = ({ userId }) => {
         setPhoneChecked(true);
       } else {
         setVerificationCode(response.data.verification_code);
+        setPhoneChecked(true);
         setVerificationStep(true);
         toast.success("Código de verificación enviado");
       }
@@ -177,10 +178,7 @@ const Form = ({ userId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isPhoneVerified) {
-      toast.error("Debe verificar su teléfono antes de agendar el turno");
-      return;
-    }
+
     const appointmentData = {
       date: selectedDate.toISOString().split("T")[0], // Se enviará la fecha con un día sumado si corresponde
       hour: selectedTime,
@@ -204,9 +202,6 @@ const Form = ({ userId }) => {
         setTimeout(() => {
           window.location.href = "/mis-turnos";
         }, 2000);
-        console.log(appointmentData);
-      } else {
-        toast.error("Error al agendar el turno.");
       }
     } catch (error) {
       toast.error("Error del servidor, por favor intente nuevamente");
@@ -232,128 +227,7 @@ const Form = ({ userId }) => {
           </h2>
         </div>
 
-        {phoneChecked ? (
-          <>
-            {isPhoneVerified && (
-              <>
-                <div className="flex flex-col gap-6 w-full text-black">
-                  <div className="flex flex-col gap-1 w-full text-black">
-                    <input
-                      type="text"
-                      name="name"
-                      value={clientName ? clientName : formData.name}
-                      readOnly={clientName ? true : false}
-                      onChange={handleChange}
-                      placeholder="Nombre completo"
-                      className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1 w-full text-black">
-                    <select
-                      name="serviceId"
-                      value={formData.serviceId}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
-                      required
-                    >
-                      <option value="">Selecciona un Servicio</option>
-                      {services.map((service) => (
-                        <option key={service.id} value={service.id}>
-                          {service.name} - ${service.price}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1 w-full text-black">
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleDateChange}
-                      placeholderText="Selecciona una Fecha"
-                      filterDate={(date) => !isDayOff(date)}
-                      dateFormat="dd/MM/yyyy"
-                      minDate={new Date()}
-                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer hover:bg-gray-200 transition-all"
-                      required
-                    />
-                  </div>
-
-                  {formData.serviceId && selectedDate ? (
-                    <div className="flex flex-col gap-1 w-full text-black">
-                      <select
-                        name="hour"
-                        value={selectedTime}
-                        onChange={handleTimeChange}
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
-                      >
-                        <option value="">Selecciona un Horario</option>
-                        {services
-                          .find(
-                            (service) =>
-                              service.id === parseInt(formData.serviceId)
-                          )
-                          ?.weeklySchedule[selectedDate.getDay()].hours.split(
-                            ";"
-                          )
-                          .map((time) => (
-                            <option key={time} value={time}>
-                              {time}
-                            </option>
-                          ))}
-
-                        {/* Si el horario seleccionado previamente no está en las opciones, lo agregamos manualmente */}
-                        {selectedTime &&
-                          !services
-                            .find(
-                              (service) =>
-                                service.id === parseInt(formData.serviceId)
-                            )
-                            ?.weeklySchedule[selectedDate.getDay()].hours.split(
-                              ";"
-                            )
-                            .includes(selectedTime) && (
-                            <option value={selectedTime}>
-                              {selectedTime} (Seleccionado previamente)
-                            </option>
-                          )}
-                      </select>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  <button
-                    type="submit"
-                    className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
-                  >
-                    Agendar Turno
-                  </button>
-                </div>
-              </>
-            )}
-            {verificationStep && (
-              <>
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-center">
-                    Ingrese el código enviado a su teléfono:
-                  </p>
-                  <input
-                    type="text"
-                    value={enteredCode}
-                    onChange={(e) => setEnteredCode(e.target.value)}
-                    className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
-                    placeholder="Código de verificación"
-                  />
-                  <button
-                    onClick={verifyPhone}
-                    className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
-                  >
-                    Verificar
-                  </button>
-                </div>
-              </>
-            )}
-          </>
-        ) : (
+        {!phoneChecked ? (
           <div className="flex flex-col gap-4 w-full text-black">
             <label className="font-semibold">Ingresa tu teléfono</label>
             <div className="flex flex-col gap-4 w-full text-black">
@@ -372,6 +246,110 @@ const Form = ({ userId }) => {
                 Verificar Teléfono
               </button>
             </div>
+          </div>
+        ) : verificationStep ? (
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-center">
+              Ingrese el código enviado a su teléfono:
+            </p>
+            <input
+              type="text"
+              value={enteredCode}
+              onChange={(e) => setEnteredCode(e.target.value)}
+              className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0 text-black"
+              placeholder="Código de verificación"
+            />
+            <button
+              onClick={verifyPhone}
+              className="bg-dark-gray py-[6px] px-3 rounded-md w-full text-white font-semibold shadow-lg"
+            >
+              Verificar
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6 w-full text-black">
+            <div className="flex flex-col gap-1 w-full text-black">
+              <input
+                type="text"
+                name="name"
+                value={clientName ? clientName : formData.name}
+                readOnly={clientName ? true : false}
+                onChange={handleChange}
+                placeholder="Nombre completo"
+                className="py-1 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:ring-0"
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full text-black">
+              <select
+                name="serviceId"
+                value={formData.serviceId}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
+                required
+              >
+                <option value="">Selecciona un Servicio</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name} - ${service.price}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1 w-full text-black">
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                placeholderText="Selecciona una Fecha"
+                filterDate={(date) => !isDayOff(date)}
+                dateFormat="dd/MM/yyyy"
+                minDate={new Date()}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer hover:bg-gray-200 transition-all"
+                required
+              />
+            </div>
+
+            {formData.serviceId && selectedDate && (
+              <div className="flex flex-col gap-1 w-full text-black">
+                <select
+                  name="hour"
+                  value={selectedTime}
+                  onChange={handleTimeChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-dark-blue cursor-pointer"
+                >
+                  <option value="">Selecciona un Horario</option>
+                  {services
+                    .find(
+                      (service) => service.id === parseInt(formData.serviceId)
+                    )
+                    ?.weeklySchedule[selectedDate.getDay()].hours.split(";")
+                    .map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+
+                  {selectedTime &&
+                    !services
+                      .find(
+                        (service) => service.id === parseInt(formData.serviceId)
+                      )
+                      ?.weeklySchedule[selectedDate.getDay()].hours.split(";")
+                      .includes(selectedTime) && (
+                      <option value={selectedTime}>
+                        {selectedTime} (Seleccionado previamente)
+                      </option>
+                    )}
+                </select>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="bg-dark-gray py-2 rounded-md w-full text-white font-bold"
+            >
+              Agendar Turno
+            </button>
           </div>
         )}
       </form>

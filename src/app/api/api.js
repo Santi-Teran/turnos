@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://www.misturnos.somee.com/api";
+const API_URL = "http://190.245.254.248:8081/api";
 
 const handleError = (error) => {
   if (error.response) {

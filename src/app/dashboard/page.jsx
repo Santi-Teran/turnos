@@ -23,8 +23,6 @@ const DashboardPage = () => {
   if (userError || appointmentsError)
     return <div>Error: {userError || appointmentsError}</div>;
 
-  if (userInfo.subscriptionId === "") console.log("false");
-
   const appointmentList = appointments.appointments;
   const fixedAppointmentList = appointments.fixedAppointments;
 

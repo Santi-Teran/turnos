@@ -64,7 +64,7 @@ export const useRegister = () => {
       if (result.success) {
         return true; // Devuelve true si el registro fue exitoso
       } else {
-        setError(result.message);
+        setError(result.data.message);
         return false;
       }
     } catch (error) {

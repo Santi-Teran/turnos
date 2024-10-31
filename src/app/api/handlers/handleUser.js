@@ -17,7 +17,7 @@ export const handleUser = () => {
       if (result.success) {
         setUserInfo(result.data);
       } else {
-        setError(result.message);
+        setError(result.data.message);
         router.push("/login");
       }
       setLoading(false);

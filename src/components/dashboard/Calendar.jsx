@@ -19,8 +19,7 @@ const CalendarView = ({
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
-  console.log(userConfiguration);
+  const [viewType, setViewType] = useState("dayGridMonth"); // Nueva variable para el tipo de vista
 
   const whatsappUrl = `https://wa.me/${selectedEvent?.client.phone}`;
 
@@ -43,7 +42,6 @@ const CalendarView = ({
     return Math.max(...closeTimes);
   };
 
-  // Ajustamos el día laboral a 26 horas, si el cierre es después de la medianoche
   const formatEventDate = (appointment) => {
     const appointmentDate = new Date(`${appointment.date}T${appointment.hour}`);
 
@@ -52,8 +50,7 @@ const CalendarView = ({
       appointmentDate.getHours() < closingHour &&
       appointmentDate.getHours() < 6
     ) {
-      // Si el evento es después de la medianoche y antes del cierre, lo ajustamos al día anterior.
-      appointmentDate.setDate(appointmentDate.getDate());
+      appointmentDate.setDate(appointmentDate.getDate() - 1);
     }
 
     return appointmentDate;
@@ -82,10 +79,16 @@ const CalendarView = ({
     const hour = appointmentDate.getHours();
 
     let adjustedDay = dayOfWeek;
-    if (dayOfWeek === 0 && hour < getLatestClosing()) {
-      adjustedDay = 6;
-    } else if (hour < getLatestClosing() && dayOfWeek !== 0) {
-      adjustedDay = dayOfWeek + 1;
+    if (viewType === "dayGridMonth") {
+      if (hour < getLatestClosing() && hour < 6 && dayOfWeek !== 0) {
+        adjustedDay = dayOfWeek - 1;
+      }
+    } else if (viewType === "timeGridWeek") {
+      if (hour < getLatestClosing() && hour < 6 && dayOfWeek === 0) {
+        adjustedDay = 6;
+      } else if (hour < getLatestClosing() && hour < 6 && dayOfWeek !== 0) {
+        adjustedDay = dayOfWeek;
+      }
     }
 
     return {
@@ -111,9 +114,25 @@ const CalendarView = ({
     setSelectedEvent(null);
   };
 
-  // Ajustamos el slotMaxTime para que pueda extenderse hasta las 26 horas (2 AM del día siguiente)
+  const handleDatesSet = (dateInfo) => {
+    setViewType(dateInfo.view.type); // Ajusta el tipo de vista según el tipo de vista del calendario
+  };
+
   const slotMinTime = `${getEarliestOpening()}:00`;
-  const slotMaxTime = "30:00"; // Extender hasta las 2 AM (26 horas)
+  const slotMaxTime = "30:00";
+
+  const getDayName = (dayNumber) => {
+    const days = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+    ];
+    return days[dayNumber];
+  };
 
   return (
     <div className="px-4 py-4 md:px-20 md:py-10 mb-20 text-dark-blue bg-dark">
@@ -148,6 +167,7 @@ const CalendarView = ({
         eventOverlap={false}
         contentHeight="auto"
         aspectRatio={1.5}
+        datesSet={handleDatesSet} // Captura el cambio de vista
       />
 
       <Modal
@@ -162,10 +182,17 @@ const CalendarView = ({
           <div className="text-dark-blue flex flex-col gap-2 w-fit shad">
             <h2 className="mt-4">{selectedEvent.client.name}</h2>
             <p>{serviceMap[selectedEvent.serviceId] || "Servicio"}</p>
-            <p>
-              <strong>Fecha:</strong>{" "}
-              {moment(selectedEvent.date).format("DD-MM-YYYY")}
-            </p>
+            {selectedEvent.date ? (
+              <p>
+                <strong>Fecha:</strong>{" "}
+                {moment(selectedEvent.date).format("DD-MM-YYYY")}
+              </p>
+            ) : (
+              <p>
+                <strong>Dia:</strong> {getDayName(selectedEvent.day)}
+              </p>
+            )}
+
             <p>
               <strong>Hora:</strong>{" "}
               {moment(selectedEvent.hour, "HH:mm:ss").format("HH:mm")}
