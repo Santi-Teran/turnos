@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://190.245.254.248:8081/api";
+const API_URL = "https://turnos-delta.vercel.app/api/apiProxy";
 
 const handleError = (error) => {
   if (error.response) {
