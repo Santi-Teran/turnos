@@ -28,7 +28,6 @@ const Notifications = ({ token }) => {
         .catch((err) => {
           setIsConnected(false);
           setConnectionError(true);
-          setTimeout(startConnection, 5000); // Reintenta la conexión después de 5 segundos
         });
     };
 
