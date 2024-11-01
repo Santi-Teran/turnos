@@ -47,17 +47,17 @@ export const ServiceOverlapInput = ({ formData, handleChange }) => (
     </label>
     <input
       type="range"
-      name="AppointmentDuration"
+      name="appointmentDuration"
       min="0"
       max="120"
       step="5"
-      value={formData.AppointmentDuration}
+      value={formData.appointmentDuration}
       onChange={handleChange}
       className="bg-blue-100 h-2 rounded-lg appearance-none cursor-pointer accent-blue-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
       required
     />
     <span className="text-sm text-gray-600">
-      {formData.AppointmentDuration} minutos
+      {formData.appointmentDuration} minutos
     </span>
   </div>
 );
@@ -69,17 +69,17 @@ export const ServiceDurationInput = ({ formData, handleChange }) => (
     </label>
     <input
       type="range"
-      name="TimeBetweenAppointments"
+      name="timeBetweenAppointments"
       min="0"
       max="120"
       step="5"
-      value={formData.TimeBetweenAppointments}
+      value={formData.timeBetweenAppointments}
       onChange={handleChange}
       className="bg-blue-100 h-2 rounded-lg appearance-none cursor-pointer accent-blue-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
       required
     />
     <span className="text-sm text-gray-600">
-      {formData.TimeBetweenAppointments} minutos
+      {formData.timeBetweenAppointments} minutos
     </span>
   </div>
 );
