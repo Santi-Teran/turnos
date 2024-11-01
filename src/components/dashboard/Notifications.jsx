@@ -12,7 +12,7 @@ const Notifications = ({ token }) => {
 
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("https://www.misturnos.somee.com/notificationHub", {
+      .withUrl("/api/notificationHub", {
         accessTokenFactory: () => token,
       })
       .configureLogging(signalR.LogLevel.None) // Desactivar logs de SignalR
