@@ -5,6 +5,10 @@
       "destination": "http://190.245.254.248:8081/api/$1"
     },
     {
+      "source": "/notificationHub/negotiate",
+      "destination": "http://190.245.254.248:8081/notificationHub/negotiate"
+    },
+    {
       "source": "/notificationHub",
       "destination": "http://190.245.254.248:8081/notificationHub"
     }
