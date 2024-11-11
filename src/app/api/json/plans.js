@@ -3,13 +3,13 @@ const plans = [
     id: 1,
     title: "Estandar",
     description: "Ideal para empezar",
-    price: "10.000 ARS/mes",
+    price: "25.000 ARS/mes",
     cancellation: "Podés cancelar en cualquier momento.",
     features: [
       "Gestión básica de turnos",
       "Acceso desde cualquier dispositivo",
-      "Soporte limitado"
-    ]
+      "Soporte limitado",
+    ],
   },
   // {
   //   id: 2,
